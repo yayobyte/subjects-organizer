@@ -3,7 +3,7 @@
   "subjects": [
     {
       "semester": "Semestre 1",
-      "id": "BA170",
+      "id": "BA100",
       "name": "Humanidades I (Base)",
       "credits": 2,
       "status": "completed",
@@ -45,15 +45,7 @@
       "prerequisites": []
     },
     {
-      "semester": "Semestre 1",
-      "id": "BA172",
-      "name": "Humanidades I",
-      "credits": null,
-      "status": "completed",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 1",
+      "semester": "Semestre 11",
       "id": "IS673",
       "name": "CONTABILIDAD...",
       "credits": null,
@@ -324,11 +316,11 @@
       ]
     },
     {
-      "semester": "Semestre 7",
+      "semester": "Semestre 1",
       "id": "IS184",
       "name": "Tecnicas De La Comunicación",
       "credits": 2,
-      "status": "in-progress",
+      "status": "completed",
       "grade": 4.1,
       "prerequisites": []
     },

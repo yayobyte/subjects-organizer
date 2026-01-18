@@ -1,11 +1,8 @@
-import { useState } from 'react';
 import { SubjectProvider, useSubjects } from './contexts/SubjectContext';
 import { Layout } from './components/Layout';
 import { SemesterListView } from './components/SemesterListView';
-import { CurriculumGraph } from './components/CurriculumGraph';
 
 function CurriculumTracker() {
-  const [view, setView] = useState<'list' | 'graph'>('list');
   const { isLoading } = useSubjects();
 
   if (isLoading) {
@@ -20,8 +17,8 @@ function CurriculumTracker() {
   }
 
   return (
-    <Layout view={view} setView={setView}>
-      {view === 'list' ? <SemesterListView /> : <CurriculumGraph />}
+    <Layout>
+      <SemesterListView />
     </Layout>
   );
 }

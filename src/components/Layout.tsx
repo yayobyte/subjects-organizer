@@ -1,15 +1,13 @@
 import { type ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { GraduationCap, BookOpen, Network } from 'lucide-react';
-import { JSONActions } from './JSONActions';
+import { GraduationCap } from 'lucide-react';
+import { DarkModeToggle } from './DarkModeToggle';
 
 interface LayoutProps {
     children: ReactNode;
-    view: 'list' | 'graph';
-    setView: (v: 'list' | 'graph') => void;
 }
 
-export const Layout = ({ children, view, setView }: LayoutProps) => {
+export const Layout = ({ children }: LayoutProps) => {
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-sans transition-colors duration-300">
             {/* Background Gradients for Premium Feel */}
@@ -31,33 +29,7 @@ export const Layout = ({ children, view, setView }: LayoutProps) => {
                         </div>
 
                         <div className="flex items-center gap-4">
-                            <JSONActions />
-
-                            <div className="h-6 w-[1px] bg-slate-200 dark:bg-slate-800" />
-
-                            {/* View Switcher */}
-                            <div className="flex p-1 bg-slate-100 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
-                                <button
-                                    onClick={() => setView('list')}
-                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${view === 'list'
-                                        ? 'bg-white dark:bg-slate-700 shadow-sm text-crimson-violet-600 dark:text-crimson-violet-400'
-                                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-300'
-                                        }`}
-                                >
-                                    <BookOpen size={16} />
-                                    <span>Curriculum</span>
-                                </button>
-                                <button
-                                    onClick={() => setView('graph')}
-                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${view === 'graph'
-                                        ? 'bg-white dark:bg-slate-700 shadow-sm text-crimson-violet-600 dark:text-crimson-violet-400'
-                                        : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-300'
-                                        }`}
-                                >
-                                    <Network size={16} />
-                                    <span>Graph Flow</span>
-                                </button>
-                            </div>
+                            <DarkModeToggle />
                         </div>
                     </div>
                 </div>
@@ -65,7 +37,6 @@ export const Layout = ({ children, view, setView }: LayoutProps) => {
 
             <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <motion.div
-                    key={view}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}

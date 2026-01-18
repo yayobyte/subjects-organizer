@@ -1,32 +1,38 @@
 # Visual Curriculum & Prerequisite Tracker
 
-A modern, interactive web application for tracking academic progress and visualizing course dependencies. Built with React, TypeScript, and Tailwind CSS v4.
+A modern, interactive web application for tracking academic progress with seamless data persistence. Built with React, TypeScript, Tailwind CSS v4, and Express backend.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178c6.svg)
+![Node](https://img.shields.io/badge/Node.js-18+-green.svg)
 
 ## ✨ Features
 
-### 📚 Dual View Modes
-- **List View**: Organized semester-by-semester curriculum display with drag-and-drop reordering
-- **Graph View**: Interactive node-based visualization showing prerequisite dependencies
+### 📚 Curriculum View
+- **Semester-by-Semester Display**: Organized curriculum view with all courses grouped by semester
+- **Drag & Drop Reordering**: Move subjects between semesters to reorganize your academic plan
+- **Visual Feedback**: Clear indicators when dragging and dropping
+- **Instant Updates**: Real-time movement without animation delays
 
 ### 🎯 Smart Subject Management
 - **Status Tracking**: Toggle subjects between Missing, In Progress, and Completed states
 - **Prerequisite Locking**: Subjects automatically lock if prerequisites aren't met
 - **Real-time Statistics**: Live calculation of progress, GPA, credits, and remaining subjects
+- **99 Total Courses**: Complete curriculum imported from university data
 
 ### 🎨 Premium Design
+- **Dark Mode**: Toggle between light and dark themes with persistent preference
 - **Glassmorphism UI**: Modern, translucent design with backdrop blur effects
 - **Custom Color Palette**: Carefully curated colors (Crimson Violet, Deep Crimson, Princeton Orange, Autumn Leaf, Dark Teal)
 - **Smooth Animations**: Powered by Framer Motion for cinematic transitions
 - **Responsive Layout**: Fully optimized for desktop and mobile devices
 
 ### 🔄 Data Persistence
-- **LocalStorage**: Automatic saving of all changes in your browser
-- **Import/Export**: Download and upload your curriculum as JSON files
-- **Reset Function**: Quickly restore default curriculum data
+- **Backend API**: Express server with file-based persistence to `server/data/curriculum.json`
+- **Auto-Save**: Changes automatically saved to file (debounced by 1 second)
+- **No Downloads**: Data persists directly to the server without triggering browser downloads
+- **Reset Function**: Restore default curriculum data from backup
 
 ### 🖱️ Drag & Drop
 - **Semester Reallocation**: Drag subjects between semesters to reorganize your plan
@@ -44,7 +50,7 @@ A modern, interactive web application for tracking academic progress and visuali
 # Install dependencies
 npm install
 
-# Start development server
+# Start development server (runs both frontend and backend)
 npm run dev
 
 # Build for production
@@ -54,10 +60,23 @@ npm run build
 npm run preview
 ```
 
-The application will be available at `http://localhost:5173`
+The application will be available at:
+- **Frontend**: `http://localhost:5173` (or next available port)
+- **Backend API**: `http://localhost:3001`
+
+### Development Commands
+
+```bash
+npm run dev      # Run both frontend and backend concurrently
+npm run client   # Run only frontend (Vite)
+npm run server   # Run only backend (Express)
+npm run build    # Build for production
+npm run preview  # Preview production build
+```
 
 ## 🏗️ Tech Stack
 
+### Frontend
 - **Framework**: React 19 with Vite
 - **Language**: TypeScript 5.9
 - **Styling**: Tailwind CSS v4 (with @tailwindcss/postcss)
@@ -66,60 +85,86 @@ The application will be available at `http://localhost:5173`
 - **Drag & Drop**: @dnd-kit/core + @dnd-kit/sortable
 - **State Management**: React Context API
 
+### Backend
+- **Server**: Express.js 5.2
+- **CORS**: Enabled for development
+- **Data Storage**: JSON file-based persistence
+- **API Endpoints**: RESTful API for curriculum operations
+
 ## 📁 Project Structure
 
 ```
 assignments/
 ├── src/
-│   ├── components/          # React components
+│   ├── components/           # React components
 │   │   ├── Layout.tsx       # Main app shell with navigation
+│   │   ├── DarkModeToggle.tsx  # Dark mode toggle component
 │   │   ├── SemesterListView.tsx  # List view with DnD
-│   │   ├── CurriculumGraph.tsx   # Graph visualization
 │   │   ├── SubjectCard.tsx       # Individual subject card
 │   │   ├── StatsDashboard.tsx    # Progress statistics
-│   │   ├── DroppableSemester.tsx # DnD semester container
-│   │   └── JSONActions.tsx       # Import/Export buttons
+│   │   └── DroppableSemester.tsx # DnD semester container
 │   ├── contexts/
 │   │   └── SubjectContext.tsx    # Global state management
 │   ├── lib/
-│   │   └── utils.ts         # Utility functions
-│   ├── data.ts              # Student data & prerequisites
+│   │   ├── utils.ts         # Utility functions
+│   │   └── storage.ts       # Storage adapters (API, localStorage, file, hybrid)
+│   ├── data.ts              # Prerequisites map
 │   ├── types.ts             # TypeScript interfaces
 │   ├── index.css            # Global styles & Tailwind config
 │   ├── App.tsx              # Main application component
 │   └── main.tsx             # Application entry point
+├── server/
+│   ├── index.js             # Express server
+│   └── data/
+│       ├── curriculum.json        # Live curriculum data
+│       └── curriculum.backup.json # Backup for reset
+├── scripts/
+│   └── mergeUniversityData.js  # Utility to merge university data
+├── .backup/                 # Archived components
 ├── public/                  # Static assets
 ├── PROJECT_CONTEXT.md       # Detailed project documentation
+├── MERGE_SUMMARY.md         # University data merge report
 ├── package.json             # Dependencies and scripts
 ├── tailwind.config.js       # Tailwind configuration
 ├── tsconfig.json            # TypeScript configuration
-└── vite.config.ts           # Vite build configuration
+└── vite.config.ts           # Vite build configuration (with API proxy)
 ```
 
 ## 🎮 Usage Guide
 
-### List View
-1. **Toggle Status**: Click the circle icon on any subject card to cycle through statuses
+### Subject Management
+1. **Toggle Status**: Click the circle icon on any subject card to cycle through statuses (Missing → In Progress → Completed → Missing)
 2. **Drag & Drop**: Hover over a card to reveal the grip icon (⋮⋮), then drag to another semester
 3. **View Prerequisites**: Locked subjects show which prerequisites are missing
+4. **Real-time Stats**: Dashboard updates automatically as you change statuses
 
-### Graph View
-1. **Hover Interaction**: Hover over any subject node to highlight its prerequisite chain
-2. **Visual Indicators**: Completed subjects are green, locked subjects are dimmed
+### Dark Mode
+- Click the Moon/Sun icon in the top-right corner to toggle between light and dark modes
+- Your preference is saved to localStorage and persists across sessions
 
-### Data Management
-1. **Export**: Click the download icon (⬇) to save your curriculum as JSON
-2. **Import**: Click the upload icon (⬆) to load a previously saved JSON file
-3. **Reset**: Click the reset icon (↻) to restore default data
+### Data Persistence
+- All changes are automatically saved to `server/data/curriculum.json` after 1 second
+- No manual save button needed - everything persists automatically
+- Reset button restores data from `curriculum.backup.json`
 
 ## 🔧 Configuration
 
 ### Customizing Data
-Edit `src/data.ts` to modify:
-- Student information
-- Subject list
-- Prerequisite relationships
-- Semester organization
+The curriculum data is stored in `server/data/curriculum.json`. You can:
+- Manually edit the JSON file
+- Use the in-app drag & drop to reorganize
+- Run `npm run dev` and the changes will load automatically
+
+### Storage Adapter Configuration
+The app uses different storage adapters. Change via `VITE_STORAGE_TYPE` environment variable:
+
+```bash
+# .env file
+VITE_STORAGE_TYPE=api          # Backend API (default)
+VITE_STORAGE_TYPE=localStorage # Browser storage
+VITE_STORAGE_TYPE=hybrid       # localStorage + manual export
+VITE_STORAGE_TYPE=file         # Download-based (legacy)
+```
 
 ### Customizing Colors
 Edit `src/index.css` in the `@theme` block to change the color palette.
@@ -134,29 +179,51 @@ const PREREQUISITES_MAP: Record<string, string[]> = {
 };
 ```
 
+## 🌐 API Endpoints
+
+The Express backend provides these endpoints:
+
+- `GET /api/curriculum` - Load curriculum data
+- `POST /api/curriculum` - Save curriculum data
+- `POST /api/curriculum/reset` - Reset to backup data
+- `GET /api/health` - Health check
+
 ## 🐛 Known Issues
 
 - TypeScript configuration warnings in `tsconfig.node.json` (does not affect functionality)
-- Graph view nodes are not draggable (by design - use List view for reordering)
+- Some course names are truncated from university HTML source (ending with "...")
+- New courses from university data may have `null` credits (needs manual update)
+
+## 📊 Current Data Status
+
+- **Total Courses**: 99
+- **Completed**: 27 courses
+- **In Progress**: 45 courses
+- **Missing**: 27 courses
+- **Data Source**: Merged from university HTML export (January 18, 2026)
+- See `MERGE_SUMMARY.md` for detailed merge report
 
 ## 🚧 Future Enhancements
 
-- [ ] Backend API integration for multi-device sync
+- [x] Backend API integration for file-based persistence
+- [x] Dark mode toggle
 - [ ] "What-if" scenario planning
 - [ ] Semester planning mode
 - [ ] Within-semester subject reordering
 - [ ] Export to PDF
-- [ ] Dark mode toggle
 - [ ] Multiple student profiles
+- [ ] User authentication
+- [ ] Cloud storage sync
 
 ## 📝 Development Notes
 
 ### Key Implementation Details
 
-1. **LocalStorage Persistence**: Data is initialized from localStorage in the `useState` initializer to prevent race conditions
-2. **Drag & Drop Logic**: The `handleDragEnd` function checks if the subject's current semester differs from the target before moving
-3. **Prerequisite Highlighting**: Uses SVG path rendering with dynamic opacity based on hover state
+1. **API-Based Persistence**: Data is saved to `server/data/curriculum.json` via Express API with automatic debouncing
+2. **Dark Mode**: Uses Tailwind's `dark:` classes with localStorage persistence and system preference detection
+3. **Drag & Drop Logic**: The `handleDragEnd` function checks if the subject's current semester differs from the target before moving
 4. **Tailwind v4**: Uses the new `@theme` directive in CSS instead of the traditional config file approach
+5. **Vite Proxy**: Frontend proxies `/api` requests to backend during development
 
 ### Building for Production
 
@@ -164,7 +231,19 @@ const PREREQUISITES_MAP: Record<string, string[]> = {
 npm run build
 ```
 
-The optimized build will be in the `dist/` folder, ready for deployment to any static hosting service.
+The optimized build will be in the `dist/` folder. For production:
+1. Serve the `dist/` folder with a static file server
+2. Run the Express server separately: `node server/index.js`
+3. Configure environment variables for API URL
+
+### Merging University Data
+
+To update with new university data:
+
+1. Place new HTML export in `server/data/universityData.html`
+2. Run the merge script: `node scripts/mergeUniversityData.js`
+3. Review the changes in `server/data/curriculum.merged.json`
+4. Copy to `curriculum.json` and `curriculum.backup.json` if satisfied
 
 ## 📄 License
 
@@ -176,6 +255,7 @@ MIT License - feel free to use this project for your own academic tracking needs
 - UI components inspired by [shadcn/ui](https://ui.shadcn.com/)
 - Icons from [Lucide](https://lucide.dev/)
 - Drag and drop by [@dnd-kit](https://dndkit.com/)
+- Backend powered by [Express.js](https://expressjs.com/)
 
 ---
 

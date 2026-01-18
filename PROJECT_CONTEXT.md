@@ -1,205 +1,324 @@
 # Project Context: Visual Curriculum & Prerequisite Tracker
 
-## User Intention & Objectives
-The goal was to create a "visually stunning, modern, and highly interactive" Curriculum Tracker for students. The primary objectives were:
-1. **List View**: A clear visualization of subjects grouped by semester, with status indicators (completed, missing, in-progress).
-2. **Graph View**: A node-based graph showing subject dependencies (prerequisites).
-3. **Interactive Features**: 
-    - Hovering over a subject highlights its entire prerequisite chain.
-    - Status toggling with automatic "locked" state detection (if prereqs aren't met).
-    - Real-time stats calculation (Credits, GPA).
-    - Drag and drop subjects between semesters.
-    - Import/Export curriculum data as JSON files.
-4. **Premium Aesthetics**: Using glassmorphism, vibrant colors (specific-palette), and smooth animations.
+**Last Updated**: January 18, 2026
 
-## Tech Stack
-- **Framework**: React 19 (Vite)
-- **Language**: TypeScript 5.9
-- **Styling**: **Tailwind CSS v4** (using the new `@theme` block in CSS and `@tailwindcss/postcss`).
-- **Animations**: Framer Motion.
-- **Icons**: Lucide React.
-- **Drag & Drop**: @dnd-kit/core + @dnd-kit/sortable + @dnd-kit/utilities
-- **State Management**: React Context (`SubjectContext`).
+## Overview
 
-## Implementation Details
+A modern curriculum tracking application with Express backend for file-based data persistence. Shows 99 courses across 10 semesters with status tracking, drag & drop, and dark mode support.
 
-### Core Files
-- `src/App.tsx`: Main entry, manages view switching (List vs Graph).
-- `src/data.ts`: Contains the student data and **Mock Prerequisite Mapping** (inferred for demonstration).
-- `src/contexts/SubjectContext.tsx`: Centralized state for subject statuses, drag & drop logic, and data persistence.
-- `src/components/SemesterListView.tsx`: The primary curriculum list view with DnD context.
-- `src/components/CurriculumGraph.tsx`: Custom SVG-based graph visualization with dependency path highlighting logic.
-- `src/components/SubjectCard.tsx`: Reusable card with status logic, "Locked" state detection, and draggable functionality.
-- `src/components/DroppableSemester.tsx`: Droppable container for semester sections.
-- `src/components/JSONActions.tsx`: Import/Export/Reset buttons for data management.
-- `src/components/Layout.tsx`: Main app shell with navigation and view switcher.
-- `src/components/StatsDashboard.tsx`: Real-time statistics display.
-- `src/index.css`: Tailwind v4 configuration and global glassmorphism utilities.
+## Current Architecture
 
-### Achievements & Solutions
-- **Tailwind v4 Migration**: Successfully configured the build to use `@tailwindcss/postcss` and the new CSS-first theme configuration with `@theme` directive.
-- **Interactive Graph**: Implemented a custom SVG bezier-curve connector system that dynamically highlights ancestor paths based on state.
-- **Prerequisite Logic**: Built a system to automatically "Lock" subjects if their prerequisites (defined in `data.ts`) are not marked as "completed".
-- **Drag & Drop Reallocation**: Implemented `@dnd-kit` integration to allow moving subjects between semesters in the List View, with persistent storage.
-- **JSON Persistence**: Added Import/Export/Reset functionality for the entire curriculum state via JSON files.
-- **LocalStorage Fix**: Resolved race condition bug by initializing state from localStorage in the `useState` initializer function instead of useEffect.
-- **Animation Optimization**: Removed layout animations from cards for instant, real-time drag feedback.
-- **UX Improvements**: Repositioned drag handle to the right side of cards, away from status toggle button.
+### Tech Stack
+- **Frontend**: React 19 + TypeScript 5.9 + Vite 7
+- **Backend**: Express.js 5.2 (Node.js)
+- **Styling**: Tailwind CSS v4 (using `@theme` directive)
+- **Animations**: Framer Motion
+- **Drag & Drop**: @dnd-kit
+- **State**: React Context API
 
-## Key Technical Decisions
+### Key Features Implemented
+1. ✅ **Single List View** - Removed graph view, kept curriculum list only
+2. ✅ **Backend API** - Express server with file-based persistence
+3. ✅ **Dark Mode** - Toggle with localStorage persistence
+4. ✅ **Auto-Save** - Changes save to file automatically (1s debounce)
+5. ✅ **University Data Merge** - 99 courses imported from HTML
+6. ✅ **Drag & Drop** - Move subjects between semesters
+7. ✅ **Status Tracking** - Missing, In Progress, Completed states
+8. ✅ **Prerequisite Locking** - Auto-lock based on prerequisites
 
-### 1. State Management
-Used React Context API instead of external libraries (Redux, Zustand) for simplicity and to avoid over-engineering. The `SubjectContext` provides:
-- `subjects`: Array of all subjects
-- `toggleSubjectStatus`: Cycle through status states
-- `updateSubjectStatus`: Set specific status
-- `moveSubjectToSemester`: Handle drag & drop operations
-- `exportData`: Download JSON file
-- `importData`: Upload JSON file
-- `resetData`: Restore defaults
+## Core Files
 
-### 2. Drag & Drop Implementation
-- **Library**: @dnd-kit chosen for its flexibility and TypeScript support
-- **Architecture**: 
-  - `SubjectCard` components are draggable (using `useDraggable`)
-  - `DroppableSemester` components are drop zones (using `useDroppable`)
-  - `DndContext` wraps the entire list view
-  - `handleDragEnd` validates the move before calling `moveSubjectToSemester`
-- **UX**: Removed Framer Motion's `layout` prop to prevent animation delays during drag operations
+### Frontend (`src/`)
+- **App.tsx** - Main app, removed view switching
+- **components/Layout.tsx** - Nav with dark mode toggle (no graph switcher)
+- **components/DarkModeToggle.tsx** - Dark mode toggle component
+- **components/SemesterListView.tsx** - List view with DnD
+- **components/SubjectCard.tsx** - Subject card with status toggle
+- **components/StatsDashboard.tsx** - Real-time statistics
+- **components/DroppableSemester.tsx** - DnD semester container
+- **contexts/SubjectContext.tsx** - Global state + API integration
+- **lib/storage.ts** - Storage abstraction (API/localStorage/file/hybrid)
+- **data.ts** - Prerequisites map
 
-### 3. Data Persistence
-- **Primary**: LocalStorage for automatic browser-based persistence
-- **Secondary**: JSON Import/Export for cross-browser/device sharing
-- **Bug Fix**: Initialize state from localStorage in `useState(() => {...})` to prevent race condition where default data overwrites saved data
+### Backend (`server/`)
+- **index.js** - Express server with CRUD endpoints
+- **data/curriculum.json** - Live curriculum data (99 courses)
+- **data/curriculum.backup.json** - Reset backup
 
-### 4. Styling Approach
-- **Tailwind v4**: Uses new `@theme` block in CSS for theme configuration
-- **Inline Styles**: Replaced utility classes like `glass-panel` with inline Tailwind classes for v4 compatibility
-- **Custom Colors**: Defined in `@theme` block using CSS custom properties
-- **Glassmorphism**: Achieved with `backdrop-blur-md` and semi-transparent backgrounds
+### Removed/Archived (`.backup/`)
+- **CurriculumGraph.tsx** - Graph view (removed per user request)
+- **JSONActions.tsx** - Import/export buttons (replaced with dark mode)
 
-## How to Continue
+## Architecture Details
 
-### Adding New Features
-1. **Data Source**: Replace `INITIAL_DATA` in `src/data.ts` with a real API call if needed.
-2. **Prerequisites**: Refine the `PREREQUISITES_MAP` in `src/data.ts` with actual academic rules.
-3. **Suggested Features**:
-    - Add a "Plan Semester" mode to select subjects for the "Current" status.
-    - Implement a "What-if" scenario where passing a certain subject shows what it unlocks.
-    - Add reordering logic *within* semesters using `@dnd-kit/sortable`.
-    - Add backend API for multi-device synchronization.
-    - Implement user authentication and multiple student profiles.
-    - Add PDF export functionality.
-    - Create a dark mode toggle (currently uses system preference).
+### 1. Backend API Persistence
 
-### Modifying Data
-1. **Student Info**: Edit `INITIAL_DATA.studentName` in `src/data.ts`
-2. **Subjects**: Add/remove/modify subjects in `INITIAL_DATA.subjects` array
-3. **Prerequisites**: Update `PREREQUISITES_MAP` object in `src/data.ts`
-4. **Semesters**: The `SEMESTERS` array is auto-generated from subject data
+**Problem Solved**: User didn't want localStorage or automatic downloads. Needed file-based persistence.
 
-### Customizing Appearance
-1. **Colors**: Edit the `@theme` block in `src/index.css`
-2. **Fonts**: Change `--font-sans` in `@theme` block or update Google Fonts link in `index.html`
-3. **Layout**: Modify `src/components/Layout.tsx` for navigation changes
-4. **Card Design**: Edit `src/components/SubjectCard.tsx` for subject card appearance
+**Solution**: Express backend that reads/writes to `server/data/curriculum.json`
 
-## Current State
-- The project is fully functional and builds successfully (`npm run build`).
-- The dev server runs on port `5173` by default.
-- All files have been moved to the root `/Users/user/Workspace/assignments` directory.
-- LocalStorage persistence is working correctly after bug fix.
-- Drag & Drop is functional with instant feedback.
+**Endpoints**:
+- `GET /api/curriculum` - Load data
+- `POST /api/curriculum` - Save data
+- `POST /api/curriculum/reset` - Reset from backup
+- `GET /api/health` - Health check
 
-## Known Issues
-- TypeScript configuration warnings in `tsconfig.node.json` (does not affect functionality):
-  - `tsBuildInfoFile` option requires `incremental` or `composite`
-  - `target` option has invalid value
-  - Unknown compiler options: `erasableSyntaxOnly`, `noUncheckedSideEffectImports`
-- These are Vite-generated config issues and can be safely ignored.
+**How it works**:
+1. Frontend uses `APIStorageAdapter` in `src/lib/storage.ts`
+2. Changes debounced by 1 second before saving
+3. Vite proxies `/api` to `localhost:3001` during dev
+4. Data persists across page refreshes
+
+### 2. Storage Abstraction Layer
+
+Located in `src/lib/storage.ts`:
+
+**Available Adapters**:
+- `APIStorageAdapter` - Backend API (default)
+- `LocalStorageAdapter` - Browser storage
+- `JSONFileAdapter` - Download-based (legacy)
+- `HybridStorageAdapter` - localStorage + manual export
+
+**Configuration**: Set `VITE_STORAGE_TYPE` environment variable
+
+**Factory Pattern**: `getStorageAdapter()` returns configured adapter
+
+### 3. Dark Mode Implementation
+
+**Component**: `src/components/DarkModeToggle.tsx`
+
+**How it works**:
+1. Initializes theme before React renders (module-level execution)
+2. Checks localStorage first, then system preference
+3. Applies `dark` class to `document.documentElement`
+4. Persists choice to localStorage
+5. Moon/Sun icon with smooth transitions
+
+**Key Fix**: Theme applied immediately on load to prevent flash
+
+### 4. University Data Merge
+
+**Date**: January 18, 2026
+
+**Process**:
+1. Placed HTML export in `server/data/universityData.html`
+2. Agent parsed HTML and extracted 95 courses
+3. Ran `scripts/mergeUniversityData.js` to merge with existing 58 courses
+4. Result: 99 total courses (14 status changes, 41 new courses)
+
+**Details in**: `MERGE_SUMMARY.md`
+
+**Key Changes**:
+- 3 courses changed to completed (IS142, IS453, IS773)
+- 10 courses changed to in-progress
+- 1 course changed from completed to in-progress (IS184 - needs verification)
+- Many humanities electives added to Semestre 7
+
+### 5. View Simplification
+
+**Removed**: Graph view completely
+- Deleted `CurriculumGraph.tsx`
+- Removed view switching UI
+- Simplified `App.tsx` and `Layout.tsx`
+- Single list view only
+
+**Replaced**: Export/Import buttons with dark mode toggle
+- Removed `JSONActions.tsx`
+- Added `DarkModeToggle.tsx`
+- Cleaner navigation bar
 
 ## Development Workflow
 
-### Running the Project
+### Running the App
+
 ```bash
-npm install          # Install dependencies
-npm run dev          # Start dev server
-npm run build        # Build for production
-npm run preview      # Preview production build
-npm run lint         # Run ESLint
+npm run dev      # Both frontend + backend
+npm run client   # Frontend only
+npm run server   # Backend only
 ```
 
-### Testing Changes
-1. Make code changes
-2. Vite will hot-reload automatically
-3. Test in browser at http://localhost:5173
-4. Verify persistence by refreshing the page
-5. Test drag & drop functionality
-6. Export data to verify JSON structure
-
-### Deployment
-1. Run `npm run build`
-2. Deploy the `dist/` folder to any static hosting service:
-   - Vercel
-   - Netlify
-   - GitHub Pages
-   - AWS S3 + CloudFront
-   - Any web server
-
-## Architecture Patterns
-
-### Component Hierarchy
-```
-App (SubjectProvider wrapper)
-└── CurriculumTracker
-    └── Layout
-        ├── Header (with JSONActions and view switcher)
-        └── Main Content
-            ├── SemesterListView (when view === 'list')
-            │   └── DndContext
-            │       └── Semesters (mapped)
-            │           └── DroppableSemester
-            │               └── SubjectCards (mapped)
-            └── CurriculumGraph (when view === 'graph')
-                └── SVG with nodes and connections
-```
+**URLs**:
+- Frontend: http://localhost:5173 (or next available)
+- Backend: http://localhost:3001
 
 ### Data Flow
-1. User interacts with UI (click, drag, import)
-2. Component calls context function (e.g., `toggleSubjectStatus`)
-3. Context updates state via `setData`
-4. State change triggers useEffect
-5. useEffect saves to localStorage
-6. React re-renders affected components
-7. UI updates to reflect new state
 
-## File Manifest
+1. User loads app → `SubjectContext` calls `storage.load()`
+2. `APIStorageAdapter` fetches from `/api/curriculum`
+3. Backend reads `server/data/curriculum.json`
+4. Data renders in UI
+5. User changes status/drags subject
+6. State updates in React
+7. After 1s debounce → `storage.save()` called
+8. API POST to `/api/curriculum`
+9. Backend writes to `curriculum.json`
 
-### Configuration Files
-- `package.json` - Dependencies and scripts
-- `tsconfig.json` - Base TypeScript config
-- `tsconfig.app.json` - App-specific TS config
-- `tsconfig.node.json` - Node/Vite TS config
-- `vite.config.ts` - Vite build configuration
-- `tailwind.config.js` - Tailwind CSS configuration
-- `postcss.config.js` - PostCSS plugins
-- `eslint.config.js` - ESLint rules
-- `.gitignore` - Git ignore patterns
+### Making Changes
 
-### Documentation
-- `README.md` - User-facing documentation
-- `PROJECT_CONTEXT.md` - This file (developer documentation)
+**Update curriculum data**:
+1. Edit `server/data/curriculum.json` directly, OR
+2. Use the UI (auto-saves), OR
+3. Run merge script for university updates
 
-### Source Code
-- `src/main.tsx` - Application entry point
-- `src/App.tsx` - Main app component
-- `src/index.css` - Global styles and Tailwind
-- `src/types.ts` - TypeScript type definitions
-- `src/data.ts` - Student data and prerequisites
-- `src/lib/utils.ts` - Utility functions
-- `src/contexts/SubjectContext.tsx` - Global state
-- `src/components/*.tsx` - React components
+**Add/modify components**:
+- Changes hot-reload via Vite
+- Backend needs manual restart if server code changes
+
+## Current Data Status
+
+- **Total Courses**: 99
+- **Completed**: 27 courses
+- **In Progress**: 45 courses
+- **Missing**: 27 courses
+- **Student**: Cristian Gutierrez Gonzalez
+- **Source**: University HTML merged January 18, 2026
+
+## Known Issues
+
+1. **TypeScript warnings** in `tsconfig.node.json` (doesn't affect functionality)
+2. **Truncated course names** from HTML source (ending with "...")
+3. **Null credits** on new courses (university HTML didn't include)
+4. **IS184 status** changed from completed→in-progress (needs user verification)
+
+## Configuration Options
+
+### Storage Adapter
+
+Change via `.env`:
+```bash
+VITE_STORAGE_TYPE=api          # Default
+VITE_STORAGE_TYPE=localStorage
+VITE_STORAGE_TYPE=hybrid
+VITE_STORAGE_TYPE=file
+```
+
+### Prerequisites
+
+Edit `src/data.ts`:
+```typescript
+export const PREREQUISITES_MAP: Record<string, string[]> = {
+    "IS284": ["IS105"],  // Prog II requires Prog I
+    // ...
+};
+```
+
+### Colors
+
+Edit `src/index.css` `@theme` block
+
+### Dark Mode Default
+
+Toggle applies immediately and persists. No config needed.
+
+## Scripts & Utilities
+
+### University Data Merge
+
+```bash
+# Place new HTML in server/data/universityData.html
+node scripts/mergeUniversityData.js
+
+# Review output in:
+# - server/data/curriculum.merged.json
+# - Console report with changes
+
+# If satisfied, copy:
+cp server/data/curriculum.merged.json server/data/curriculum.json
+cp server/data/curriculum.merged.json server/data/curriculum.backup.json
+```
+
+## Production Deployment
+
+### Building
+
+```bash
+npm run build  # Creates dist/ folder
+```
+
+### Deployment Steps
+
+1. **Frontend**: Serve `dist/` folder with static server
+2. **Backend**: Run `node server/index.js` separately
+3. **Environment**: Set `VITE_API_URL` to backend URL if different domain
+4. **CORS**: Update CORS settings in `server/index.js` for production
+
+### Example (PM2)
+
+```bash
+# Backend
+pm2 start server/index.js --name curriculum-api
+
+# Frontend (using serve)
+pm2 serve dist 5173 --name curriculum-frontend --spa
+```
+
+## Future Enhancements
+
+### Completed ✅
+- Backend API integration
+- Dark mode toggle
+- University data import
+- File-based persistence
+
+### Pending 📋
+- "What-if" scenario planning
+- Within-semester reordering
+- PDF export
+- Multiple student profiles
+- User authentication
+- Cloud storage sync
+- Mobile app version
+
+## Technical Decisions Log
+
+### Why Express Backend?
+- User wanted file-based persistence without downloads
+- Browser can't write to local files (security)
+- Express simple, lightweight, perfect for JSON CRUD
+- Easy to add authentication later
+
+### Why Remove Graph View?
+- User preference
+- Simpler codebase
+- Focus on core functionality
+- Can restore from `.backup/` if needed
+
+### Why Storage Abstraction?
+- Flexibility to switch between persistence methods
+- Easy testing with different adapters
+- Clean separation of concerns
+- Future-proof for cloud storage
+
+### Why Dark Mode Over Export Buttons?
+- User request
+- Better UX (common feature)
+- Data auto-saves anyway (no manual export needed)
+- Export buttons moved to backup if needed later
+
+## Troubleshooting
+
+### Dark Mode Not Working
+- Check `DarkModeToggle.tsx` loads before render
+- Verify Tailwind config has `darkMode: ["class"]`
+- Clear localStorage and test again
+
+### Data Not Persisting
+- Check backend is running on port 3001
+- Verify Vite proxy in `vite.config.ts`
+- Check browser console for API errors
+- Ensure `server/data/` directory is writable
+
+### Drag & Drop Issues
+- Verify @dnd-kit packages installed
+- Check `DndContext` wraps components properly
+- Ensure subject has unique `id`
+
+### Backend Won't Start
+- Check port 3001 not in use: `lsof -ti:3001`
+- Verify `server/data/curriculum.json` exists
+- Check Node.js version (18+)
 
 ---
-*Last Updated: January 18, 2026*
-*Created by Antigravity AI*
+
+**For user-facing documentation, see**: `README.md`
+**For merge details, see**: `MERGE_SUMMARY.md`
