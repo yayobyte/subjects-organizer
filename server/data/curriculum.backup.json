@@ -6,7 +6,7 @@
       "id": "BA170",
       "name": "Humanidades I (Base)",
       "credits": 2,
-      "status": "missing",
+      "status": "completed",
       "prerequisites": []
     },
     {
@@ -32,7 +32,7 @@
       "id": "IS142",
       "name": "Desarrollo del Pensamiento Lógico",
       "credits": 2,
-      "status": "missing",
+      "status": "completed",
       "prerequisites": []
     },
     {
@@ -42,6 +42,46 @@
       "credits": 3,
       "status": "completed",
       "grade": 3.3,
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 1",
+      "id": "BA021",
+      "name": "Human I: Hum...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 1",
+      "id": "BA022",
+      "name": "HUMAN I: NAR...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 1",
+      "id": "BA023",
+      "name": "Human I: Med...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 1",
+      "id": "BA172",
+      "name": "Humanidades I",
+      "credits": null,
+      "status": "completed",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 1",
+      "id": "IS673",
+      "name": "CONTABILIDAD...",
+      "credits": null,
+      "status": "missing",
       "prerequisites": []
     },
     {
@@ -150,6 +190,30 @@
       ]
     },
     {
+      "semester": "Semestre 3",
+      "id": "BA024",
+      "name": "Human Ii: Ar...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 3",
+      "id": "BA025",
+      "name": "Human Ii: Me...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 3",
+      "id": "BA026",
+      "name": "Human Ii: Di...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
       "semester": "Semestre 4",
       "id": "CB4A4",
       "name": "Cálculo Multivariado",
@@ -224,7 +288,7 @@
       "id": "IS453",
       "name": "Programación III",
       "credits": 3,
-      "status": "missing",
+      "status": "completed",
       "prerequisites": [
         "IS304"
       ]
@@ -254,7 +318,7 @@
       "id": "IS773",
       "name": "Laboratorio De Electrónica Digital",
       "credits": 2,
-      "status": "missing",
+      "status": "completed",
       "prerequisites": []
     },
     {
@@ -312,7 +376,7 @@
       "id": "IS184",
       "name": "Tecnicas De La Comunicación",
       "credits": 2,
-      "status": "completed",
+      "status": "in-progress",
       "grade": 4.1,
       "prerequisites": []
     },
@@ -332,7 +396,7 @@
       "id": "IS623",
       "name": "Computación Gráfica",
       "credits": 3,
-      "status": "missing",
+      "status": "in-progress",
       "prerequisites": []
     },
     {
@@ -340,7 +404,7 @@
       "id": "IS644",
       "name": "Base De Datos I",
       "credits": 4,
-      "status": "missing",
+      "status": "in-progress",
       "prerequisites": [
         "IS304"
       ]
@@ -354,11 +418,195 @@
       "prerequisites": []
     },
     {
+      "semester": "Semestre 7",
+      "id": "BA001",
+      "name": "Antropologia...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA002",
+      "name": "Aprendiendo ...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA003",
+      "name": "El Cuento Br...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA004",
+      "name": "Arte Y Tecno...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA005",
+      "name": "Educacion Se...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA006",
+      "name": "Narrativas C...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA007",
+      "name": "Cronica, Mem...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA008",
+      "name": "Emprendimien...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA0081",
+      "name": "Emprendimien...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA009",
+      "name": "La Experienc...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA0091",
+      "name": "La Experienc...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA010",
+      "name": "Etica De La ...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA0101",
+      "name": "Etica De La ...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA011",
+      "name": "Feminismos Y...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA012",
+      "name": "Catedra De L...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA0122",
+      "name": "Catedra De L...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA013",
+      "name": "Curso De Def...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA0131",
+      "name": "Curso De Def...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA0151",
+      "name": "Talller De L...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA0161",
+      "name": "Comunicacion...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "BA0171",
+      "name": "Didacticas D...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "CD112",
+      "name": "Catedra De D...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "TC100",
+      "name": "Guion Cinema...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
       "semester": "Semestre 8",
       "id": "IS653",
       "name": "Investigación de Operaciones",
       "credits": 3,
-      "status": "missing",
+      "status": "in-progress",
       "prerequisites": []
     },
     {
@@ -389,7 +637,7 @@
       "id": "IS734",
       "name": "Sistemas Operativos I",
       "credits": 4,
-      "status": "missing",
+      "status": "in-progress",
       "prerequisites": [
         "IS614",
         "IS304"
@@ -400,7 +648,7 @@
       "id": "IS753",
       "name": "Compiladores",
       "credits": 3,
-      "status": "missing",
+      "status": "in-progress",
       "prerequisites": [
         "IS405",
         "IS304"
@@ -411,7 +659,7 @@
       "id": "IS784",
       "name": "Inteligencia Artificial",
       "credits": 3,
-      "status": "missing",
+      "status": "in-progress",
       "prerequisites": [
         "IS323",
         "IS304"
@@ -432,7 +680,7 @@
       "id": "IS842",
       "name": "Legislación, Ética y Contratación",
       "credits": 2,
-      "status": "missing",
+      "status": "in-progress",
       "prerequisites": []
     },
     {
@@ -440,7 +688,55 @@
       "id": "IS053",
       "name": "Gerencia De Proyectos",
       "credits": 3,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 9",
+      "id": "AY114",
+      "name": "Complejidad ...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 9",
+      "id": "AY164",
+      "name": "Matematicas ...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 9",
+      "id": "AY184",
+      "name": "Analisis Mul...",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 9",
+      "id": "AY254",
+      "name": "Optimizacion",
+      "credits": null,
+      "status": "in-progress",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 9",
+      "id": "IS923",
+      "name": "Comunicacion...",
+      "credits": null,
       "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 9",
+      "id": "IS943",
+      "name": "Sistemas Exp...",
+      "credits": null,
+      "status": "in-progress",
       "prerequisites": []
     },
     {
@@ -448,7 +744,7 @@
       "id": "IS823",
       "name": "Comunicaciones II",
       "credits": 3,
-      "status": "missing",
+      "status": "in-progress",
       "prerequisites": [
         "IS723"
       ]
@@ -530,7 +826,7 @@
       "id": "IS031",
       "name": "Constitución Política",
       "credits": 1,
-      "status": "missing",
+      "status": "in-progress",
       "prerequisites": []
     },
     {
@@ -556,6 +852,38 @@
       "id": "IS0A0",
       "name": "Electiva A2",
       "credits": 6,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS013",
+      "name": "Admon. Siste...",
+      "credits": null,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS042",
+      "name": "Planeacion E...",
+      "credits": null,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS067",
+      "name": "Practica En ...",
+      "credits": null,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS068",
+      "name": "Formacion Pr...",
+      "credits": null,
       "status": "missing",
       "prerequisites": []
     }
