@@ -26,20 +26,20 @@ export const useSubjects = () => {
 };
 
 export const SubjectProvider = ({ children }: { children: ReactNode }) => {
-    const [data, setData] = useState<StudentData>(HYDRATED_DATA);
-
-    // Persistence 
-    useEffect(() => {
+    // Initialize state from localStorage or use default data
+    const [data, setData] = useState<StudentData>(() => {
         const saved = localStorage.getItem('curriculum-tracker-data');
         if (saved) {
             try {
-                setData(JSON.parse(saved));
+                return JSON.parse(saved);
             } catch (e) {
                 console.error("Failed to parse saved data", e);
             }
         }
-    }, []);
+        return HYDRATED_DATA;
+    });
 
+    // Save to localStorage whenever data changes
     useEffect(() => {
         localStorage.setItem('curriculum-tracker-data', JSON.stringify(data));
     }, [data]);
