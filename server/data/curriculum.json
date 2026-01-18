@@ -1,0 +1,563 @@
+{
+  "studentName": "Cristian Gutierrez Gonzalez",
+  "subjects": [
+    {
+      "semester": "Semestre 1",
+      "id": "BA170",
+      "name": "Humanidades I (Base)",
+      "credits": 2,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 1",
+      "id": "BU101",
+      "name": "Deportes I (Base)",
+      "credits": 1,
+      "status": "completed",
+      "grade": "Aprobada",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 1",
+      "id": "CB1B3",
+      "name": "Matemáticas Fundamentales",
+      "credits": 3,
+      "status": "completed",
+      "grade": 3.4,
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 1",
+      "id": "IS142",
+      "name": "Desarrollo del Pensamiento Lógico",
+      "credits": 2,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 1",
+      "id": "IS193",
+      "name": "Introducción a La Informatica",
+      "credits": 3,
+      "status": "completed",
+      "grade": 3.3,
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 2",
+      "id": "IS105",
+      "name": "Programación I",
+      "credits": 5,
+      "status": "completed",
+      "grade": 3.3,
+      "prerequisites": [
+        "IS193"
+      ]
+    },
+    {
+      "semester": "Semestre 2",
+      "id": "CB2A3",
+      "name": "Cálculo Diferencial",
+      "credits": 3,
+      "status": "completed",
+      "grade": 3.5,
+      "prerequisites": [
+        "CB1B3"
+      ]
+    },
+    {
+      "semester": "Semestre 2",
+      "id": "CB234",
+      "name": "Física I",
+      "credits": 4,
+      "status": "completed",
+      "grade": 3.8,
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 2",
+      "id": "CB242",
+      "name": "Laboratorio de Física I",
+      "credits": 2,
+      "status": "completed",
+      "grade": 4.3,
+      "prerequisites": [
+        "CB234"
+      ]
+    },
+    {
+      "semester": "Semestre 1",
+      "id": "BA372",
+      "name": "Humanidades II",
+      "credits": 2,
+      "status": "completed",
+      "grade": 4.2,
+      "prerequisites": [
+        "BA170"
+      ]
+    },
+    {
+      "semester": "Semestre 3",
+      "id": "CB223",
+      "name": "Álgebra Lineal",
+      "credits": 3,
+      "status": "completed",
+      "grade": 3.1,
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 3",
+      "id": "CB334",
+      "name": "Física II",
+      "credits": 4,
+      "status": "completed",
+      "grade": 3.4,
+      "prerequisites": [
+        "CB234"
+      ]
+    },
+    {
+      "semester": "Semestre 3",
+      "id": "CB342",
+      "name": "Laboratorio de Física II",
+      "credits": 2,
+      "status": "completed",
+      "grade": 3.1,
+      "prerequisites": [
+        "CB334"
+      ]
+    },
+    {
+      "semester": "Semestre 3",
+      "id": "IS284",
+      "name": "Programación II",
+      "credits": 4,
+      "status": "completed",
+      "grade": 5,
+      "prerequisites": [
+        "IS105"
+      ]
+    },
+    {
+      "semester": "Semestre 3",
+      "id": "CB3A4",
+      "name": "Cálculo Integral",
+      "credits": 4,
+      "status": "missing",
+      "prerequisites": [
+        "CB2A3"
+      ]
+    },
+    {
+      "semester": "Semestre 4",
+      "id": "CB4A4",
+      "name": "Cálculo Multivariado",
+      "credits": 4,
+      "status": "completed",
+      "grade": 3.9,
+      "prerequisites": [
+        "CB3A4",
+        "CB223"
+      ]
+    },
+    {
+      "semester": "Semestre 4",
+      "id": "IS304",
+      "name": "Estructura de Datos",
+      "credits": 4,
+      "status": "completed",
+      "grade": 3.1,
+      "prerequisites": [
+        "IS284",
+        "IS142"
+      ]
+    },
+    {
+      "semester": "Semestre 4",
+      "id": "IS474",
+      "name": "Fundamentos de Electrónica",
+      "credits": 3,
+      "status": "completed",
+      "grade": 3.3,
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 4",
+      "id": "IS482",
+      "name": "Teoría de Sistemas",
+      "credits": 2,
+      "status": "completed",
+      "grade": 3,
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 4",
+      "id": "IS543",
+      "name": "Laboratorio de Electrónica",
+      "credits": 2,
+      "status": "completed",
+      "grade": 3.1,
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 5",
+      "id": "CB4A3",
+      "name": "Ecuaciones Diferenciales Ordinarias",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": [
+        "CB3A4"
+      ]
+    },
+    {
+      "semester": "Semestre 5",
+      "id": "IS323",
+      "name": "Lógica",
+      "credits": 3,
+      "status": "completed",
+      "grade": 3.1,
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 5",
+      "id": "IS453",
+      "name": "Programación III",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": [
+        "IS304"
+      ]
+    },
+    {
+      "semester": "Semestre 5",
+      "id": "IS503",
+      "name": "Administración de Empresas",
+      "credits": 3,
+      "status": "completed",
+      "grade": 3.7,
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 5",
+      "id": "IS634",
+      "name": "Electrónica Digital",
+      "credits": 3,
+      "status": "completed",
+      "grade": 3.7,
+      "prerequisites": [
+        "IS474"
+      ]
+    },
+    {
+      "semester": "Semestre 5",
+      "id": "IS773",
+      "name": "Laboratorio De Electrónica Digital",
+      "credits": 2,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 6",
+      "id": "CB434",
+      "name": "Física III",
+      "credits": 4,
+      "status": "completed",
+      "grade": 3,
+      "prerequisites": [
+        "CB334"
+      ]
+    },
+    {
+      "semester": "Semestre 6",
+      "id": "CB442",
+      "name": "Laboratorio de Física III",
+      "credits": 2,
+      "status": "completed",
+      "grade": 3.5,
+      "prerequisites": [
+        "CB434"
+      ]
+    },
+    {
+      "semester": "Semestre 6",
+      "id": "IS405",
+      "name": "Gramáticas y Lenguajes Formales",
+      "credits": 4,
+      "status": "completed",
+      "grade": 3,
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 6",
+      "id": "IS512",
+      "name": "Estadistica",
+      "credits": 2,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 6",
+      "id": "IS553",
+      "name": "Programación IV",
+      "credits": 3,
+      "status": "completed",
+      "grade": 4.4,
+      "prerequisites": [
+        "IS453"
+      ]
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "IS184",
+      "name": "Tecnicas De La Comunicación",
+      "credits": 2,
+      "status": "completed",
+      "grade": 4.1,
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "IS614",
+      "name": "Arquitectura de Computadores",
+      "credits": 4,
+      "status": "completed",
+      "grade": 3.9,
+      "prerequisites": [
+        "IS634"
+      ]
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "IS623",
+      "name": "Computación Gráfica",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "IS644",
+      "name": "Base De Datos I",
+      "credits": 4,
+      "status": "missing",
+      "prerequisites": [
+        "IS304"
+      ]
+    },
+    {
+      "semester": "Semestre 7",
+      "id": "IS692",
+      "name": "Estadística Especial",
+      "credits": 2,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 8",
+      "id": "IS653",
+      "name": "Investigación de Operaciones",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 8",
+      "id": "IS714",
+      "name": "Ingeniería de Sofware I",
+      "credits": 4,
+      "status": "missing",
+      "prerequisites": [
+        "IS644",
+        "IS453"
+      ]
+    },
+    {
+      "semester": "Semestre 8",
+      "id": "IS723",
+      "name": "Comunicaciones I",
+      "credits": 3,
+      "status": "completed",
+      "grade": 4.1,
+      "prerequisites": [
+        "CB242",
+        "IS474"
+      ]
+    },
+    {
+      "semester": "Semestre 8",
+      "id": "IS734",
+      "name": "Sistemas Operativos I",
+      "credits": 4,
+      "status": "missing",
+      "prerequisites": [
+        "IS614",
+        "IS304"
+      ]
+    },
+    {
+      "semester": "Semestre 9",
+      "id": "IS753",
+      "name": "Compiladores",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": [
+        "IS405",
+        "IS304"
+      ]
+    },
+    {
+      "semester": "Semestre 9",
+      "id": "IS784",
+      "name": "Inteligencia Artificial",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": [
+        "IS323",
+        "IS304"
+      ]
+    },
+    {
+      "semester": "Semestre 9",
+      "id": "IS884",
+      "name": "Ingeniería de Software II",
+      "credits": 4,
+      "status": "missing",
+      "prerequisites": [
+        "IS714"
+      ]
+    },
+    {
+      "semester": "Semestre 9",
+      "id": "IS842",
+      "name": "Legislación, Ética y Contratación",
+      "credits": 2,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 9",
+      "id": "IS053",
+      "name": "Gerencia De Proyectos",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS823",
+      "name": "Comunicaciones II",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": [
+        "IS723"
+      ]
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS845",
+      "name": "Computación Blanda",
+      "credits": 4,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS873",
+      "name": "Laboratorio Del Software",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS893",
+      "name": "Sistemas Distribuidos",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": [
+        "IS734",
+        "IS723"
+      ]
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS953",
+      "name": "Administración De Proyectos de Software",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS924",
+      "name": "Arquitectura Cliente-Servidor",
+      "credits": 4,
+      "status": "missing",
+      "prerequisites": [
+        "IS893",
+        "IS553"
+      ]
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS962",
+      "name": "Proyecto de Grado I",
+      "credits": 2,
+      "status": "missing",
+      "prerequisites": [
+        "IS714"
+      ]
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS023",
+      "name": "Auditoría de Sistemas",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS9A0",
+      "name": "Electiva A1",
+      "credits": 6,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS031",
+      "name": "Constitución Política",
+      "credits": 1,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS066",
+      "name": "Proyecto De Grado II",
+      "credits": 6,
+      "status": "missing",
+      "prerequisites": [
+        "IS962"
+      ]
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS073",
+      "name": "Emprendimiento",
+      "credits": 3,
+      "status": "missing",
+      "prerequisites": []
+    },
+    {
+      "semester": "Semestre 10",
+      "id": "IS0A0",
+      "name": "Electiva A2",
+      "credits": 6,
+      "status": "missing",
+      "prerequisites": []
+    }
+  ]
+}
