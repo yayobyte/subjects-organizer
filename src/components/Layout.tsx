@@ -17,7 +17,7 @@ export const Layout = ({ children }: LayoutProps) => {
             </div>
 
             <nav className="sticky top-0 z-50 w-full border-b border-slate-200/50 dark:border-slate-800/50 bg-white/70 dark:bg-black/70 backdrop-blur-lg border-white/20 shadow-xl">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="w-full px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">
                         <div className="flex items-center gap-2">
                             <div className="p-2 bg-gradient-to-br from-crimson-violet-500 to-deep-crimson-600 rounded-lg shadow-lg">
@@ -35,7 +35,7 @@ export const Layout = ({ children }: LayoutProps) => {
                 </div>
             </nav>
 
-            <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <main className="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-8">
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}

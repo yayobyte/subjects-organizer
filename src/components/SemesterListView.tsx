@@ -49,7 +49,7 @@ export const SemesterListView = () => {
 
     return (
         <div className="pb-20">
-            <header className="mb-8 flex justify-between items-end gap-4">
+            <header className="mb-8">
                 <div>
                     <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
                         Welcome back, <span className="bg-clip-text text-transparent bg-gradient-to-r from-crimson-violet-500 to-deep-crimson-500">{studentName.split(' ')[0]}</span>
@@ -60,10 +60,12 @@ export const SemesterListView = () => {
                 </div>
             </header>
 
-            <StatsOverview />
+            <div className="mb-8">
+                <StatsOverview />
+            </div>
 
             <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-                <div className="space-y-8">
+                <div className="flex gap-6 overflow-x-auto pb-4">
                     {semesters.map((semester, index) => {
                         const semesterSubjects = groupedSubjects[semester] || [];
                         const isCompleted = semesterSubjects.length > 0 && semesterSubjects.every(s => s.status === 'completed');
@@ -71,28 +73,27 @@ export const SemesterListView = () => {
                         return (
                             <motion.section
                                 key={semester}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: index * 0.05 }}
-                                className="relative"
+                                className="flex-shrink-0 w-80"
                             >
-                                <div className="flex items-center gap-4 mb-4">
+                                <div className="flex flex-col items-center gap-2 mb-4">
                                     <h2 className={`text-lg font-semibold tracking-tight ${isCompleted ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'}`}>
                                         {semester}
                                     </h2>
-                                    <div className="h-[1px] flex-1 bg-slate-200 dark:bg-slate-800" />
                                     <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">
                                         {semesterSubjects.reduce((acc, s) => acc + s.credits, 0)} Credits
                                     </span>
                                 </div>
 
                                 <DroppableSemester id={semester}>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 -m-4">
+                                    <div className="flex flex-col gap-4 min-h-[200px] p-4 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
                                         {semesterSubjects.map(subject => (
                                             <SubjectCard key={subject.id} subject={subject} />
                                         ))}
                                         {semesterSubjects.length === 0 && (
-                                            <div className="col-span-full py-8 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl flex items-center justify-center text-slate-400 text-sm">
+                                            <div className="flex-1 py-8 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl flex items-center justify-center text-slate-400 text-sm">
                                                 Drop subjects here
                                             </div>
                                         )}
