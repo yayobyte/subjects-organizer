@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useSubjects } from '../contexts/SubjectContext';
 import { SubjectCard } from './SubjectCard';
-import { SEMESTERS } from '../data';
+import { getSortedSemesters } from '../data';
 import { StatsOverview } from './StatsDashboard';
 import { motion } from 'framer-motion';
 import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
@@ -19,13 +19,15 @@ export const SemesterListView = () => {
         useSensor(TouchSensor)
     );
 
+    const semesters = useMemo(() => getSortedSemesters(subjects), [subjects]);
+
     const groupedSubjects = useMemo(() => {
         const groups: Record<string, typeof subjects> = {};
-        SEMESTERS.forEach(sem => {
+        semesters.forEach(sem => {
             groups[sem] = subjects.filter(s => s.semester === sem);
         });
         return groups;
-    }, [subjects]);
+    }, [subjects, semesters]);
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -62,7 +64,7 @@ export const SemesterListView = () => {
 
             <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
                 <div className="space-y-8">
-                    {SEMESTERS.map((semester, index) => {
+                    {semesters.map((semester, index) => {
                         const semesterSubjects = groupedSubjects[semester] || [];
                         const isCompleted = semesterSubjects.length > 0 && semesterSubjects.every(s => s.status === 'completed');
 

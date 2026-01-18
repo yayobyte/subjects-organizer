@@ -1,25 +1,29 @@
 import { useMemo, useState } from 'react';
 import { useSubjects } from '../contexts/SubjectContext';
-import { SEMESTERS } from '../data';
+import { getSortedSemesters } from '../data';
 import type { Subject } from '../types';
 import { motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 // Constants for layout
-const COLUMN_WIDTH = 250;
-const ROW_HEIGHT = 140;
+const NODE_WIDTH = 180;
+const NODE_HEIGHT = 80;
+const COLUMN_WIDTH = NODE_WIDTH + 60;
+const ROW_HEIGHT = NODE_HEIGHT + 40;
 const X_GAP = 60;
-const Y_GAP = 20;
 
 interface NodePosition {
     x: number;
     y: number;
+    semester: string;
 }
 
 export const CurriculumGraph = () => {
     const { subjects, toggleSubjectStatus } = useSubjects();
     const [hoveredSubject, setHoveredSubject] = useState<string | null>(null);
+
+    const semesters = useMemo(() => getSortedSemesters(subjects), [subjects]);
 
     // 1. Calculate Positions
     // We'll organize by columns (semesters). Y position dynamic based on index in semester.
@@ -28,12 +32,13 @@ export const CurriculumGraph = () => {
         const semesterCounts: Record<string, number> = {};
 
         // First assign basic grid positions
-        SEMESTERS.forEach((sem, colIndex) => {
+        semesters.forEach((sem, colIndex) => {
             const semesterSubjects = subjects.filter(s => s.semester === sem);
-            semesterSubjects.forEach((sub, rowIndex) => {
-                positions[sub.id] = {
-                    x: colIndex * (COLUMN_WIDTH + X_GAP),
-                    y: rowIndex * (ROW_HEIGHT + Y_GAP)
+            semesterSubjects.forEach((subject, rowIndex) => {
+                positions[subject.id] = {
+                    x: colIndex * COLUMN_WIDTH + 50,
+                    y: rowIndex * ROW_HEIGHT + 100,
+                    semester: sem
                 };
             });
             semesterCounts[sem] = semesterSubjects.length;
@@ -42,7 +47,7 @@ export const CurriculumGraph = () => {
         // Center vertically relative to the tallest semester? 
         // For now, top-aligned is cleaner for reading flow.
         return positions;
-    }, [subjects]);
+    }, [subjects, semesters]);
 
     // 2. Identify connections to highlight
     const highlightedConnections = useMemo(() => {
@@ -103,7 +108,7 @@ export const CurriculumGraph = () => {
             <div
                 className="relative min-w-[max-content] min-h-[max-content] p-20"
                 style={{
-                    width: SEMESTERS.length * (COLUMN_WIDTH + X_GAP) + 100,
+                    width: semesters.length * (COLUMN_WIDTH + X_GAP) + 100,
                     height: Math.max(...Object.values(nodePositions).map(p => p.y)) + ROW_HEIGHT + 100
                 }}
             >

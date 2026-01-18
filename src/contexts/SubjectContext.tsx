@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { Subject, StudentData, SubjectStatus } from '../types';
-import { HYDRATED_DATA } from '../data';
+import { getStorageAdapter } from '../lib/storage';
 
 interface SubjectContextType {
     studentName: string;
@@ -13,6 +13,7 @@ interface SubjectContextType {
     exportData: () => void;
     importData: (jsonData: StudentData) => void;
     resetData: () => void;
+    isLoading: boolean;
 }
 
 const SubjectContext = createContext<SubjectContextType | undefined>(undefined);
@@ -25,24 +26,58 @@ export const useSubjects = () => {
     return context;
 };
 
-export const SubjectProvider = ({ children }: { children: ReactNode }) => {
-    // Initialize state from localStorage or use default data
-    const [data, setData] = useState<StudentData>(() => {
-        const saved = localStorage.getItem('curriculum-tracker-data');
-        if (saved) {
-            try {
-                return JSON.parse(saved);
-            } catch (e) {
-                console.error("Failed to parse saved data", e);
-            }
-        }
-        return HYDRATED_DATA;
-    });
+// Default empty state while loading
+const EMPTY_DATA: StudentData = {
+    studentName: '',
+    subjects: []
+};
 
-    // Save to localStorage whenever data changes
+export const SubjectProvider = ({ children }: { children: ReactNode }) => {
+    const [data, setData] = useState<StudentData>(EMPTY_DATA);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isFirstLoad, setIsFirstLoad] = useState(true);
+    const storage = getStorageAdapter();
+
+    // Load data on mount
     useEffect(() => {
-        localStorage.setItem('curriculum-tracker-data', JSON.stringify(data));
-    }, [data]);
+        const loadData = async () => {
+            try {
+                const loaded = await storage.load();
+                if (loaded) {
+                    setData(loaded);
+                } else {
+                    console.warn('No data found in storage, using empty state');
+                }
+            } catch (error) {
+                console.error('Failed to load data:', error);
+            } finally {
+                setIsLoading(false);
+                // We use a timeout to ensure any state updates from loading are processed
+                // before we allow saving again.
+                setTimeout(() => setIsFirstLoad(false), 1000);
+            }
+        };
+
+        loadData();
+    }, []);
+
+    // Save data whenever it changes (debounced to avoid excessive saves)
+    useEffect(() => {
+        // Don't save if still loading, if it's the empty state, or if it's the very first load
+        if (isLoading || isFirstLoad || data === EMPTY_DATA) return;
+
+        const saveData = async () => {
+            try {
+                await storage.save(data);
+            } catch (error) {
+                console.error('Failed to save data:', error);
+            }
+        };
+
+        // Debounce saves
+        const timeoutId = setTimeout(saveData, 1000);
+        return () => clearTimeout(timeoutId);
+    }, [data, isLoading, isFirstLoad]);
 
     const updateSubjectStatus = (id: string, status: SubjectStatus) => {
         setData(prev => ({
@@ -77,27 +112,39 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
     const exportData = () => {
         const dataStr = JSON.stringify(data, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-        const exportFileDefaultName = 'curriculum-data.json';
+        const exportFileDefaultName = 'curriculum.json';
 
         const linkElement = document.createElement('a');
         linkElement.setAttribute('href', dataUri);
         linkElement.setAttribute('download', exportFileDefaultName);
         linkElement.click();
+
+        console.info('📥 Downloaded curriculum.json');
     };
 
     const importData = (jsonData: StudentData) => {
         // Simple validation 
         if (jsonData && jsonData.subjects && Array.isArray(jsonData.subjects)) {
             setData(jsonData);
+            console.info('✅ Data imported successfully');
         } else {
             alert('Invalid JSON format. Please ensure it follows the StudentData interface.');
         }
     };
 
-    const resetData = () => {
-        if (window.confirm('Are you sure you want to reset all data to defaults?')) {
-            setData(HYDRATED_DATA);
-            localStorage.removeItem('curriculum-tracker-data');
+    const resetData = async () => {
+        if (window.confirm('Are you sure you want to reset all data? This will reload from curriculum.json.')) {
+            try {
+                await storage.reset();
+                // Reload from storage
+                const loaded = await storage.load();
+                if (loaded) {
+                    setData(loaded);
+                    console.info('✅ Data reset successfully');
+                }
+            } catch (error) {
+                console.error('Failed to reset data:', error);
+            }
         }
     };
 
@@ -118,7 +165,8 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
             moveSubjectToSemester,
             exportData,
             importData,
-            resetData
+            resetData,
+            isLoading
         }}>
             {children}
         </SubjectContext.Provider>
