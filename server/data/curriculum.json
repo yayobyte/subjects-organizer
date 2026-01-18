@@ -7,6 +7,7 @@
       "name": "Humanidades I (Base)",
       "credits": 2,
       "status": "completed",
+      "grade": 4.2,
       "prerequisites": []
     },
     {
@@ -32,6 +33,7 @@
       "id": "IS142",
       "name": "Desarrollo del Pensamiento Lógico",
       "credits": 2,
+      "grade": 4.1,
       "status": "completed",
       "prerequisites": []
     },
@@ -68,7 +70,7 @@
       "id": "CB2A3",
       "name": "Cálculo Diferencial",
       "credits": 3,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.5,
       "prerequisites": [
         "CB1B3"
@@ -99,7 +101,7 @@
       "id": "BA372",
       "name": "Humanidades II",
       "credits": 2,
-      "status": "completed",
+      "status": "missing",
       "grade": 4.2,
       "prerequisites": [
         "BA170"
@@ -110,7 +112,7 @@
       "id": "CB223",
       "name": "Álgebra Lineal",
       "credits": 3,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.1,
       "prerequisites": []
     },
@@ -119,7 +121,7 @@
       "id": "CB334",
       "name": "Física II",
       "credits": 4,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.4,
       "prerequisites": [
         "CB234"
@@ -130,7 +132,7 @@
       "id": "CB342",
       "name": "Laboratorio de Física II",
       "credits": 2,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.1,
       "prerequisites": [
         "CB334"
@@ -141,7 +143,7 @@
       "id": "IS284",
       "name": "Programación II",
       "credits": 4,
-      "status": "completed",
+      "status": "missing",
       "grade": 5,
       "prerequisites": [
         "IS105"
@@ -162,7 +164,7 @@
       "id": "CB4A4",
       "name": "Cálculo Multivariado",
       "credits": 4,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.9,
       "prerequisites": [
         "CB3A4",
@@ -174,7 +176,7 @@
       "id": "IS304",
       "name": "Estructura de Datos",
       "credits": 4,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.1,
       "prerequisites": [
         "IS284",
@@ -186,7 +188,7 @@
       "id": "IS474",
       "name": "Fundamentos de Electrónica",
       "credits": 3,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.3,
       "prerequisites": []
     },
@@ -195,7 +197,7 @@
       "id": "IS482",
       "name": "Teoría de Sistemas",
       "credits": 2,
-      "status": "completed",
+      "status": "missing",
       "grade": 3,
       "prerequisites": []
     },
@@ -204,7 +206,7 @@
       "id": "IS543",
       "name": "Laboratorio de Electrónica",
       "credits": 2,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.1,
       "prerequisites": []
     },
@@ -223,7 +225,7 @@
       "id": "IS323",
       "name": "Lógica",
       "credits": 3,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.1,
       "prerequisites": []
     },
@@ -232,7 +234,7 @@
       "id": "IS453",
       "name": "Programación III",
       "credits": 3,
-      "status": "completed",
+      "status": "missing",
       "prerequisites": [
         "IS304"
       ]
@@ -242,7 +244,7 @@
       "id": "IS503",
       "name": "Administración de Empresas",
       "credits": 3,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.7,
       "prerequisites": []
     },
@@ -251,7 +253,7 @@
       "id": "IS634",
       "name": "Electrónica Digital",
       "credits": 3,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.7,
       "prerequisites": [
         "IS474"
@@ -262,7 +264,7 @@
       "id": "IS773",
       "name": "Laboratorio De Electrónica Digital",
       "credits": 2,
-      "status": "completed",
+      "status": "missing",
       "prerequisites": []
     },
     {
@@ -270,7 +272,7 @@
       "id": "CB434",
       "name": "Física III",
       "credits": 4,
-      "status": "completed",
+      "status": "missing",
       "grade": 3,
       "prerequisites": [
         "CB334"
@@ -281,7 +283,7 @@
       "id": "CB442",
       "name": "Laboratorio de Física III",
       "credits": 2,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.5,
       "prerequisites": [
         "CB434"
@@ -292,7 +294,7 @@
       "id": "IS405",
       "name": "Gramáticas y Lenguajes Formales",
       "credits": 4,
-      "status": "completed",
+      "status": "missing",
       "grade": 3,
       "prerequisites": []
     },
@@ -309,7 +311,7 @@
       "id": "IS553",
       "name": "Programación IV",
       "credits": 3,
-      "status": "completed",
+      "status": "missing",
       "grade": 4.4,
       "prerequisites": [
         "IS453"
@@ -317,11 +319,11 @@
     },
     {
       "semester": "Semestre 1",
-      "id": "IS184",
-      "name": "Tecnicas De La Comunicación",
-      "credits": 2,
+      "id": "IS105",
+      "name": "Programación 1",
+      "credits": 5,
       "status": "completed",
-      "grade": 4.1,
+      "grade": 3.3,
       "prerequisites": []
     },
     {
@@ -329,7 +331,7 @@
       "id": "IS614",
       "name": "Arquitectura de Computadores",
       "credits": 4,
-      "status": "completed",
+      "status": "missing",
       "grade": 3.9,
       "prerequisites": [
         "IS634"
@@ -569,7 +571,7 @@
       "id": "IS723",
       "name": "Comunicaciones I",
       "credits": 3,
-      "status": "completed",
+      "status": "missing",
       "grade": 4.1,
       "prerequisites": [
         "CB242",

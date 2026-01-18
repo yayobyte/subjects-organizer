@@ -29,13 +29,18 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
     const isLocked = missingPrereqs.length > 0;
     const isCompleted = subject.status === 'completed';
 
+    const handleCheckboxClick = () => {
+        if (!isLocked || isCompleted) {
+            toggleSubjectStatus(subject.id);
+        }
+    };
 
     return (
         <motion.div
             ref={setNodeRef}
             style={style}
             className={cn(
-                "group relative p-4 rounded-xl border backdrop-blur-sm transition-all duration-300",
+                "group relative p-4 rounded-xl border backdrop-blur-sm transition-all duration-300 w-full h-32 flex flex-col",
                 isDragging ? "shadow-2xl ring-2 ring-crimson-violet-500/50 border-crimson-violet-500/50 scale-[1.02] z-50 bg-white" : "hover:shadow-lg",
                 // Styles based on status
                 isCompleted
@@ -45,26 +50,28 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                         : "bg-white/60 dark:bg-slate-800/60 border-slate-200/60 dark:border-slate-700/60 hover:border-crimson-violet-300 hover:bg-white hover:shadow-crimson-violet-500/10"
             )}
         >
-            <div
+            <button
                 {...listeners}
                 {...attributes}
-                className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 cursor-grab active:cursor-grabbing text-slate-400 dark:text-slate-500 p-1 hover:text-crimson-violet-500 dark:hover:text-crimson-violet-400 transition-colors"
+                type="button"
+                className="absolute right-2 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-100 cursor-grab active:cursor-grabbing text-slate-400 dark:text-slate-500 p-2 hover:text-crimson-violet-500 dark:hover:text-crimson-violet-400 transition-all hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
             >
-                <GripVertical size={16} />
-            </div>
+                <GripVertical size={20} />
+            </button>
 
             <div className="flex justify-between items-start gap-4">
                 {/* Status Toggle */}
                 <button
-                    onClick={() => toggleSubjectStatus(subject.id)}
+                    type="button"
+                    onClick={handleCheckboxClick}
                     disabled={isLocked && !isCompleted}
                     className={cn(
                         "mt-0.5 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200",
                         isCompleted
-                            ? "bg-emerald-500 text-white"
+                            ? "bg-emerald-500 text-white cursor-pointer hover:bg-emerald-600"
                             : isLocked
                                 ? "bg-slate-200 dark:bg-slate-800 text-slate-400 cursor-not-allowed"
-                                : "bg-slate-100 dark:bg-slate-700 text-slate-300 group-hover:border-crimson-violet-400 border border-transparent"
+                                : "bg-slate-100 dark:bg-slate-700 text-slate-300 group-hover:border-crimson-violet-400 border border-transparent cursor-pointer hover:bg-crimson-violet-100 dark:hover:bg-slate-600"
                     )}
                 >
                     {isCompleted ? <Check size={14} strokeWidth={3} /> : <Circle size={14} />}
