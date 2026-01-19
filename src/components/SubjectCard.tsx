@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check, Circle, BookOpen, Star, AlertCircle, GripVertical } from 'lucide-react';
+import { Check, Circle, BookOpen, Star, AlertCircle, GripVertical, Edit2 } from 'lucide-react';
 import type { Subject } from '../types';
 import { useSubjects } from '../contexts/SubjectContext';
 import { cn } from '../lib/utils';
@@ -11,7 +12,12 @@ interface SubjectCardProps {
 }
 
 export const SubjectCard = ({ subject }: SubjectCardProps) => {
-    const { toggleSubjectStatus, subjects } = useSubjects();
+    const { toggleSubjectStatus, subjects, updateSubjectGrade, updateSubjectCredits } = useSubjects();
+    const [isEditingGrade, setIsEditingGrade] = useState(false);
+    const [gradeValue, setGradeValue] = useState(subject.grade?.toString() || '');
+    const [isEditingCredits, setIsEditingCredits] = useState(false);
+    const [creditsValue, setCreditsValue] = useState(subject.credits.toString());
+
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: subject.id,
     });
@@ -32,6 +38,43 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
     const handleCheckboxClick = () => {
         if (!isLocked || isCompleted) {
             toggleSubjectStatus(subject.id);
+        }
+    };
+
+    const handleGradeSubmit = () => {
+        if (gradeValue.trim()) {
+            // Try to parse as number, otherwise save as string
+            const numGrade = parseFloat(gradeValue);
+            updateSubjectGrade(subject.id, isNaN(numGrade) ? gradeValue.trim() : numGrade);
+        }
+        setIsEditingGrade(false);
+    };
+
+    const handleGradeKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            handleGradeSubmit();
+        } else if (e.key === 'Escape') {
+            setGradeValue(subject.grade?.toString() || '');
+            setIsEditingGrade(false);
+        }
+    };
+
+    const handleCreditsSubmit = () => {
+        const credits = parseInt(creditsValue);
+        if (!isNaN(credits) && credits >= 0 && credits <= 12) {
+            updateSubjectCredits(subject.id, credits);
+        } else {
+            setCreditsValue(subject.credits.toString());
+        }
+        setIsEditingCredits(false);
+    };
+
+    const handleCreditsKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            handleCreditsSubmit();
+        } else if (e.key === 'Escape') {
+            setCreditsValue(subject.credits.toString());
+            setIsEditingCredits(false);
         }
     };
 
@@ -90,17 +133,58 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                         </span>
                     </div>
 
-                    <div className="flex items-center gap-3 mt-2">
-                        <span className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 flex items-center gap-1">
-                            <BookOpen size={10} />
-                            {subject.credits} Cr
-                        </span>
+                    <div className="flex items-center gap-2 mt-2 flex-wrap">
+                        {isEditingCredits ? (
+                            <input
+                                type="number"
+                                min="1"
+                                max="12"
+                                value={creditsValue}
+                                onChange={(e) => setCreditsValue(e.target.value)}
+                                onBlur={handleCreditsSubmit}
+                                onKeyDown={handleCreditsKeyDown}
+                                autoFocus
+                                className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-300 dark:border-slate-600 w-16 focus:outline-none focus:ring-1 focus:ring-crimson-violet-400"
+                            />
+                        ) : (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsEditingCredits(true);
+                                }}
+                                className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 flex items-center gap-1 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer group"
+                            >
+                                <BookOpen size={10} />
+                                {subject.credits} Cr
+                                <Edit2 size={8} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </button>
+                        )}
 
-                        {isCompleted && subject.grade && (
-                            <span className="text-xs bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-800/30 flex items-center gap-1">
-                                <Star size={10} />
-                                {subject.grade}
-                            </span>
+                        {isCompleted && (
+                            isEditingGrade ? (
+                                <input
+                                    type="text"
+                                    value={gradeValue}
+                                    onChange={(e) => setGradeValue(e.target.value)}
+                                    onBlur={handleGradeSubmit}
+                                    onKeyDown={handleGradeKeyDown}
+                                    placeholder="Grade"
+                                    autoFocus
+                                    className="text-xs bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800/30 w-16 focus:outline-none focus:ring-1 focus:ring-emerald-400"
+                                />
+                            ) : (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsEditingGrade(true);
+                                    }}
+                                    className="text-xs bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-800/30 flex items-center gap-1 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors cursor-pointer group"
+                                >
+                                    <Star size={10} />
+                                    {subject.grade || 'Add grade'}
+                                    <Edit2 size={8} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                                </button>
+                            )
                         )}
 
                         {isLocked && !isCompleted && (

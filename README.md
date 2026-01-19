@@ -10,13 +10,19 @@ A modern, interactive web application for tracking academic progress with seamle
 ## ✨ Features
 
 ### 📚 Curriculum View
-- **Semester-by-Semester Display**: Organized curriculum view with all courses grouped by semester
-- **Drag & Drop Reordering**: Move subjects between semesters to reorganize your academic plan
-- **Visual Feedback**: Clear indicators when dragging and dropping
+- **Horizontal Semester Layout**: Semesters displayed from left to right in landscape mode for better overview
+- **Full-Width Display**: No horizontal limits - uses entire screen width for maximum visibility
+- **Drag & Drop Reordering**: Move subjects between semesters with visible drag handles
+- **Visual Feedback**: Clear grip icons and drag indicators
 - **Instant Updates**: Real-time movement without animation delays
+- **Fixed Card Dimensions**: Consistent card sizes (w-full × h-32) for uniform appearance
 
 ### 🎯 Smart Subject Management
-- **Status Tracking**: Toggle subjects between Missing, In Progress, and Completed states
+- **One-Click Status Toggle**: Single click to cycle subjects between Missing, In Progress, and Completed states
+- **Add New Subjects**: Beautiful inline form to add subjects directly to any semester
+- **Edit Credits**: Click any subject's credit badge to edit (validates 1-12 credits)
+- **Edit Grades**: Click grade badge on completed subjects to add or modify grades (supports numeric or text)
+- **Inline Editing**: Keyboard shortcuts (Enter to save, Escape to cancel) for quick updates
 - **Prerequisite Locking**: Subjects automatically lock if prerequisites aren't met
 - **Real-time Statistics**: Live calculation of progress, GPA, credits, and remaining subjects
 - **99 Total Courses**: Complete curriculum imported from university data
@@ -97,10 +103,11 @@ npm run preview  # Preview production build
 assignments/
 ├── src/
 │   ├── components/           # React components
-│   │   ├── Layout.tsx       # Main app shell with navigation
+│   │   ├── Layout.tsx       # Main app shell with navigation (full-width)
 │   │   ├── DarkModeToggle.tsx  # Dark mode toggle component
-│   │   ├── SemesterListView.tsx  # List view with DnD
-│   │   ├── SubjectCard.tsx       # Individual subject card
+│   │   ├── SemesterListView.tsx  # Horizontal list view with DnD
+│   │   ├── SubjectCard.tsx       # Individual subject card with inline editing
+│   │   ├── AddSubjectButton.tsx  # Add new subject form component
 │   │   ├── StatsDashboard.tsx    # Progress statistics
 │   │   └── DroppableSemester.tsx # DnD semester container
 │   ├── contexts/
@@ -133,10 +140,25 @@ assignments/
 ## 🎮 Usage Guide
 
 ### Subject Management
-1. **Toggle Status**: Click the circle icon on any subject card to cycle through statuses (Missing → In Progress → Completed → Missing)
-2. **Drag & Drop**: Hover over a card to reveal the grip icon (⋮⋮), then drag to another semester
-3. **View Prerequisites**: Locked subjects show which prerequisites are missing
-4. **Real-time Stats**: Dashboard updates automatically as you change statuses
+1. **Toggle Status**: Single-click the checkbox icon to cycle through statuses (Missing → In Progress → Completed)
+2. **Add New Subject**:
+   - Click the "Add Subject" button at the bottom of any semester
+   - Fill in Course Code (e.g., CS101), Subject Name, and Credits
+   - Press "Add Subject" or Enter to save
+3. **Edit Credits**:
+   - Click the credits badge (e.g., "3 Cr") on any subject card
+   - Type new value (1-12 credits)
+   - Press Enter to save or Escape to cancel
+4. **Edit Grades**:
+   - Click the grade badge on any completed subject
+   - Type grade (numeric like "95" or text like "Aprobada")
+   - Press Enter to save or Escape to cancel
+   - Shows "Add grade" if no grade exists
+5. **Drag & Drop**:
+   - Click and hold the grip icon (⋮⋮) visible on each card
+   - Drag to another semester to move the subject
+6. **View Prerequisites**: Locked subjects show which prerequisites are missing
+7. **Real-time Stats**: Dashboard updates automatically as you make changes
 
 ### Dark Mode
 - Click the Moon/Sun icon in the top-right corner to toggle between light and dark modes
@@ -207,6 +229,12 @@ The Express backend provides these endpoints:
 
 - [x] Backend API integration for file-based persistence
 - [x] Dark mode toggle
+- [x] Horizontal semester layout for landscape mode
+- [x] Add new subjects functionality
+- [x] Inline grade and credits editing
+- [x] Single-click status toggle
+- [ ] Delete subjects functionality
+- [ ] Edit subject names and IDs
 - [ ] "What-if" scenario planning
 - [ ] Semester planning mode
 - [ ] Within-semester subject reordering

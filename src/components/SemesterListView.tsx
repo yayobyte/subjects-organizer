@@ -6,6 +6,7 @@ import { StatsOverview } from './StatsDashboard';
 import { motion } from 'framer-motion';
 import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
 import { DroppableSemester } from './DroppableSemester';
+import { AddSubjectButton } from './AddSubjectButton';
 
 export const SemesterListView = () => {
     const { subjects, studentName, moveSubjectToSemester } = useSubjects();
@@ -97,6 +98,7 @@ export const SemesterListView = () => {
                                                 Drop subjects here
                                             </div>
                                         )}
+                                        <AddSubjectButton semester={semester} />
                                     </div>
                                 </DroppableSemester>
                             </motion.section>

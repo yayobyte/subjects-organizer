@@ -7,9 +7,12 @@ interface SubjectContextType {
     subjects: Subject[];
     toggleSubjectStatus: (id: string) => void;
     updateSubjectStatus: (id: string, status: SubjectStatus) => void;
+    updateSubjectGrade: (id: string, grade: number | string) => void;
+    updateSubjectCredits: (id: string, credits: number) => void;
     togglePrerequisiteCheck: (id: string) => void;
     getSubject: (id: string) => Subject | undefined;
     moveSubjectToSemester: (subjectId: string, targetSemester: string) => void;
+    addSubject: (subject: Subject) => void;
     exportData: () => void;
     importData: (jsonData: StudentData) => void;
     resetData: () => void;
@@ -86,6 +89,20 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
         }));
     };
 
+    const updateSubjectGrade = (id: string, grade: number | string) => {
+        setData(prev => ({
+            ...prev,
+            subjects: prev.subjects.map(s => s.id === id ? { ...s, grade } : s)
+        }));
+    };
+
+    const updateSubjectCredits = (id: string, credits: number) => {
+        setData(prev => ({
+            ...prev,
+            subjects: prev.subjects.map(s => s.id === id ? { ...s, credits } : s)
+        }));
+    };
+
     const toggleSubjectStatus = (id: string) => {
         const subject = data.subjects.find(s => s.id === id);
         if (!subject) return;
@@ -106,6 +123,13 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
             subjects: prev.subjects.map(s =>
                 s.id === subjectId ? { ...s, semester: targetSemester } : s
             )
+        }));
+    };
+
+    const addSubject = (subject: Subject) => {
+        setData(prev => ({
+            ...prev,
+            subjects: [...prev.subjects, subject]
         }));
     };
 
@@ -160,9 +184,12 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
             subjects: data.subjects,
             toggleSubjectStatus,
             updateSubjectStatus,
+            updateSubjectGrade,
+            updateSubjectCredits,
             togglePrerequisiteCheck,
             getSubject,
             moveSubjectToSemester,
+            addSubject,
             exportData,
             importData,
             resetData,
