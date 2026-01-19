@@ -14,7 +14,7 @@ A modern, interactive web application for tracking academic progress with seamle
 ### 📚 Curriculum View
 - **Horizontal Semester Layout**: Semesters displayed from left to right in landscape mode for better overview
 - **Full-Width Display**: No horizontal limits - uses entire screen width for maximum visibility
-- **Drag & Drop Reordering**: Move subjects between semesters with visible drag handles
+- **Drag & Drop Reordering**: Reorder subjects within each semester with visible drag handles
 - **Visual Feedback**: Clear grip icons and drag indicators
 - **Instant Updates**: Real-time movement without animation delays
 - **Fixed Card Dimensions**: Consistent card sizes (w-full × h-32) for uniform appearance
@@ -58,7 +58,7 @@ A modern, interactive web application for tracking academic progress with seamle
 - **Cross-Device Sync**: Access your data from any device
 
 ### 🖱️ Drag & Drop
-- **Semester Reallocation**: Drag subjects between semesters to reorganize your plan
+- **Within-Semester Reordering**: Drag subjects up and down to reorder within the same semester
 - **Visual Feedback**: Clear indicators when dragging and dropping
 - **Instant Updates**: Real-time movement without animation delays
 
@@ -130,8 +130,7 @@ assignments/
 │   │   ├── AddSubjectButton.tsx  # Add subject form (auto-credit detection)
 │   │   ├── ConfirmDialog.tsx     # Custom confirmation modal for deletions
 │   │   ├── StatsDashboard.tsx    # Progress statistics
-│   │   ├── PrerequisiteEditor.tsx     # Prerequisite inline editor
-│   │   └── DroppableSemester.tsx # DnD semester container
+│   │   └── PrerequisiteEditor.tsx     # Prerequisite inline editor
 │   ├── contexts/
 │   │   ├── SubjectContext.tsx    # Curriculum state management
 │   │   └── ConfigContext.tsx     # User preferences state
@@ -208,7 +207,7 @@ The color system works in both light and dark modes with automatically adjusted 
    - Confirm deletion in the beautiful modal dialog
 8. **Drag & Drop**:
    - Click and hold the grip icon at the bottom right of each card
-   - Drag to another semester to move the subject
+   - Drag up or down to reorder subjects within the same semester
 9. **View Prerequisites**: Locked subjects show which prerequisites are missing (hover for details)
 10. **Prerequisite Connection Lines** (NEW):
    - Click the GitBranch icon (🌿) in the navbar to toggle visual connection lines

@@ -6,11 +6,11 @@ import { StatsOverview } from './StatsDashboard';
 import { PrerequisiteLines } from './PrerequisiteLines';
 import { motion } from 'framer-motion';
 import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
-import { DroppableSemester } from './DroppableSemester';
+import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { AddSubjectButton } from './AddSubjectButton';
 
 export const SemesterListView = () => {
-    const { subjects, studentName, moveSubjectToSemester } = useSubjects();
+    const { subjects, studentName, reorderSubjectsInSemester } = useSubjects();
 
     const sensors = useSensors(
         useSensor(MouseSensor, {
@@ -26,7 +26,9 @@ export const SemesterListView = () => {
     const groupedSubjects = useMemo(() => {
         const groups: Record<string, typeof subjects> = {};
         semesters.forEach(sem => {
-            groups[sem] = subjects.filter(s => s.semester === sem);
+            groups[sem] = subjects
+                .filter(s => s.semester === sem)
+                .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
         });
         return groups;
     }, [subjects, semesters]);
@@ -35,17 +37,25 @@ export const SemesterListView = () => {
         const { active, over } = event;
         if (!over) return;
 
-        // active.id is the subject ID, over.id is the semester name
-        const subjectId = active.id as string;
-        const targetSemester = over.id as string;
-
-        // Find the current semester of the subject
-        const currentSubject = subjects.find(s => s.id === subjectId);
+        const draggedSubjectId = active.id as string;
+        const currentSubject = subjects.find(s => s.id === draggedSubjectId);
         if (!currentSubject) return;
 
-        // Only move if dropping into a different semester
-        if (currentSubject.semester !== targetSemester) {
-            moveSubjectToSemester(subjectId, targetSemester);
+        // Only handle within-semester reorder
+        const targetSubject = subjects.find(s => s.id === over.id);
+
+        if (targetSubject && currentSubject.semester === targetSubject.semester && active.id !== over.id) {
+            const semesterSubjects = subjects
+                .filter(s => s.semester === currentSubject.semester)
+                .sort((a, b) => (a.orderIndex ?? 0) - (b.orderIndex ?? 0));
+
+            const oldIndex = semesterSubjects.findIndex(s => s.id === active.id);
+            const newIndex = semesterSubjects.findIndex(s => s.id === over.id);
+
+            if (oldIndex !== newIndex) {
+                const reordered = arrayMove(semesterSubjects, oldIndex, newIndex);
+                reorderSubjectsInSemester(currentSubject.semester, reordered.map(s => s.id));
+            }
         }
     };
 
@@ -57,7 +67,7 @@ export const SemesterListView = () => {
                         Welcome back, <span className="bg-clip-text text-transparent bg-gradient-to-r from-crimson-violet-500 to-deep-crimson-500">{studentName.split(' ')[0]}</span>
                     </h1>
                     <p className="text-slate-500 dark:text-slate-400 mt-2">
-                        Here is your academic roadmap. Drag subjects to reorder semesters.
+                        Here is your academic roadmap. Drag subjects to reorder within semesters.
                     </p>
                 </div>
             </header>
@@ -91,19 +101,22 @@ export const SemesterListView = () => {
                                     </span>
                                 </div>
 
-                                <DroppableSemester id={semester}>
+                                <SortableContext
+                                    items={semesterSubjects.map(s => s.id)}
+                                    strategy={verticalListSortingStrategy}
+                                >
                                     <div className="flex flex-col gap-4 min-h-[200px] p-4 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800" style={{ overflow: 'visible' }}>
                                         {semesterSubjects.map(subject => (
                                             <SubjectCard key={subject.id} subject={subject} />
                                         ))}
                                         {semesterSubjects.length === 0 && (
                                             <div className="flex-1 py-8 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl flex items-center justify-center text-slate-400 text-sm">
-                                                Drop subjects here
+                                                No subjects yet
                                             </div>
                                         )}
-                                        <AddSubjectButton semester={semester} />
                                     </div>
-                                </DroppableSemester>
+                                </SortableContext>
+                                <AddSubjectButton semester={semester} />
                             </motion.section>
                         );
                     })}

@@ -14,7 +14,7 @@ interface SubjectContextType {
     deleteSubject: (id: string) => void;
     togglePrerequisiteCheck: (id: string) => void;
     getSubject: (id: string) => Subject | undefined;
-    moveSubjectToSemester: (subjectId: string, targetSemester: string) => void;
+    reorderSubjectsInSemester: (semester: string, orderedSubjectIds: string[]) => void;
     addSubject: (subject: Subject) => void;
     exportData: () => void;
     importData: (jsonData: StudentData) => void;
@@ -134,12 +134,19 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
         updateSubjectStatus(id, nextStatus[subject.status] || 'missing');
     };
 
-    const moveSubjectToSemester = (subjectId: string, targetSemester: string) => {
+    const reorderSubjectsInSemester = (semester: string, orderedSubjectIds: string[]) => {
         setData(prev => ({
             ...prev,
-            subjects: prev.subjects.map(s =>
-                s.id === subjectId ? { ...s, semester: targetSemester } : s
-            )
+            subjects: prev.subjects.map(subject => {
+                if (subject.semester === semester) {
+                    const newIndex = orderedSubjectIds.indexOf(subject.id);
+                    return {
+                        ...subject,
+                        orderIndex: newIndex >= 0 ? newIndex : subject.orderIndex ?? 0
+                    };
+                }
+                return subject;
+            })
         }));
     };
 
@@ -215,7 +222,7 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
             deleteSubject,
             togglePrerequisiteCheck,
             getSubject,
-            moveSubjectToSemester,
+            reorderSubjectsInSemester,
             addSubject,
             exportData,
             importData,

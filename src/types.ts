@@ -8,6 +8,7 @@ export interface Subject {
     status: SubjectStatus;
     grade?: number | string; // Some are numeric, some "Aprobada"
     prerequisites?: string[]; // array of Subject IDs
+    orderIndex?: number; // Track sort position within semester
 }
 
 export interface StudentData {

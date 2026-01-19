@@ -258,7 +258,7 @@ This will:
 ## Key Features
 
 ### Frontend Features
-- ✅ Drag & Drop subject reordering between semesters
+- ✅ Drag & Drop subject reordering within semesters
 - ✅ One-click status toggle (Missing → In Progress → Completed)
 - ✅ Inline editing (names, credits, grades, prerequisites)
 - ✅ Dark mode with cross-device sync

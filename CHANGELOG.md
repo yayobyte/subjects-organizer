@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-01-19
+
+### Removed - Cross-Semester Drag and Drop
+- **Removed cross-semester drag functionality**: Subjects can no longer be dragged between semesters
+- **Simplified drag and drop**: Now only supports within-semester reordering
+- **User workflow change**: To move subjects to different semesters, users must delete and recreate them
+- **Removed DroppableSemester component**: Eliminated unnecessary wrapper component
+- **Simplified handleDragEnd logic**: Cleaner implementation focused solely on within-semester reordering
+
+#### Technical Changes
+- Deleted `src/components/DroppableSemester.tsx`
+- Removed `moveSubjectToSemester` function from SubjectContext
+- Updated `handleDragEnd` to only handle within-semester drops
+- Updated UI text and tooltips to reflect within-semester-only functionality
+- Updated all documentation (README, ARCHITECTURE, PROJECT_SETUP)
+
+#### Rationale
+- Cross-semester drag was not working correctly
+- Simplified user experience and codebase
+- Reduced complexity in drag and drop logic
+- Users can still reorganize by deleting and recreating subjects
+
 ## [1.1.0] - 2026-01-19
 
 ### Added - Prerequisite Connection Lines Feature
@@ -89,7 +111,7 @@ All notable changes to this project will be documented in this file.
 ### Initial Release
 - Complete curriculum tracker with 99 subjects
 - Horizontal semester layout
-- Drag & drop between semesters
+- Drag & drop within semesters for reordering
 - Color-coded status system
 - Inline editing for all fields
 - Dark mode support

@@ -4,7 +4,7 @@ import { Check, Circle, BookOpen, Star, AlertCircle, GripVertical, Edit2, Trash2
 import type { Subject } from '../types';
 import { useSubjects } from '../contexts/SubjectContext';
 import { cn } from '../lib/utils';
-import { useDraggable } from '@dnd-kit/core';
+import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ConfirmDialog } from './ConfirmDialog';
 import { PrerequisiteEditor } from './PrerequisiteEditor';
@@ -25,12 +25,13 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const creditsPopoverRef = useRef<HTMLDivElement>(null);
 
-    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: subject.id,
     });
 
     const style = {
-        transform: CSS.Translate.toString(transform),
+        transform: CSS.Transform.toString(transform),
+        transition,
         zIndex: isDragging ? 50 : undefined,
     };
 
@@ -363,7 +364,7 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                                 {...attributes}
                                 type="button"
                                 className="opacity-50 group-hover:opacity-100 cursor-grab active:cursor-grabbing text-slate-400 dark:text-slate-500 p-1.5 hover:text-crimson-violet-500 dark:hover:text-crimson-violet-400 transition-all hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
-                                title="Drag to move"
+                                title="Drag to reorder"
                             >
                                 <GripVertical size={16} />
                             </button>

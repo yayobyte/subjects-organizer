@@ -1,8 +1,7 @@
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSubjects } from '../contexts/SubjectContext';
 import { useConfig } from '../contexts/ConfigContext';
-import type { Subject } from '../types';
 
 interface Point {
     x: number;
@@ -12,7 +11,7 @@ interface Point {
 interface Connection {
     from: Point;
     to: Point;
-    status: 'completed' | 'in-progress' | 'missing';
+    status: 'completed' | 'in-progress' | 'missing' | 'current';
     subjectId: string;
     prereqId: string;
 }
@@ -21,7 +20,7 @@ export const PrerequisiteLines = () => {
     const { subjects } = useSubjects();
     const { config } = useConfig();
     const [connections, setConnections] = useState<Connection[]>([]);
-    const [containerRect, setContainerRect] = useState<DOMRect | null>(null);
+    const [, setContainerRect] = useState<DOMRect | null>(null);
 
     // Calculate connections between subjects and their prerequisites
     const calculateConnections = useCallback((): Connection[] => {
@@ -87,11 +86,12 @@ export const PrerequisiteLines = () => {
     };
 
     // Get color based on prerequisite status
-    const getLineColor = (status: 'completed' | 'in-progress' | 'missing'): string => {
+    const getLineColor = (status: 'completed' | 'in-progress' | 'missing' | 'current'): string => {
         switch (status) {
             case 'completed':
                 return 'stroke-emerald-500 dark:stroke-emerald-400';
             case 'in-progress':
+            case 'current':
                 return 'stroke-dark-teal-500 dark:stroke-dark-teal-400';
             case 'missing':
                 return 'stroke-deep-crimson-500 dark:stroke-deep-crimson-400';
@@ -102,7 +102,7 @@ export const PrerequisiteLines = () => {
     useEffect(() => {
         if (!config.showPrerequisiteLines) return;
 
-        let timeoutId: NodeJS.Timeout;
+        let timeoutId: number;
 
         const handleUpdate = () => {
             clearTimeout(timeoutId);
