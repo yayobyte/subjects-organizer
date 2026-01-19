@@ -20,8 +20,8 @@ A fully-functional, production-ready web application for tracking academic progr
 - Instant updates without animation delays
 
 ✅ **Data Persistence**
-- LocalStorage for automatic browser-based saving
-- JSON Import/Export for cross-browser sharing
+- Backend API with file-based persistence
+- Auto-save (1 second debounce)
 - Reset to defaults functionality
 
 ✅ **Premium UI/UX**
@@ -40,16 +40,16 @@ A fully-functional, production-ready web application for tracking academic progr
 - Framer Motion for animations
 
 ### 2. Key Bugs Fixed
-- **LocalStorage Race Condition**: Fixed initialization bug where default data was overwriting saved data
 - **Drag & Drop Logic**: Corrected semester comparison logic in handleDragEnd
 - **Animation Performance**: Removed layout prop for instant drag feedback
 - **UX Issues**: Repositioned drag handle away from status button
+- **Credits Editing**: Improved UI with popover-style selector
 
 ### 3. Architecture Decisions
 - React Context API for state management (simple, no over-engineering)
-- Custom SVG graph rendering (full control over appearance)
+- Express backend for file-based persistence
 - Inline Tailwind classes for v4 compatibility
-- useState initializer for localStorage loading
+- API-based data storage with auto-save
 
 ## File Organization
 
@@ -121,11 +121,10 @@ npm run build
 ```
 
 ### For Data Management
-1. Make changes in the app
-2. Click Export (⬇) to download JSON
-3. Share JSON file or import in another browser
-4. Click Import (⬆) to load saved data
-5. Click Reset (↻) to restore defaults
+1. Make changes in the app (auto-saves to server)
+2. Data persists to `server/data/curriculum.json`
+3. Click Reset to restore from backup
+4. Manually edit JSON file if needed
 
 ## Next Steps (Optional)
 

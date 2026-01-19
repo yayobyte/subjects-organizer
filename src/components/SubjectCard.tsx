@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Circle, BookOpen, Star, AlertCircle, GripVertical, Edit2, Trash2 } from 'lucide-react';
 import type { Subject } from '../types';
@@ -18,9 +18,11 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
     const [gradeValue, setGradeValue] = useState(subject.grade?.toString() || '');
     const [isEditingCredits, setIsEditingCredits] = useState(false);
     const [creditsValue, setCreditsValue] = useState(subject.credits.toString());
+    const [showCustomCredits, setShowCustomCredits] = useState(false);
     const [isEditingName, setIsEditingName] = useState(false);
     const [nameValue, setNameValue] = useState(subject.name);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const creditsPopoverRef = useRef<HTMLDivElement>(null);
 
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: subject.id,
@@ -71,6 +73,7 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
             setCreditsValue(subject.credits.toString());
         }
         setIsEditingCredits(false);
+        setShowCustomCredits(false);
     };
 
     const handleCreditsKeyDown = (e: React.KeyboardEvent) => {
@@ -79,7 +82,14 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
         } else if (e.key === 'Escape') {
             setCreditsValue(subject.credits.toString());
             setIsEditingCredits(false);
+            setShowCustomCredits(false);
         }
+    };
+
+    const handleQuickCreditsSelect = (credits: number) => {
+        updateSubjectCredits(subject.id, credits);
+        setIsEditingCredits(false);
+        setShowCustomCredits(false);
     };
 
     const handleNameSubmit = () => {
@@ -103,6 +113,19 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
     const handleDelete = () => {
         deleteSubject(subject.id);
     };
+
+    // Close credits popover when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (isEditingCredits && creditsPopoverRef.current && !creditsPopoverRef.current.contains(event.target as Node)) {
+                setIsEditingCredits(false);
+                setShowCustomCredits(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [isEditingCredits]);
 
     return (
         <>
@@ -186,31 +209,85 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                     </div>
 
                     <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
-                        <div className="flex items-center gap-2 flex-wrap">
-                        {isEditingCredits ? (
-                            <input
-                                type="number"
-                                min="0"
-                                max="12"
-                                value={creditsValue}
-                                onChange={(e) => setCreditsValue(e.target.value)}
-                                onBlur={handleCreditsSubmit}
-                                onKeyDown={handleCreditsKeyDown}
-                                autoFocus
-                                className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-300 dark:border-slate-600 w-16 focus:outline-none focus:ring-1 focus:ring-crimson-violet-400"
-                            />
-                        ) : (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setIsEditingCredits(true);
-                                }}
-                                className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 flex items-center gap-1 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer group"
+                        <div className="flex items-center gap-2 flex-wrap relative">
+                        {/* Credits Badge */}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsEditingCredits(!isEditingCredits);
+                                setShowCustomCredits(false);
+                            }}
+                            className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 flex items-center gap-1 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer group"
+                        >
+                            <BookOpen size={10} />
+                            {subject.credits} Cr
+                            <Edit2 size={8} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </button>
+
+                        {/* Credits Popover */}
+                        {isEditingCredits && (
+                            <div
+                                ref={creditsPopoverRef}
+                                className="absolute bottom-full left-0 mb-1 z-50"
+                                onClick={(e) => e.stopPropagation()}
                             >
-                                <BookOpen size={10} />
-                                {subject.credits} Cr
-                                <Edit2 size={8} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </button>
+                                <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 p-2">
+                                    {!showCustomCredits ? (
+                                        <div className="flex flex-col gap-1">
+                                            <div className="flex gap-1">
+                                                {/* Quick select buttons 0-6 */}
+                                                {[0, 1, 2, 3, 4, 5, 6].map(num => (
+                                                    <button
+                                                        key={num}
+                                                        onClick={() => handleQuickCreditsSelect(num)}
+                                                        className={cn(
+                                                            "text-xs font-medium px-2.5 py-1.5 rounded border transition-all min-w-[32px]",
+                                                            subject.credits === num
+                                                                ? "bg-crimson-violet-500 text-white border-crimson-violet-600 shadow-sm"
+                                                                : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-crimson-violet-400"
+                                                        )}
+                                                    >
+                                                        {num}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            {/* More button for 7-12 */}
+                                            <button
+                                                onClick={() => {
+                                                    setShowCustomCredits(true);
+                                                    setCreditsValue(subject.credits > 6 ? subject.credits.toString() : '7');
+                                                }}
+                                                className="text-xs font-medium px-2 py-1 rounded border bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-crimson-violet-400 transition-all"
+                                                title="Enter custom value (7-12)"
+                                            >
+                                                More (7-12) •••
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="flex flex-col gap-1">
+                                            {/* Custom input for 7-12 */}
+                                            <input
+                                                type="number"
+                                                min="7"
+                                                max="12"
+                                                value={creditsValue}
+                                                onChange={(e) => setCreditsValue(e.target.value)}
+                                                onBlur={handleCreditsSubmit}
+                                                onKeyDown={handleCreditsKeyDown}
+                                                autoFocus
+                                                placeholder="7-12"
+                                                className="text-xs bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-1.5 rounded border border-crimson-violet-400 dark:border-crimson-violet-500 w-full focus:outline-none focus:ring-1 focus:ring-crimson-violet-400"
+                                            />
+                                            <button
+                                                onClick={() => setShowCustomCredits(false)}
+                                                className="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 py-1"
+                                            >
+                                                ← Back
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         )}
 
                         {isEditingGrade ? (

@@ -19,9 +19,11 @@ A modern, interactive web application for tracking academic progress with seamle
 
 ### 🎯 Smart Subject Management
 - **One-Click Status Toggle**: Single click to cycle subjects between Missing, In Progress, and Completed states
-- **Add New Subjects**: Beautiful inline form to add subjects directly to any semester
-- **Edit Credits**: Click any subject's credit badge to edit (validates 1-12 credits)
-- **Edit Grades**: Click grade badge on completed subjects to add or modify grades (supports numeric or text)
+- **Add New Subjects**: Simplified inline form with auto-credit detection from course ID
+- **Edit Subject Names**: Click any subject name to edit inline
+- **Edit Credits**: Click any subject's credit badge to edit (validates 0-12 credits)
+- **Edit Grades**: Click grade badge on ANY subject to add or modify grades (supports numeric or text)
+- **Delete Subjects**: Beautiful confirmation modal with smooth animations
 - **Inline Editing**: Keyboard shortcuts (Enter to save, Escape to cancel) for quick updates
 - **Prerequisite Locking**: Subjects automatically lock if prerequisites aren't met
 - **Real-time Statistics**: Live calculation of progress, GPA, credits, and remaining subjects
@@ -37,7 +39,6 @@ A modern, interactive web application for tracking academic progress with seamle
 ### 🔄 Data Persistence
 - **Backend API**: Express server with file-based persistence to `server/data/curriculum.json`
 - **Auto-Save**: Changes automatically saved to file (debounced by 1 second)
-- **No Downloads**: Data persists directly to the server without triggering browser downloads
 - **Reset Function**: Restore default curriculum data from backup
 
 ### 🖱️ Drag & Drop
@@ -106,15 +107,16 @@ assignments/
 │   │   ├── Layout.tsx       # Main app shell with navigation (full-width)
 │   │   ├── DarkModeToggle.tsx  # Dark mode toggle component
 │   │   ├── SemesterListView.tsx  # Horizontal list view with DnD
-│   │   ├── SubjectCard.tsx       # Individual subject card with inline editing
-│   │   ├── AddSubjectButton.tsx  # Add new subject form component
+│   │   ├── SubjectCard.tsx       # Subject card with full inline editing + delete
+│   │   ├── AddSubjectButton.tsx  # Add subject form (auto-credit detection)
+│   │   ├── ConfirmDialog.tsx     # Custom confirmation modal for deletions
 │   │   ├── StatsDashboard.tsx    # Progress statistics
 │   │   └── DroppableSemester.tsx # DnD semester container
 │   ├── contexts/
 │   │   └── SubjectContext.tsx    # Global state management
 │   ├── lib/
 │   │   ├── utils.ts         # Utility functions
-│   │   └── storage.ts       # Storage adapters (API, localStorage, file, hybrid)
+│   │   └── storage.ts       # API storage adapter
 │   ├── data.ts              # Prerequisites map
 │   ├── types.ts             # TypeScript interfaces
 │   ├── index.css            # Global styles & Tailwind config
@@ -143,22 +145,31 @@ assignments/
 1. **Toggle Status**: Single-click the checkbox icon to cycle through statuses (Missing → In Progress → Completed)
 2. **Add New Subject**:
    - Click the "Add Subject" button at the bottom of any semester
-   - Fill in Course Code (e.g., CS101), Subject Name, and Credits
+   - Fill in Course Code (e.g., IS105) and Subject Name
+   - Credits auto-extracted from last digit of ID (IS105 → 5 credits)
    - Press "Add Subject" or Enter to save
-3. **Edit Credits**:
-   - Click the credits badge (e.g., "3 Cr") on any subject card
-   - Type new value (1-12 credits)
+3. **Edit Subject Name**:
+   - Click any subject name to edit inline
+   - Edit icon appears on hover
    - Press Enter to save or Escape to cancel
-4. **Edit Grades**:
-   - Click the grade badge on any completed subject
+4. **Edit Credits**:
+   - Click the credits badge (e.g., "3 Cr") at the bottom of any card
+   - Type new value (0-12 credits)
+   - Press Enter to save or Escape to cancel
+5. **Edit Grades**:
+   - Click the grade badge on ANY subject (not just completed ones)
    - Type grade (numeric like "95" or text like "Aprobada")
    - Press Enter to save or Escape to cancel
    - Shows "Add grade" if no grade exists
-5. **Drag & Drop**:
-   - Click and hold the grip icon (⋮⋮) visible on each card
+6. **Delete Subject**:
+   - Hover over a card to reveal action buttons at the bottom right
+   - Click the trash icon
+   - Confirm deletion in the beautiful modal dialog
+7. **Drag & Drop**:
+   - Click and hold the grip icon at the bottom right of each card
    - Drag to another semester to move the subject
-6. **View Prerequisites**: Locked subjects show which prerequisites are missing
-7. **Real-time Stats**: Dashboard updates automatically as you make changes
+8. **View Prerequisites**: Locked subjects show which prerequisites are missing
+9. **Real-time Stats**: Dashboard updates automatically as you make changes
 
 ### Dark Mode
 - Click the Moon/Sun icon in the top-right corner to toggle between light and dark modes
@@ -176,17 +187,6 @@ The curriculum data is stored in `server/data/curriculum.json`. You can:
 - Manually edit the JSON file
 - Use the in-app drag & drop to reorganize
 - Run `npm run dev` and the changes will load automatically
-
-### Storage Adapter Configuration
-The app uses different storage adapters. Change via `VITE_STORAGE_TYPE` environment variable:
-
-```bash
-# .env file
-VITE_STORAGE_TYPE=api          # Backend API (default)
-VITE_STORAGE_TYPE=localStorage # Browser storage
-VITE_STORAGE_TYPE=hybrid       # localStorage + manual export
-VITE_STORAGE_TYPE=file         # Download-based (legacy)
-```
 
 ### Customizing Colors
 Edit `src/index.css` in the `@theme` block to change the color palette.
@@ -214,7 +214,7 @@ The Express backend provides these endpoints:
 
 - TypeScript configuration warnings in `tsconfig.node.json` (does not affect functionality)
 - Some course names are truncated from university HTML source (ending with "...")
-- New courses from university data may have `null` credits (needs manual update)
+- ~~New courses from university data may have `null` credits~~ **FIXED**: All null credits converted to 0
 
 ## 📊 Current Data Status
 
@@ -230,11 +230,13 @@ The Express backend provides these endpoints:
 - [x] Backend API integration for file-based persistence
 - [x] Dark mode toggle
 - [x] Horizontal semester layout for landscape mode
-- [x] Add new subjects functionality
-- [x] Inline grade and credits editing
+- [x] Add new subjects functionality with auto-credit detection
+- [x] Inline grade and credits editing (all subjects)
+- [x] Inline subject name editing
 - [x] Single-click status toggle
-- [ ] Delete subjects functionality
-- [ ] Edit subject names and IDs
+- [x] Delete subjects with custom confirmation modal
+- [x] Action buttons (drag/delete) in bottom row
+- [ ] Edit course IDs
 - [ ] "What-if" scenario planning
 - [ ] Semester planning mode
 - [ ] Within-semester subject reordering

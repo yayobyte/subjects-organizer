@@ -3,8 +3,8 @@
   "subjects": [
     {
       "semester": "Semestre 1",
-      "id": "BA100",
-      "name": "Humanidades I (Base)",
+      "id": "BA172",
+      "name": "Humanidades I",
       "credits": 2,
       "status": "completed",
       "grade": 4.2,
@@ -56,13 +56,13 @@
     },
     {
       "semester": "Semestre 2",
-      "id": "IS105",
-      "name": "Programación I",
-      "credits": 5,
+      "id": "BU201",
+      "name": "Deportes 2",
+      "credits": 1,
       "status": "completed",
-      "grade": 3.3,
+      "grade": "Aprobada",
       "prerequisites": [
-        "IS193"
+        "BU101"
       ]
     },
     {
@@ -70,8 +70,8 @@
       "id": "CB2A3",
       "name": "Cálculo Diferencial",
       "credits": 3,
-      "status": "missing",
-      "grade": 3.5,
+      "status": "completed",
+      "grade": 3.4,
       "prerequisites": [
         "CB1B3"
       ]
@@ -97,22 +97,22 @@
       ]
     },
     {
-      "semester": "Semestre 2",
+      "semester": "Semestre 3",
       "id": "BA372",
       "name": "Humanidades II",
       "credits": 2,
-      "status": "missing",
+      "status": "completed",
       "grade": 4.2,
       "prerequisites": [
         "BA170"
       ]
     },
     {
-      "semester": "Semestre 3",
+      "semester": "Semestre 2",
       "id": "CB223",
       "name": "Álgebra Lineal",
       "credits": 3,
-      "status": "missing",
+      "status": "completed",
       "grade": 3.1,
       "prerequisites": []
     },
@@ -121,7 +121,7 @@
       "id": "CB334",
       "name": "Física II",
       "credits": 4,
-      "status": "missing",
+      "status": "completed",
       "grade": 3.4,
       "prerequisites": [
         "CB234"
@@ -132,18 +132,18 @@
       "id": "CB342",
       "name": "Laboratorio de Física II",
       "credits": 2,
-      "status": "missing",
+      "status": "completed",
       "grade": 3.1,
       "prerequisites": [
         "CB334"
       ]
     },
     {
-      "semester": "Semestre 3",
+      "semester": "Semestre 2",
       "id": "IS284",
       "name": "Programación II",
       "credits": 4,
-      "status": "missing",
+      "status": "completed",
       "grade": 5,
       "prerequisites": [
         "IS105"
@@ -154,10 +154,11 @@
       "id": "CB3A4",
       "name": "Cálculo Integral",
       "credits": 4,
-      "status": "missing",
+      "status": "completed",
       "prerequisites": [
         "CB2A3"
-      ]
+      ],
+      "grade": 3.5
     },
     {
       "semester": "Semestre 4",
@@ -172,11 +173,11 @@
       ]
     },
     {
-      "semester": "Semestre 4",
+      "semester": "Semestre 3",
       "id": "IS304",
       "name": "Estructura de Datos",
       "credits": 4,
-      "status": "missing",
+      "status": "completed",
       "grade": 3.1,
       "prerequisites": [
         "IS284",
@@ -188,8 +189,8 @@
       "id": "IS474",
       "name": "Fundamentos de Electrónica",
       "credits": 3,
-      "status": "missing",
-      "grade": 3.3,
+      "status": "completed",
+      "grade": 3.7,
       "prerequisites": []
     },
     {
@@ -197,7 +198,7 @@
       "id": "IS482",
       "name": "Teoría de Sistemas",
       "credits": 2,
-      "status": "missing",
+      "status": "completed",
       "grade": 3,
       "prerequisites": []
     },
@@ -205,9 +206,9 @@
       "semester": "Semestre 4",
       "id": "IS543",
       "name": "Laboratorio de Electrónica",
-      "credits": 2,
-      "status": "missing",
-      "grade": 3.1,
+      "credits": 3,
+      "status": "completed",
+      "grade": 3,
       "prerequisites": []
     },
     {
@@ -215,36 +216,38 @@
       "id": "CB4A3",
       "name": "Ecuaciones Diferenciales Ordinarias",
       "credits": 3,
-      "status": "missing",
+      "status": "completed",
       "prerequisites": [
         "CB3A4"
-      ]
+      ],
+      "grade": 3.9
     },
     {
-      "semester": "Semestre 5",
+      "semester": "Semestre 3",
       "id": "IS323",
       "name": "Lógica",
       "credits": 3,
-      "status": "missing",
+      "status": "completed",
       "grade": 3.1,
       "prerequisites": []
     },
     {
-      "semester": "Semestre 5",
+      "semester": "Semestre 4",
       "id": "IS453",
       "name": "Programación III",
       "credits": 3,
-      "status": "missing",
+      "status": "completed",
       "prerequisites": [
         "IS304"
-      ]
+      ],
+      "grade": 3
     },
     {
       "semester": "Semestre 5",
       "id": "IS503",
       "name": "Administración de Empresas",
       "credits": 3,
-      "status": "missing",
+      "status": "completed",
       "grade": 3.7,
       "prerequisites": []
     },
@@ -252,9 +255,9 @@
       "semester": "Semestre 5",
       "id": "IS634",
       "name": "Electrónica Digital",
-      "credits": 3,
-      "status": "missing",
-      "grade": 3.7,
+      "credits": 4,
+      "status": "completed",
+      "grade": 3.3,
       "prerequisites": [
         "IS474"
       ]
@@ -263,43 +266,44 @@
       "semester": "Semestre 5",
       "id": "IS773",
       "name": "Laboratorio De Electrónica Digital",
-      "credits": 2,
-      "status": "missing",
-      "prerequisites": []
+      "credits": 3,
+      "status": "completed",
+      "prerequisites": [],
+      "grade": 3.1
     },
     {
-      "semester": "Semestre 6",
+      "semester": "Semestre 4",
       "id": "CB434",
       "name": "Física III",
       "credits": 4,
-      "status": "missing",
+      "status": "completed",
       "grade": 3,
       "prerequisites": [
         "CB334"
       ]
     },
     {
-      "semester": "Semestre 6",
+      "semester": "Semestre 4",
       "id": "CB442",
       "name": "Laboratorio de Física III",
       "credits": 2,
-      "status": "missing",
+      "status": "completed",
       "grade": 3.5,
       "prerequisites": [
         "CB434"
       ]
     },
     {
-      "semester": "Semestre 6",
+      "semester": "Semestre 5",
       "id": "IS405",
       "name": "Gramáticas y Lenguajes Formales",
-      "credits": 4,
-      "status": "missing",
-      "grade": 3,
+      "credits": 5,
+      "status": "completed",
+      "grade": 3.9,
       "prerequisites": []
     },
     {
-      "semester": "Semestre 6",
+      "semester": "Semestre 5",
       "id": "IS512",
       "name": "Estadistica",
       "credits": 2,
@@ -307,11 +311,11 @@
       "prerequisites": []
     },
     {
-      "semester": "Semestre 6",
+      "semester": "Semestre 5",
       "id": "IS553",
       "name": "Programación IV",
       "credits": 3,
-      "status": "missing",
+      "status": "completed",
       "grade": 4.4,
       "prerequisites": [
         "IS453"

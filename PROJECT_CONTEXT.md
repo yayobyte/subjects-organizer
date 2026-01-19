@@ -1,6 +1,6 @@
 # Project Context: Visual Curriculum & Prerequisite Tracker
 
-**Last Updated**: January 18, 2026 (Evening Update)
+**Last Updated**: January 19, 2026 (Late Evening Session)
 
 ## Overview
 
@@ -37,11 +37,12 @@ A modern curriculum tracking application with Express backend for file-based dat
 - **components/Layout.tsx** - Full-width nav with dark mode toggle
 - **components/DarkModeToggle.tsx** - Dark mode toggle component
 - **components/SemesterListView.tsx** - Horizontal row-based list view with DnD
-- **components/SubjectCard.tsx** - Card with inline editing (grade, credits, status)
-- **components/AddSubjectButton.tsx** - Inline form to add new subjects
+- **components/SubjectCard.tsx** - Card with full inline editing (name, grade, credits, status) + delete
+- **components/AddSubjectButton.tsx** - Simplified form with auto-credit detection
+- **components/ConfirmDialog.tsx** - Custom animated confirmation modal for deletions
 - **components/StatsDashboard.tsx** - Real-time statistics
 - **components/DroppableSemester.tsx** - DnD semester container
-- **contexts/SubjectContext.tsx** - Global state + API integration + edit methods
+- **contexts/SubjectContext.tsx** - Global state + API integration + all edit/delete methods
 - **lib/storage.ts** - Storage abstraction (API/localStorage/file/hybrid)
 - **data.ts** - Prerequisites map
 
@@ -74,21 +75,7 @@ A modern curriculum tracking application with Express backend for file-based dat
 3. Vite proxies `/api` to `localhost:3001` during dev
 4. Data persists across page refreshes
 
-### 2. Storage Abstraction Layer
-
-Located in `src/lib/storage.ts`:
-
-**Available Adapters**:
-- `APIStorageAdapter` - Backend API (default)
-- `LocalStorageAdapter` - Browser storage
-- `JSONFileAdapter` - Download-based (legacy)
-- `HybridStorageAdapter` - localStorage + manual export
-
-**Configuration**: Set `VITE_STORAGE_TYPE` environment variable
-
-**Factory Pattern**: `getStorageAdapter()` returns configured adapter
-
-### 3. Dark Mode Implementation
+### 2. Dark Mode Implementation
 
 **Component**: `src/components/DarkModeToggle.tsx`
 
@@ -101,7 +88,7 @@ Located in `src/lib/storage.ts`:
 
 **Key Fix**: Theme applied immediately on load to prevent flash
 
-### 4. Horizontal Layout & UI Improvements (January 18, 2026 - Evening)
+### 3. Horizontal Layout & UI Improvements (January 18, 2026 - Evening)
 
 **Problem**: User wanted better landscape viewing and easier data editing
 
@@ -153,6 +140,78 @@ Located in `src/lib/storage.ts`:
 - `updateSubjectGrade(id: string, grade: number | string)` - Updates grade
 - `updateSubjectCredits(id: string, credits: number)` - Updates credits
 
+### 4. Extended Editing & Delete Features (January 19, 2026 - Late Evening)
+
+**Problem**: User wanted comprehensive editing capabilities and delete functionality
+
+**Database Fix**:
+- Converted all null credits to 0 in both curriculum.json and backup (34 subjects in main, 41 in backup)
+- Ensures consistent data structure for all calculations
+
+**Changes Made**:
+
+1. **Subject Name Editing**:
+   - Click any subject name to edit inline
+   - Small edit icon appears on hover
+   - Input field with border when editing
+   - Keyboard shortcuts (Enter/Escape)
+   - Auto-saves on blur
+   - Added `updateSubjectName` method to context
+
+2. **Grade Editing for All Subjects**:
+   - Previously only available for completed subjects
+   - Now available for ALL subjects regardless of status
+   - Dynamic styling:
+     - Completed: Green/emerald theme
+     - Not completed: Gray/slate theme
+   - Shows "Add grade" badge on all subjects
+
+3. **Simplified Add Subject Form**:
+   - Removed credits field from form
+   - Only requires: Course Code + Subject Name
+   - Auto-extracts credits from last digit of ID:
+     - IS105 → 5 credits
+     - CS201 → 1 credit
+     - MATH3 → 3 credits
+     - Non-digit last char → 0 credits
+   - Updated placeholder: "e.g., IS105 (last digit = credits)"
+
+4. **Delete Subject Feature**:
+   - Added `deleteSubject` method to context
+   - Beautiful custom confirmation modal (ConfirmDialog component):
+     - Animated backdrop with blur
+     - Red warning icon with AlertTriangle
+     - Clear title and message
+     - Shows subject name and ID
+     - "This action cannot be undone" warning
+     - Red delete button + gray cancel button
+     - X button to close
+     - Smooth animations via Framer Motion
+   - Replaces browser's default alert
+
+5. **Action Buttons Repositioned**:
+   - Moved from top-right overlay to bottom row
+   - Bottom row now uses `justify-between`:
+     - Left: Credits, Grade, Locked indicator
+     - Right: Delete + Drag buttons
+   - Delete button:
+     - Hidden by default (opacity-0)
+     - Appears on card hover
+     - Red on hover
+     - Trash icon (14px)
+   - Drag button:
+     - Semi-transparent by default (opacity-50)
+     - Fully visible on hover
+     - Violet on hover
+     - Grip icon (16px)
+
+**Context Methods Added**:
+- `updateSubjectName(id: string, name: string)` - Updates subject name
+- `deleteSubject(id: string)` - Removes subject from curriculum
+
+**New Components**:
+- `ConfirmDialog.tsx` - Reusable confirmation modal with animations
+
 ### 5. University Data Merge
 
 **Date**: January 18, 2026
@@ -171,7 +230,7 @@ Located in `src/lib/storage.ts`:
 - 1 course changed from completed to in-progress (IS184 - needs verification)
 - Many humanities electives added to Semestre 7
 
-### 5. View Simplification
+### 6. View Simplification
 
 **Removed**: Graph view completely
 - Deleted `CurriculumGraph.tsx`
@@ -238,16 +297,6 @@ npm run server   # Backend only
 4. **IS184 status** changed from completed→in-progress (needs user verification)
 
 ## Configuration Options
-
-### Storage Adapter
-
-Change via `.env`:
-```bash
-VITE_STORAGE_TYPE=api          # Default
-VITE_STORAGE_TYPE=localStorage
-VITE_STORAGE_TYPE=hybrid
-VITE_STORAGE_TYPE=file
-```
 
 ### Prerequisites
 
@@ -318,15 +367,18 @@ pm2 serve dist 5173 --name curriculum-frontend --spa
 - File-based persistence
 - Horizontal semester layout
 - Single-click status toggle
-- Add new subjects
-- Inline grade editing
+- Add new subjects with auto-credit detection
+- Inline grade editing (all subjects)
 - Inline credits editing
+- Inline subject name editing
+- Delete subjects with custom confirmation modal
 - Visible drag handles
 - Fixed card dimensions
+- Action buttons in bottom row
+- Null credits database fix
 
 ### Pending 📋
-- Delete subjects functionality
-- Edit subject names and course IDs
+- Edit course IDs
 - "What-if" scenario planning
 - Within-semester reordering
 - PDF export
@@ -348,12 +400,6 @@ pm2 serve dist 5173 --name curriculum-frontend --spa
 - Simpler codebase
 - Focus on core functionality
 - Can restore from `.backup/` if needed
-
-### Why Storage Abstraction?
-- Flexibility to switch between persistence methods
-- Easy testing with different adapters
-- Clean separation of concerns
-- Future-proof for cloud storage
 
 ### Why Dark Mode Over Export Buttons?
 - User request
@@ -381,6 +427,35 @@ pm2 serve dist 5173 --name curriculum-frontend --spa
 - Prevents accidental drags when clicking
 - Common pattern in sortable lists
 - Makes drag-and-drop more intentional
+
+### Why Auto-Extract Credits from ID?
+- Simplifies add subject form (2 fields instead of 3)
+- Follows convention where last digit = credits (IS105, CS201, etc.)
+- Reduces user input errors
+- Faster subject creation workflow
+- Can still be edited after creation
+
+### Why Custom Confirmation Modal?
+- Native browser alerts feel outdated
+- Better UX with animations and styling
+- Consistent with app's design language
+- Shows more context (subject name + ID)
+- Professional appearance
+- Clear warning message with icon
+
+### Why Allow Grade Editing on All Subjects?
+- User flexibility - can add grades before marking complete
+- Useful for tracking partial grades or predictions
+- No technical limitation preventing it
+- Dynamic styling differentiates completed vs incomplete
+- More powerful than restricting to completed only
+
+### Why Action Buttons in Bottom Row?
+- Better use of space in fixed-height cards
+- Groups related actions together
+- Left side: data (credits, grade, status)
+- Right side: actions (delete, drag)
+- Clear visual separation with justify-between
 
 ## Troubleshooting
 
@@ -417,10 +492,34 @@ pm2 serve dist 5173 --name curriculum-frontend --spa
 - Check that context methods exist (updateSubjectGrade, updateSubjectCredits)
 
 ### Add Subject Form Issues
-- Verify credits field uses string state (not number)
-- Check form validation (all fields required)
+- Verify auto-credit extraction regex works: `/^\d$/`
+- Check form only requires ID and name (not credits)
 - Ensure AddSubjectButton receives semester prop
 - Check that addSubject method exists in context
+- Verify last digit extraction: `formData.id.trim().slice(-1)`
+
+### Delete Not Working
+- Check ConfirmDialog component is imported
+- Verify showDeleteDialog state is managed
+- Ensure deleteSubject method exists in context
+- Check modal animations (AnimatePresence)
+- Verify confirmation triggers handleDelete
+
+### Name Editing Issues
+- Check updateSubjectName method exists in context
+- Verify edit icon appears on hover (Edit2 from lucide-react)
+- Ensure keyboard handlers (Enter/Escape) work
+- Check that name input autofocuses
+- Verify stopPropagation prevents card drag
+
+### Null Credits Errors
+- All null credits should be converted to 0
+- Run database fix script if needed:
+  ```js
+  // Fix null credits
+  data.subjects = data.subjects.map(s => ({...s, credits: s.credits || 0}))
+  ```
+- Check all credit calculations handle 0 correctly
 
 ---
 
