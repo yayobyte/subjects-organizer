@@ -331,18 +331,18 @@
       "prerequisites": []
     },
     {
-      "semester": "Semestre 7",
+      "semester": "Semestre 6",
       "id": "IS614",
       "name": "Arquitectura de Computadores",
       "credits": 4,
-      "status": "missing",
+      "status": "completed",
       "grade": 3.9,
       "prerequisites": [
         "IS634"
       ]
     },
     {
-      "semester": "Semestre 7",
+      "semester": "Semestre 6",
       "id": "IS623",
       "name": "Computación Gráfica",
       "credits": 3,
@@ -350,7 +350,7 @@
       "prerequisites": []
     },
     {
-      "semester": "Semestre 7",
+      "semester": "Semestre 6",
       "id": "IS644",
       "name": "Base De Datos I",
       "credits": 4,
@@ -360,7 +360,7 @@
       ]
     },
     {
-      "semester": "Semestre 7",
+      "semester": "Semestre 6",
       "id": "IS692",
       "name": "Estadística Especial",
       "credits": 2,
@@ -368,191 +368,7 @@
       "prerequisites": []
     },
     {
-      "semester": "Semestre 7",
-      "id": "BA001",
-      "name": "Antropologia...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA002",
-      "name": "Aprendiendo ...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA003",
-      "name": "El Cuento Br...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA004",
-      "name": "Arte Y Tecno...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA005",
-      "name": "Educacion Se...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA006",
-      "name": "Narrativas C...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA007",
-      "name": "Cronica, Mem...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA008",
-      "name": "Emprendimien...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA0081",
-      "name": "Emprendimien...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA009",
-      "name": "La Experienc...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA0091",
-      "name": "La Experienc...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA010",
-      "name": "Etica De La ...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA0101",
-      "name": "Etica De La ...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA011",
-      "name": "Feminismos Y...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA012",
-      "name": "Catedra De L...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA0122",
-      "name": "Catedra De L...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA013",
-      "name": "Curso De Def...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA0131",
-      "name": "Curso De Def...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA0151",
-      "name": "Talller De L...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA0161",
-      "name": "Comunicacion...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "BA0171",
-      "name": "Didacticas D...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "CD112",
-      "name": "Catedra De D...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 7",
-      "id": "TC100",
-      "name": "Guion Cinema...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 8",
+      "semester": "Semestre 6",
       "id": "IS653",
       "name": "Investigación de Operaciones",
       "credits": 3,
@@ -560,7 +376,7 @@
       "prerequisites": []
     },
     {
-      "semester": "Semestre 8",
+      "semester": "Semestre 7",
       "id": "IS714",
       "name": "Ingeniería de Sofware I",
       "credits": 4,
@@ -571,7 +387,7 @@
       ]
     },
     {
-      "semester": "Semestre 8",
+      "semester": "Semestre 7",
       "id": "IS723",
       "name": "Comunicaciones I",
       "credits": 3,
@@ -583,18 +399,19 @@
       ]
     },
     {
-      "semester": "Semestre 8",
+      "semester": "Semestre 7",
       "id": "IS734",
       "name": "Sistemas Operativos I",
       "credits": 4,
-      "status": "in-progress",
+      "status": "completed",
       "prerequisites": [
         "IS614",
         "IS304"
-      ]
+      ],
+      "grade": 4.1
     },
     {
-      "semester": "Semestre 9",
+      "semester": "Semestre 7",
       "id": "IS753",
       "name": "Compiladores",
       "credits": 3,
@@ -605,7 +422,7 @@
       ]
     },
     {
-      "semester": "Semestre 9",
+      "semester": "Semestre 7",
       "id": "IS784",
       "name": "Inteligencia Artificial",
       "credits": 3,
@@ -616,7 +433,7 @@
       ]
     },
     {
-      "semester": "Semestre 9",
+      "semester": "Semestre 8",
       "id": "IS884",
       "name": "Ingeniería de Software II",
       "credits": 4,
@@ -626,7 +443,7 @@
       ]
     },
     {
-      "semester": "Semestre 9",
+      "semester": "Semestre 8",
       "id": "IS842",
       "name": "Legislación, Ética y Contratación",
       "credits": 2,
@@ -634,7 +451,7 @@
       "prerequisites": []
     },
     {
-      "semester": "Semestre 9",
+      "semester": "Semestre 8",
       "id": "IS053",
       "name": "Gerencia De Proyectos",
       "credits": 3,
@@ -642,55 +459,7 @@
       "prerequisites": []
     },
     {
-      "semester": "Semestre 9",
-      "id": "AY114",
-      "name": "Complejidad ...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 9",
-      "id": "AY164",
-      "name": "Matematicas ...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 9",
-      "id": "AY184",
-      "name": "Analisis Mul...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 9",
-      "id": "AY254",
-      "name": "Optimizacion",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 9",
-      "id": "IS923",
-      "name": "Comunicacion...",
-      "credits": 0,
-      "status": "missing",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 9",
-      "id": "IS943",
-      "name": "Sistemas Exp...",
-      "credits": 0,
-      "status": "in-progress",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 10",
+      "semester": "Semestre 8",
       "id": "IS823",
       "name": "Comunicaciones II",
       "credits": 3,
@@ -700,15 +469,7 @@
       ]
     },
     {
-      "semester": "Semestre 10",
-      "id": "IS845",
-      "name": "Computación Blanda",
-      "credits": 4,
-      "status": "missing",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 10",
+      "semester": "Semestre 9",
       "id": "IS873",
       "name": "Laboratorio Del Software",
       "credits": 3,
@@ -716,7 +477,7 @@
       "prerequisites": []
     },
     {
-      "semester": "Semestre 10",
+      "semester": "Semestre 8",
       "id": "IS893",
       "name": "Sistemas Distribuidos",
       "credits": 3,
@@ -727,7 +488,7 @@
       ]
     },
     {
-      "semester": "Semestre 10",
+      "semester": "Semestre 9",
       "id": "IS953",
       "name": "Administración De Proyectos de Software",
       "credits": 3,
@@ -735,7 +496,7 @@
       "prerequisites": []
     },
     {
-      "semester": "Semestre 10",
+      "semester": "Semestre 9",
       "id": "IS924",
       "name": "Arquitectura Cliente-Servidor",
       "credits": 4,
@@ -746,7 +507,7 @@
       ]
     },
     {
-      "semester": "Semestre 10",
+      "semester": "Semestre 9",
       "id": "IS962",
       "name": "Proyecto de Grado I",
       "credits": 2,
@@ -764,7 +525,7 @@
       "prerequisites": []
     },
     {
-      "semester": "Semestre 10",
+      "semester": "Semestre 9",
       "id": "IS9A0",
       "name": "Electiva A1",
       "credits": 6,
@@ -806,34 +567,18 @@
       "prerequisites": []
     },
     {
-      "semester": "Semestre 10",
-      "id": "IS013",
-      "name": "Admon. Siste...",
-      "credits": 0,
+      "id": "IS184",
+      "name": "Tecnicas de la comunicacion",
+      "semester": "Semestre 6",
+      "credits": 4,
       "status": "missing",
       "prerequisites": []
     },
     {
-      "semester": "Semestre 10",
-      "id": "IS042",
-      "name": "Planeacion E...",
-      "credits": 0,
-      "status": "missing",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 10",
-      "id": "IS067",
-      "name": "Practica En ...",
-      "credits": 0,
-      "status": "missing",
-      "prerequisites": []
-    },
-    {
-      "semester": "Semestre 10",
-      "id": "IS068",
-      "name": "Formacion Pr...",
-      "credits": 0,
+      "id": "OP21",
+      "name": "Base Optional",
+      "semester": "Semestre 7",
+      "credits": 1,
       "status": "missing",
       "prerequisites": []
     }

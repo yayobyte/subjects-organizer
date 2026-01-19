@@ -1,6 +1,6 @@
 # Project Context: Visual Curriculum & Prerequisite Tracker
 
-**Last Updated**: January 19, 2026 (Late Evening Session)
+**Last Updated**: January 19, 2026 (Evening) - Credits UI improved, storage simplified, all semesters visible, 3-row layout
 
 ## Overview
 
@@ -17,18 +17,20 @@ A modern curriculum tracking application with Express backend for file-based dat
 - **State**: React Context API
 
 ### Key Features Implemented
-1. ✅ **Horizontal Semester Layout** - Row-based layout for landscape mode viewing
-2. ✅ **Backend API** - Express server with file-based persistence
+1. ✅ **Horizontal Semester Layout** - Row-based layout for landscape mode viewing (all 10 semesters always visible)
+2. ✅ **Backend API** - Express server with file-based persistence (API-only, simplified)
 3. ✅ **Dark Mode** - Toggle with localStorage persistence
 4. ✅ **Auto-Save** - Changes save to file automatically (1s debounce)
 5. ✅ **University Data Merge** - 99 courses imported from HTML
 6. ✅ **Drag & Drop** - Move subjects between semesters with visible grip handles
 7. ✅ **One-Click Status Toggle** - Single click to change status (fixed double-click issue)
-8. ✅ **Add New Subjects** - Inline form to add subjects to any semester
-9. ✅ **Inline Grade Editing** - Click to edit grades on completed subjects
-10. ✅ **Inline Credits Editing** - Click to edit credits on any subject
-11. ✅ **Prerequisite Locking** - Auto-lock based on prerequisites
-12. ✅ **Fixed Card Dimensions** - Consistent w-full × h-32 for uniform UI
+8. ✅ **Add New Subjects** - Inline form to add subjects to any semester (auto-credit detection)
+9. ✅ **Inline Grade Editing** - Click to edit grades on all subjects
+10. ✅ **Inline Credits Editing** - Popover UI with quick-select buttons (0-6) + custom input (7-12)
+11. ✅ **Inline Name Editing** - Click any subject name to edit inline
+12. ✅ **Delete Subjects** - Custom animated confirmation modal
+13. ✅ **Prerequisite Locking** - Auto-lock based on prerequisites
+14. ✅ **Fixed Card Dimensions** - Consistent w-full × h-32 with clean 3-row layout
 
 ## Core Files
 
@@ -43,8 +45,8 @@ A modern curriculum tracking application with Express backend for file-based dat
 - **components/StatsDashboard.tsx** - Real-time statistics
 - **components/DroppableSemester.tsx** - DnD semester container
 - **contexts/SubjectContext.tsx** - Global state + API integration + all edit/delete methods
-- **lib/storage.ts** - Storage abstraction (API/localStorage/file/hybrid)
-- **data.ts** - Prerequisites map
+- **lib/storage.ts** - API storage adapter (backend persistence only)
+- **data.ts** - Prerequisites map + getSortedSemesters() (returns all 10 semesters)
 
 ### Backend (`server/`)
 - **index.js** - Express server with CRUD endpoints
@@ -212,7 +214,48 @@ A modern curriculum tracking application with Express backend for file-based dat
 **New Components**:
 - `ConfirmDialog.tsx` - Reusable confirmation modal with animations
 
-### 5. University Data Merge
+### 5. Credits Editing Improvement & Storage Cleanup (January 19, 2026 - Evening)
+
+**Problem**: Credits input was a basic number field, and multiple storage adapters caused confusion
+
+**Changes Made**:
+
+1. **Popover-Style Credits Selector**:
+   - Replaced number input with elegant popover UI
+   - Quick-select buttons for 0-6 credits (one click)
+   - "More (7-12)" option for edge cases
+   - Appears above the badge, doesn't overflow card
+   - Click outside to close functionality
+   - Clean shadow and animations
+
+2. **Storage System Simplification**:
+   - Removed `LocalStorageAdapter`, `JSONFileAdapter`, `HybridStorageAdapter`
+   - Kept only `APIStorageAdapter` for backend persistence
+   - Deleted `STORAGE.md` and `STORAGE_IMPLEMENTATION.md`
+   - Simplified `getStorageAdapter()` to always return API adapter
+   - Updated all documentation to reflect API-only approach
+
+3. **Always Show All Semesters**:
+   - Modified `getSortedSemesters()` to always return 10 semesters
+   - Empty semesters now display with "Drop subjects here" placeholder
+   - Can add subjects to any semester, even empty ones
+   - Maintains consistent horizontal scroll layout
+
+4. **Card Layout Refinement**:
+   - Restructured to proper 3-row layout:
+     - Row 1: Subject name + ID
+     - Row 2: Credits + Grade badges (left-aligned)
+     - Row 3: Locked badge (left) + Action buttons (right)
+   - Fixed overflow issues with locked badge
+   - Clean spacing with `justify-between` on row 3
+   - Maintains fixed h-32 card height
+
+**Technical Details**:
+- Credits popover uses `useRef` + `useEffect` for click-outside detection
+- Storage adapter reduced from 200 lines to 77 lines
+- Semester list always renders 10 columns for consistency
+
+### 6. University Data Merge
 
 **Date**: January 18, 2026
 
@@ -230,7 +273,7 @@ A modern curriculum tracking application with Express backend for file-based dat
 - 1 course changed from completed to in-progress (IS184 - needs verification)
 - Many humanities electives added to Semestre 7
 
-### 6. View Simplification
+### 7. View Simplification
 
 **Removed**: Graph view completely
 - Deleted `CurriculumGraph.tsx`
@@ -369,13 +412,15 @@ pm2 serve dist 5173 --name curriculum-frontend --spa
 - Single-click status toggle
 - Add new subjects with auto-credit detection
 - Inline grade editing (all subjects)
-- Inline credits editing
+- Inline credits editing with popover UI
 - Inline subject name editing
 - Delete subjects with custom confirmation modal
 - Visible drag handles
-- Fixed card dimensions
-- Action buttons in bottom row
+- Fixed card dimensions (w-full × h-32)
+- 3-row card layout (name, badges, actions)
 - Null credits database fix
+- Storage system simplified to API-only
+- All 10 semesters always visible
 
 ### Pending 📋
 - Edit course IDs
@@ -457,6 +502,36 @@ pm2 serve dist 5173 --name curriculum-frontend --spa
 - Right side: actions (delete, drag)
 - Clear visual separation with justify-between
 
+### Why Popover Credits Selector?
+- Original inline buttons overflowed card width
+- Popover appears above badge, doesn't affect layout
+- Quick-select buttons (0-6) cover 99% of use cases
+- Professional appearance with shadow and border
+- Click-outside-to-close matches modern UI patterns
+- No overflow or layout breaking
+
+### Why Simplify to API-Only Storage?
+- Single source of truth reduces confusion
+- Multiple adapters were unnecessary complexity
+- Backend API is the production solution
+- Easier to understand and maintain
+- Fewer files to manage (removed 2 MD files)
+- Clear data flow: UI → API → File
+
+### Why Always Show All 10 Semesters?
+- Empty semesters need to be accessible for adding subjects
+- Consistent UI regardless of data state
+- Users can plan ahead by adding to future semesters
+- Horizontal scroll shows complete curriculum timeline
+- Prevents UI layout shifts when semesters become empty
+
+### Why 3-Row Card Layout?
+- Prevents overflow issues with locked badge
+- Clear visual hierarchy: name → metadata → actions
+- Locked badge and action buttons don't interfere
+- Each row has specific purpose and alignment
+- Maintains fixed card height (h-32) consistently
+
 ## Troubleshooting
 
 ### Dark Mode Not Working
@@ -520,6 +595,26 @@ pm2 serve dist 5173 --name curriculum-frontend --spa
   data.subjects = data.subjects.map(s => ({...s, credits: s.credits || 0}))
   ```
 - Check all credit calculations handle 0 correctly
+
+### Credits Popover Not Closing
+- Check `creditsPopoverRef` is properly attached to popover div
+- Verify `useEffect` click-outside listener is set up
+- Ensure `isEditingCredits` state updates correctly
+- Try clicking the badge again to toggle close
+
+### Empty Semester Not Showing
+- Check `getSortedSemesters()` returns all 10 semesters
+- Verify array is hardcoded: `['Semestre 1', ..., 'Semestre 10']`
+- Confirm `SemesterListView` maps over all returned semesters
+- Empty semesters should show "Drop subjects here" placeholder
+
+### Card Layout Overflowing
+- Verify 3-row structure in SubjectCard:
+  - Row 1: flex justify-between (name + ID)
+  - Row 2: flex gap-2 (credits + grade)
+  - Row 3: flex justify-between (locked + actions)
+- Check card has fixed h-32 height
+- Ensure no extra nested flex containers causing issues
 
 ---
 

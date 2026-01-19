@@ -2,6 +2,8 @@
 
 A modern, interactive web application for tracking academic progress with seamless data persistence. Built with React, TypeScript, Tailwind CSS v4, and Express backend.
 
+**Last Updated**: January 19, 2026 (Evening) - Credits UI improved, storage simplified, layout refined
+
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178c6.svg)
@@ -153,9 +155,11 @@ assignments/
    - Edit icon appears on hover
    - Press Enter to save or Escape to cancel
 4. **Edit Credits**:
-   - Click the credits badge (e.g., "3 Cr") at the bottom of any card
-   - Type new value (0-12 credits)
-   - Press Enter to save or Escape to cancel
+   - Click the credits badge (e.g., "3 Cr") on any card
+   - A popover appears with quick-select buttons for 0-6 credits
+   - Click any number for instant selection
+   - Click "More (7-12) •••" for custom values 7-12
+   - Click outside the popover or the badge again to close
 5. **Edit Grades**:
    - Click the grade badge on ANY subject (not just completed ones)
    - Type grade (numeric like "95" or text like "Aprobada")
@@ -214,7 +218,7 @@ The Express backend provides these endpoints:
 
 - TypeScript configuration warnings in `tsconfig.node.json` (does not affect functionality)
 - Some course names are truncated from university HTML source (ending with "...")
-- ~~New courses from university data may have `null` credits~~ **FIXED**: All null credits converted to 0
+- IS184 status changed from completed→in-progress during merge (needs user verification)
 
 ## 📊 Current Data Status
 
@@ -227,23 +231,28 @@ The Express backend provides these endpoints:
 
 ## 🚧 Future Enhancements
 
-- [x] Backend API integration for file-based persistence
-- [x] Dark mode toggle
-- [x] Horizontal semester layout for landscape mode
-- [x] Add new subjects functionality with auto-credit detection
-- [x] Inline grade and credits editing (all subjects)
-- [x] Inline subject name editing
-- [x] Single-click status toggle
-- [x] Delete subjects with custom confirmation modal
-- [x] Action buttons (drag/delete) in bottom row
-- [ ] Edit course IDs
-- [ ] "What-if" scenario planning
-- [ ] Semester planning mode
-- [ ] Within-semester subject reordering
-- [ ] Export to PDF
-- [ ] Multiple student profiles
-- [ ] User authentication
-- [ ] Cloud storage sync
+### Completed ✅
+- Backend API integration for file-based persistence
+- Dark mode toggle
+- Horizontal semester layout for landscape mode (all 10 semesters always visible)
+- Add new subjects functionality with auto-credit detection
+- Inline grade and credits editing (all subjects) with popover UI
+- Inline subject name editing
+- Single-click status toggle
+- Delete subjects with custom confirmation modal
+- 3-row card layout (name, badges, actions)
+- Storage simplified to API-only
+- Fixed card dimensions (w-full × h-32)
+
+### Pending 📋
+- Edit course IDs
+- "What-if" scenario planning
+- Semester planning mode
+- Within-semester subject reordering
+- Export to PDF
+- Multiple student profiles
+- User authentication
+- Cloud storage sync
 
 ## 📝 Development Notes
 

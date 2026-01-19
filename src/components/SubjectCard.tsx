@@ -208,8 +208,8 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                         </span>
                     </div>
 
-                    <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
-                        <div className="flex items-center gap-2 flex-wrap relative">
+                    {/* Row 2: Credits and Grade badges */}
+                    <div className="flex items-center gap-2 mt-2 relative">
                         {/* Credits Badge */}
                         <button
                             onClick={(e) => {
@@ -324,20 +324,21 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                                 <Edit2 size={8} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                             </button>
                         )}
+                    </div>
 
-                        {isLocked && !isCompleted && (
-                            <div className="flex -space-x-1">
-                                {/* Simple dot indicators for missing prereqs */}
-                                <span className="text-xs text-amber-500 flex items-center gap-1" title={`Missing: ${missingPrereqs.map(p => p?.name).join(', ')}`}>
-                                    <AlertCircle size={12} />
-                                    Locked
-                                </span>
-                            </div>
+                    {/* Row 3: Locked Badge + Action Buttons */}
+                    <div className="flex items-center justify-between gap-2 mt-1">
+                        {isLocked && !isCompleted ? (
+                            <span className="text-xs text-amber-500 flex items-center gap-1" title={`Missing: ${missingPrereqs.map(p => p?.name).join(', ')}`}>
+                                <AlertCircle size={12} />
+                                Locked
+                            </span>
+                        ) : (
+                            <div></div>
                         )}
-                        </div>
 
                         {/* Action Buttons */}
-                        <div className="flex items-center gap-1 ml-auto">
+                        <div className="flex items-center gap-1">
                             <button
                                 type="button"
                                 onClick={(e) => {

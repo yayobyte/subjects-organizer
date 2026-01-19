@@ -40,12 +40,21 @@ export const PREREQUISITES_MAP: Record<string, string[]> = {
 };
 
 /**
- * Helper function to get sorted semesters from student data
+ * Helper function to get all semesters (1-10)
+ * Returns all semesters regardless of whether they have subjects
  */
 export function getSortedSemesters(subjects: { semester: string }[]): string[] {
-    return Array.from(new Set(subjects.map(s => s.semester))).sort((a, b) => {
-        const numA = parseInt(a.replace(/\D/g, '')) || 0;
-        const numB = parseInt(b.replace(/\D/g, '')) || 0;
-        return numA - numB;
-    });
+    // Always return all 10 semesters
+    return [
+        'Semestre 1',
+        'Semestre 2',
+        'Semestre 3',
+        'Semestre 4',
+        'Semestre 5',
+        'Semestre 6',
+        'Semestre 7',
+        'Semestre 8',
+        'Semestre 9',
+        'Semestre 10',
+    ];
 }
