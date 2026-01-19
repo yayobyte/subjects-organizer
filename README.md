@@ -1,8 +1,8 @@
 # Visual Curriculum & Prerequisite Tracker
 
-A modern, interactive web application for tracking academic progress with seamless data persistence. Built with React, TypeScript, Tailwind CSS v4, and Express backend.
+A modern, interactive web application for tracking academic progress with seamless data persistence and cross-device sync. Built with React, TypeScript, Tailwind CSS v4, and Express backend.
 
-**Last Updated**: January 19, 2026 (Evening) - Credits UI improved, storage simplified, layout refined
+**Last Updated**: January 19, 2026 (Late Night) - Configuration system + Prerequisites editor added
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
@@ -23,8 +23,9 @@ A modern, interactive web application for tracking academic progress with seamle
 - **One-Click Status Toggle**: Single click to cycle subjects between Missing, In Progress, and Completed states
 - **Add New Subjects**: Simplified inline form with auto-credit detection from course ID
 - **Edit Subject Names**: Click any subject name to edit inline
-- **Edit Credits**: Click any subject's credit badge to edit (validates 0-12 credits)
+- **Edit Credits**: Click any subject's credit badge with popover selector (0-6 quick buttons, 7-12 custom)
 - **Edit Grades**: Click grade badge on ANY subject to add or modify grades (supports numeric or text)
+- **Edit Prerequisites**: Searchable dropdown to add/remove prerequisites inline
 - **Delete Subjects**: Beautiful confirmation modal with smooth animations
 - **Inline Editing**: Keyboard shortcuts (Enter to save, Escape to cancel) for quick updates
 - **Prerequisite Locking**: Subjects automatically lock if prerequisites aren't met
@@ -32,16 +33,19 @@ A modern, interactive web application for tracking academic progress with seamle
 - **99 Total Courses**: Complete curriculum imported from university data
 
 ### 🎨 Premium Design
-- **Dark Mode**: Toggle between light and dark themes with persistent preference
+- **Cross-Device Dark Mode**: Backend-synced dark mode that works across all devices
+- **Editable Student Name**: Click your name in navbar to edit with backend sync
 - **Glassmorphism UI**: Modern, translucent design with backdrop blur effects
 - **Custom Color Palette**: Carefully curated colors (Crimson Violet, Deep Crimson, Princeton Orange, Autumn Leaf, Dark Teal)
 - **Smooth Animations**: Powered by Framer Motion for cinematic transitions
 - **Responsive Layout**: Fully optimized for desktop and mobile devices
 
 ### 🔄 Data Persistence
-- **Backend API**: Express server with file-based persistence to `server/data/curriculum.json`
+- **Backend API**: Express server with file-based persistence
+- **Configuration Sync**: User preferences (dark mode, student name) sync across devices via `server/data/config.json`
+- **Curriculum Storage**: All subjects and prerequisites saved to `server/data/curriculum.json`
 - **Auto-Save**: Changes automatically saved to file (debounced by 1 second)
-- **Reset Function**: Restore default curriculum data from backup
+- **Reset Function**: Restore default data from backup files
 
 ### 🖱️ Drag & Drop
 - **Semester Reallocation**: Drag subjects between semesters to reorganize your plan
@@ -165,24 +169,34 @@ assignments/
    - Type grade (numeric like "95" or text like "Aprobada")
    - Press Enter to save or Escape to cancel
    - Shows "Add grade" if no grade exists
-6. **Delete Subject**:
+6. **Edit Prerequisites**:
+   - Scroll down to the prerequisite section on any card
+   - Click "Add prerequisite" to open searchable dropdown
+   - Search by course code or name
+   - Select subjects from current or previous semesters only
+   - Click X on any prerequisite badge to remove it
+   - Changes save automatically
+7. **Delete Subject**:
    - Hover over a card to reveal action buttons at the bottom right
    - Click the trash icon
    - Confirm deletion in the beautiful modal dialog
-7. **Drag & Drop**:
+8. **Drag & Drop**:
    - Click and hold the grip icon at the bottom right of each card
    - Drag to another semester to move the subject
-8. **View Prerequisites**: Locked subjects show which prerequisites are missing
-9. **Real-time Stats**: Dashboard updates automatically as you make changes
+9. **View Prerequisites**: Locked subjects show which prerequisites are missing (hover for details)
+10. **Real-time Stats**: Dashboard updates automatically as you make changes
 
-### Dark Mode
-- Click the Moon/Sun icon in the top-right corner to toggle between light and dark modes
-- Your preference is saved to localStorage and persists across sessions
+### User Preferences (Synced Across Devices)
+- **Student Name**: Click your name in the navbar to edit inline, syncs to all devices
+- **Dark Mode**: Click the Moon/Sun icon to toggle, preference syncs across all devices
+- Settings are saved to `server/data/config.json` and sync in real-time
 
 ### Data Persistence
-- All changes are automatically saved to `server/data/curriculum.json` after 1 second
-- No manual save button needed - everything persists automatically
-- Reset button restores data from `curriculum.backup.json`
+- **Auto-Save**: All changes automatically saved after 1 second (curriculum and config)
+- **Cross-Device Sync**: Open on mobile and desktop - settings sync instantly
+- **Curriculum**: Saved to `server/data/curriculum.json`
+- **Configuration**: Saved to `server/data/config.json`
+- **Reset**: Restore default data from backup files
 
 ## 🔧 Configuration
 

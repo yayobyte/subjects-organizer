@@ -83,7 +83,9 @@
       "credits": 4,
       "status": "completed",
       "grade": 3.8,
-      "prerequisites": []
+      "prerequisites": [
+        "CB1B3"
+      ]
     },
     {
       "semester": "Semestre 2",

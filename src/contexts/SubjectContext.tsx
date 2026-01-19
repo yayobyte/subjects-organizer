@@ -10,6 +10,7 @@ interface SubjectContextType {
     updateSubjectGrade: (id: string, grade: number | string) => void;
     updateSubjectCredits: (id: string, credits: number) => void;
     updateSubjectName: (id: string, name: string) => void;
+    updatePrerequisites: (id: string, prerequisites: string[]) => void;
     deleteSubject: (id: string) => void;
     togglePrerequisiteCheck: (id: string) => void;
     getSubject: (id: string) => Subject | undefined;
@@ -112,6 +113,13 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
         }));
     };
 
+    const updatePrerequisites = (id: string, prerequisites: string[]) => {
+        setData(prev => ({
+            ...prev,
+            subjects: prev.subjects.map(s => s.id === id ? { ...s, prerequisites } : s)
+        }));
+    };
+
     const toggleSubjectStatus = (id: string) => {
         const subject = data.subjects.find(s => s.id === id);
         if (!subject) return;
@@ -203,6 +211,7 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
             updateSubjectGrade,
             updateSubjectCredits,
             updateSubjectName,
+            updatePrerequisites,
             deleteSubject,
             togglePrerequisiteCheck,
             getSubject,

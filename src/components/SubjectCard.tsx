@@ -7,6 +7,7 @@ import { cn } from '../lib/utils';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import { ConfirmDialog } from './ConfirmDialog';
+import { PrerequisiteEditor } from './PrerequisiteEditor';
 
 interface SubjectCardProps {
     subject: Subject;
@@ -141,10 +142,14 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
 
         <motion.div
             ref={setNodeRef}
-            style={style}
+            style={{
+                ...style,
+                position: 'relative',
+                zIndex: isDragging ? 50 : 'auto',
+            }}
             className={cn(
-                "group relative p-4 rounded-xl border backdrop-blur-sm transition-all duration-300 w-full h-32 flex flex-col",
-                isDragging ? "shadow-2xl ring-2 ring-crimson-violet-500/50 border-crimson-violet-500/50 scale-[1.02] z-50 bg-white" : "hover:shadow-lg",
+                "group p-4 rounded-xl border backdrop-blur-sm transition-all duration-300 w-full min-h-32 flex flex-col",
+                isDragging ? "shadow-2xl ring-2 ring-crimson-violet-500/50 border-crimson-violet-500/50 scale-[1.02] bg-white" : "hover:shadow-lg",
                 // Styles based on status
                 isCompleted
                     ? "bg-white/80 dark:bg-slate-800/80 border-emerald-200 dark:border-emerald-800/30 hover:shadow-emerald-500/10"
@@ -361,6 +366,9 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                             </button>
                         </div>
                     </div>
+
+                    {/* Row 4: Prerequisites */}
+                    <PrerequisiteEditor subject={subject} />
                 </div>
             </div>
 

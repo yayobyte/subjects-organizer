@@ -78,6 +78,7 @@ export const SemesterListView = () => {
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: index * 0.05 }}
                                 className="flex-shrink-0 w-80"
+                                style={{ overflow: 'visible' }}
                             >
                                 <div className="flex flex-col items-center gap-2 mb-4">
                                     <h2 className={`text-lg font-semibold tracking-tight ${isCompleted ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'}`}>
@@ -89,7 +90,7 @@ export const SemesterListView = () => {
                                 </div>
 
                                 <DroppableSemester id={semester}>
-                                    <div className="flex flex-col gap-4 min-h-[200px] p-4 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800">
+                                    <div className="flex flex-col gap-4 min-h-[200px] p-4 bg-slate-50/50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800" style={{ overflow: 'visible' }}>
                                         {semesterSubjects.map(subject => (
                                             <SubjectCard key={subject.id} subject={subject} />
                                         ))}

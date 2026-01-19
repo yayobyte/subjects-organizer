@@ -1,10 +1,10 @@
 # Project Context: Visual Curriculum & Prerequisite Tracker
 
-**Last Updated**: January 19, 2026 (Evening) - Credits UI improved, storage simplified, all semesters visible, 3-row layout
+**Last Updated**: January 19, 2026 (Late Night) - Configuration system + Prerequisites editor added
 
 ## Overview
 
-A modern curriculum tracking application with Express backend for file-based data persistence. Shows 99 courses across 10 semesters with status tracking, drag & drop, and dark mode support.
+A modern curriculum tracking application with Express backend for file-based data persistence. Shows 99 courses across 10 semesters with status tracking, drag & drop, cross-device dark mode sync, and inline prerequisite editing.
 
 ## Current Architecture
 
@@ -19,39 +19,48 @@ A modern curriculum tracking application with Express backend for file-based dat
 ### Key Features Implemented
 1. ✅ **Horizontal Semester Layout** - Row-based layout for landscape mode viewing (all 10 semesters always visible)
 2. ✅ **Backend API** - Express server with file-based persistence (API-only, simplified)
-3. ✅ **Dark Mode** - Toggle with localStorage persistence
-4. ✅ **Auto-Save** - Changes save to file automatically (1s debounce)
-5. ✅ **University Data Merge** - 99 courses imported from HTML
-6. ✅ **Drag & Drop** - Move subjects between semesters with visible grip handles
-7. ✅ **One-Click Status Toggle** - Single click to change status (fixed double-click issue)
-8. ✅ **Add New Subjects** - Inline form to add subjects to any semester (auto-credit detection)
-9. ✅ **Inline Grade Editing** - Click to edit grades on all subjects
-10. ✅ **Inline Credits Editing** - Popover UI with quick-select buttons (0-6) + custom input (7-12)
-11. ✅ **Inline Name Editing** - Click any subject name to edit inline
-12. ✅ **Delete Subjects** - Custom animated confirmation modal
-13. ✅ **Prerequisite Locking** - Auto-lock based on prerequisites
-14. ✅ **Fixed Card Dimensions** - Consistent w-full × h-32 with clean 3-row layout
+3. ✅ **Cross-Device Dark Mode** - Backend-synced dark mode that works across all devices
+4. ✅ **Student Name Editor** - Edit student name in navbar with backend sync
+5. ✅ **Configuration System** - Backend API for user preferences (dark mode, student name)
+6. ✅ **Auto-Save** - Changes save to file automatically (1s debounce)
+7. ✅ **University Data Merge** - 99 courses imported from HTML
+8. ✅ **Drag & Drop** - Move subjects between semesters with visible grip handles
+9. ✅ **One-Click Status Toggle** - Single click to change status (fixed double-click issue)
+10. ✅ **Add New Subjects** - Inline form to add subjects to any semester (auto-credit detection)
+11. ✅ **Inline Grade Editing** - Click to edit grades on all subjects
+12. ✅ **Inline Credits Editing** - Popover UI with quick-select buttons (0-6) + custom input (7-12)
+13. ✅ **Inline Name Editing** - Click any subject name to edit inline
+14. ✅ **Prerequisites Editor** - Searchable dropdown to add/remove prerequisites inline
+15. ✅ **Delete Subjects** - Custom animated confirmation modal
+16. ✅ **Prerequisite Locking** - Auto-lock based on prerequisites
+17. ✅ **Flexible Card Height** - Cards use min-h-32 to accommodate varying prerequisite counts
 
 ## Core Files
 
 ### Frontend (`src/`)
-- **App.tsx** - Main app, removed view switching
-- **components/Layout.tsx** - Full-width nav with dark mode toggle
-- **components/DarkModeToggle.tsx** - Dark mode toggle component
-- **components/SemesterListView.tsx** - Horizontal row-based list view with DnD
-- **components/SubjectCard.tsx** - Card with full inline editing (name, grade, credits, status) + delete
+- **App.tsx** - Main app wrapped with ConfigProvider and SubjectProvider
+- **components/Layout.tsx** - Full-width nav with student name editor + dark mode toggle
+- **components/DarkModeToggle.tsx** - Dark mode toggle using ConfigContext
+- **components/StudentNameEditor.tsx** - Inline student name editor in navbar
+- **components/SemesterListView.tsx** - Horizontal row-based list view with DnD (overflow-visible fix)
+- **components/SubjectCard.tsx** - Card with full inline editing + prerequisites editor (min-h-32)
+- **components/PrerequisiteEditor.tsx** - Searchable dropdown to add/remove prerequisites
 - **components/AddSubjectButton.tsx** - Simplified form with auto-credit detection
 - **components/ConfirmDialog.tsx** - Custom animated confirmation modal for deletions
 - **components/StatsDashboard.tsx** - Real-time statistics
 - **components/DroppableSemester.tsx** - DnD semester container
-- **contexts/SubjectContext.tsx** - Global state + API integration + all edit/delete methods
+- **contexts/SubjectContext.tsx** - Global state + API integration + all edit/delete/prerequisites methods
+- **contexts/ConfigContext.tsx** - Configuration state (dark mode, student name)
 - **lib/storage.ts** - API storage adapter (backend persistence only)
+- **lib/configStorage.ts** - Configuration API storage adapter
 - **data.ts** - Prerequisites map + getSortedSemesters() (returns all 10 semesters)
 
 ### Backend (`server/`)
-- **index.js** - Express server with CRUD endpoints
+- **index.js** - Express server with curriculum + config CRUD endpoints
 - **data/curriculum.json** - Live curriculum data (99 courses)
-- **data/curriculum.backup.json** - Reset backup
+- **data/curriculum.backup.json** - Reset backup for curriculum
+- **data/config.json** - User configuration (dark mode, student name)
+- **data/config.backup.json** - Reset backup for config
 
 ### Removed/Archived (`.backup/`)
 - **CurriculumGraph.tsx** - Graph view (removed per user request)
@@ -286,6 +295,95 @@ A modern curriculum tracking application with Express backend for file-based dat
 - Added `DarkModeToggle.tsx`
 - Cleaner navigation bar
 
+### 8. Configuration System Implementation (January 19, 2026)
+
+**Problem**: Dark mode stored in localStorage (device-specific), no cross-device sync
+
+**Solution**: Backend configuration API with React Context
+
+**New Backend Endpoints**:
+- `GET /api/config` - Load configuration
+- `POST /api/config` - Save entire config
+- `PATCH /api/config` - Update specific fields (recommended)
+- `POST /api/config/reset` - Reset to defaults
+
+**Configuration Structure**:
+```json
+{
+  "darkMode": false,
+  "studentName": "Cristian Gutierrez Gonzalez"
+}
+```
+
+**Files Created**:
+- `src/lib/configStorage.ts` - Config API adapter
+- `src/contexts/ConfigContext.tsx` - Config state management
+- `src/components/StudentNameEditor.tsx` - Inline name editor
+- `server/data/config.json` - Active config
+- `server/data/config.backup.json` - Default backup
+
+**Changes Made**:
+- DarkModeToggle now uses ConfigContext instead of localStorage
+- App.tsx wrapped with ConfigProvider
+- Layout.tsx includes StudentNameEditor in navbar
+- Dark mode syncs across all devices via backend
+- Student name editable with keyboard shortcuts (Enter/Escape)
+
+**Benefits**:
+- Settings persist across devices
+- Centralized configuration management
+- Easy to extend with new settings
+- Optimistic updates for instant feedback
+
+**Details**: See `CONFIG_IMPLEMENTATION.md`
+
+### 9. Prerequisites Inline Editor (January 19, 2026)
+
+**Problem**: No way to add/edit prerequisites from the UI
+
+**Solution**: Searchable dropdown editor integrated into subject cards
+
+**Features**:
+- Click "Add prerequisite" button to open searchable dropdown
+- Real-time search by course code or subject name
+- Only shows subjects from current or previous semesters
+- Cannot add self or duplicates
+- Prerequisites displayed as blue badges with X to remove
+- Auto-saves to backend immediately
+
+**New Component**: `src/components/PrerequisiteEditor.tsx`
+
+**UI Location**: Row 4 of SubjectCard (after action buttons)
+
+**Dropdown Features**:
+- 288px width (w-72)
+- Max height 256px with scroll
+- Z-index 50 for proper layering
+- Click-outside-to-close
+- Auto-focus search input
+
+**Context Method Added**:
+```typescript
+updatePrerequisites: (id: string, prerequisites: string[]) => void
+```
+
+**Card Changes**:
+- Changed from `h-32` (fixed) to `min-h-32` (flexible)
+- Cards expand vertically to show all prerequisites
+- Now 4-row layout: name, badges, actions, prerequisites
+
+**Z-Index Fix**:
+- Added `overflow-visible` to semester container in SemesterListView
+- Prevents dropdown from being clipped by parent containers
+- Dropdown properly appears above other cards
+
+**Smart Filtering**:
+- Semestre 5 subject can only select prerequisites from Semesters 1-5
+- Prevents circular dependencies
+- Excludes already-added prerequisites
+
+**Details**: See `PREREQUISITES_FEATURE.md`
+
 ## Development Workflow
 
 ### Running the App
@@ -405,7 +503,10 @@ pm2 serve dist 5173 --name curriculum-frontend --spa
 
 ### Completed ✅
 - Backend API integration
-- Dark mode toggle
+- Configuration system with backend sync (dark mode, student name)
+- Cross-device dark mode synchronization
+- Student name editor in navbar
+- Prerequisites inline editor with searchable dropdown
 - University data import
 - File-based persistence
 - Horizontal semester layout
@@ -416,11 +517,12 @@ pm2 serve dist 5173 --name curriculum-frontend --spa
 - Inline subject name editing
 - Delete subjects with custom confirmation modal
 - Visible drag handles
-- Fixed card dimensions (w-full × h-32)
-- 3-row card layout (name, badges, actions)
+- Flexible card height (min-h-32)
+- 4-row card layout (name, badges, actions, prerequisites)
 - Null credits database fix
 - Storage system simplified to API-only
 - All 10 semesters always visible
+- Z-index and overflow fixes for dropdowns
 
 ### Pending 📋
 - Edit course IDs
