@@ -157,11 +157,11 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                 isCompleted
                     ? "bg-emerald-50/90 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800/50 hover:shadow-emerald-500/20"
                     : isInProgress
-                        ? "bg-sky-50/90 dark:bg-sky-950/40 border-sky-300 dark:border-sky-800/50 hover:shadow-sky-500/20"
+                        ? "bg-dark-teal-50/90 dark:bg-dark-teal-950/40 border-dark-teal-300 dark:border-dark-teal-800/50 hover:shadow-dark-teal-500/20"
                         : isReady
-                            ? "bg-amber-50/90 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800/50 hover:shadow-amber-500/20"
+                            ? "bg-princeton-orange-50/90 dark:bg-princeton-orange-950/40 border-princeton-orange-300 dark:border-princeton-orange-800/50 hover:shadow-princeton-orange-500/20"
                             : isLockedMissing
-                                ? "bg-red-50/90 dark:bg-red-950/40 border-red-300 dark:border-red-800/50 hover:shadow-red-500/20"
+                                ? "bg-deep-crimson-50/90 dark:bg-deep-crimson-950/40 border-deep-crimson-300 dark:border-deep-crimson-800/50 hover:shadow-deep-crimson-500/20"
                                 : "bg-slate-50/90 dark:bg-slate-900/40 border-slate-300 dark:border-slate-700/50"
             )}
         >
@@ -176,11 +176,11 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                         isCompleted
                             ? "bg-emerald-500 text-white cursor-pointer hover:bg-emerald-600"
                             : isInProgress
-                                ? "bg-sky-500 text-white cursor-pointer hover:bg-sky-600"
+                                ? "bg-dark-teal-500 text-white cursor-pointer hover:bg-dark-teal-600"
                                 : isLockedMissing
-                                    ? "bg-red-200 dark:bg-red-900 text-red-600 dark:text-red-300 cursor-not-allowed"
+                                    ? "bg-deep-crimson-200 dark:bg-deep-crimson-900 text-deep-crimson-600 dark:text-deep-crimson-300 cursor-not-allowed"
                                     : isReady
-                                        ? "bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-300 cursor-pointer hover:bg-amber-200 dark:hover:bg-amber-800"
+                                        ? "bg-princeton-orange-100 dark:bg-princeton-orange-900 text-princeton-orange-600 dark:text-princeton-orange-300 cursor-pointer hover:bg-princeton-orange-200 dark:hover:bg-princeton-orange-800"
                                         : "bg-slate-100 dark:bg-slate-700 text-slate-300 cursor-pointer hover:bg-slate-200"
                     )}
                 >
@@ -242,7 +242,7 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
 
                         {/* Locked Badge */}
                         {isLockedMissing && (
-                            <span className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1" title={`Missing: ${missingPrereqs.map(p => p?.name).join(', ')}`}>
+                            <span className="text-xs text-deep-crimson-600 dark:text-deep-crimson-400 flex items-center gap-1" title={`Missing: ${missingPrereqs.map(p => p?.name).join(', ')}`}>
                                 <AlertCircle size={12} />
                                 Locked
                             </span>
@@ -314,7 +314,7 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                             </div>
                         )}
 
-                        {!isLockedMissing && (
+                        {isCompleted && (
                             isEditingGrade ? (
                                 <input
                                     type="text"
@@ -324,16 +324,7 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                                     onKeyDown={handleGradeKeyDown}
                                     placeholder="Grade"
                                     autoFocus
-                                    className={cn(
-                                        "text-xs px-2 py-0.5 rounded-full border w-16 focus:outline-none focus:ring-1",
-                                        isCompleted
-                                            ? "bg-emerald-500 dark:bg-emerald-600 text-white placeholder:text-emerald-100 border-emerald-600 dark:border-emerald-500 focus:ring-emerald-300"
-                                            : isInProgress
-                                                ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 border-sky-200 dark:border-sky-800/30 focus:ring-sky-400"
-                                                : isReady
-                                                    ? "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800/30 focus:ring-amber-400"
-                                                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-600 focus:ring-slate-400"
-                                    )}
+                                    className="text-xs px-2 py-0.5 rounded-full border w-16 focus:outline-none focus:ring-1 bg-emerald-500 dark:bg-emerald-600 text-white placeholder:text-emerald-100 border-emerald-600 dark:border-emerald-500 focus:ring-emerald-300"
                                 />
                             ) : (
                                 <button
@@ -341,16 +332,7 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                                         e.stopPropagation();
                                         setIsEditingGrade(true);
                                     }}
-                                    className={cn(
-                                        "text-xs px-2 py-0.5 rounded-full border flex items-center gap-1 transition-colors cursor-pointer group",
-                                        isCompleted
-                                            ? "bg-emerald-500 dark:bg-emerald-600 text-white border-emerald-600 dark:border-emerald-500 hover:bg-emerald-600 dark:hover:bg-emerald-500 shadow-sm"
-                                            : isInProgress
-                                                ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 border-sky-100 dark:border-sky-800/30 hover:bg-sky-100 dark:hover:bg-sky-900/30"
-                                                : isReady
-                                                    ? "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-800/30 hover:bg-amber-100 dark:hover:bg-amber-900/30"
-                                                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
-                                    )}
+                                    className="text-xs px-2 py-0.5 rounded-full border flex items-center gap-1 transition-colors cursor-pointer group bg-emerald-500 dark:bg-emerald-600 text-white border-emerald-600 dark:border-emerald-500 hover:bg-emerald-600 dark:hover:bg-emerald-500 shadow-sm"
                                 >
                                     <Star size={10} />
                                     {subject.grade || 'Add grade'}
@@ -394,7 +376,7 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
 
             {/* Connector Line (Decorative) - shows on ready subjects */}
             {isReady && (
-                <div className="absolute left-0 bottom-0 w-full h-[2px] bg-gradient-to-r from-transparent via-amber-400/0 to-transparent group-hover:via-amber-400/50 transition-all duration-500" />
+                <div className="absolute left-0 bottom-0 w-full h-[2px] bg-gradient-to-r from-transparent via-princeton-orange-400/0 to-transparent group-hover:via-princeton-orange-400/50 transition-all duration-500" />
             )}
         </motion.div>
         </>

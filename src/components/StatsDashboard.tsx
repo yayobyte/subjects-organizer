@@ -1,13 +1,15 @@
 
 import { useSubjects } from '../contexts/SubjectContext';
-import { Trophy, Book, Zap, TrendingUp } from 'lucide-react';
+import { Trophy, Book, Zap, TrendingUp, Clock } from 'lucide-react';
 
 export const StatsOverview = () => {
     const { subjects } = useSubjects();
 
     const completed = subjects.filter(s => s.status === 'completed');
+    const inProgress = subjects.filter(s => s.status === 'in-progress');
     const totalCredits = subjects.reduce((acc, s) => acc + s.credits, 0);
     const completedCredits = completed.reduce((acc, s) => acc + s.credits, 0);
+    const inProgressCredits = inProgress.reduce((acc, s) => acc + s.credits, 0);
     const progress = Math.round((completedCredits / totalCredits) * 100);
 
     // Calculate Average Grade
@@ -20,34 +22,41 @@ export const StatsOverview = () => {
         : '-';
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
             <StatCard
                 label="Progress"
                 value={`${progress}%`}
                 subtext={`${completedCredits}/${totalCredits} Credits`}
                 icon={<TrendingUp size={20} />}
-                bgColor="bg-emerald-700 dark:bg-emerald-800"
+                bgColor="bg-emerald-600 dark:bg-emerald-700"
+            />
+            <StatCard
+                label="In Progress"
+                value={inProgress.length.toString()}
+                subtext={`${inProgressCredits} Credits`}
+                icon={<Clock size={20} />}
+                bgColor="bg-dark-teal-600 dark:bg-dark-teal-700"
             />
             <StatCard
                 label="Average Grade"
                 value={average}
                 subtext="Cumulative GPA"
                 icon={<Trophy size={20} />}
-                bgColor="bg-orange-700 dark:bg-orange-800"
+                bgColor="bg-princeton-orange-600 dark:bg-princeton-orange-700"
             />
             <StatCard
                 label="Completed"
                 value={completed.length.toString()}
                 subtext="Total Subjects"
                 icon={<Book size={20} />}
-                bgColor="bg-violet-700 dark:bg-violet-800"
+                bgColor="bg-crimson-violet-600 dark:bg-crimson-violet-700"
             />
             <StatCard
                 label="Remaining"
                 value={(subjects.length - completed.length).toString()}
                 subtext="To Graduate"
                 icon={<Zap size={20} />}
-                bgColor="bg-teal-700 dark:bg-teal-800"
+                bgColor="bg-autumn-leaf-600 dark:bg-autumn-leaf-700"
             />
         </div>
     );
