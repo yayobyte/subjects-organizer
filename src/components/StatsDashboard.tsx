@@ -26,28 +26,28 @@ export const StatsOverview = () => {
                 value={`${progress}%`}
                 subtext={`${completedCredits}/${totalCredits} Credits`}
                 icon={<TrendingUp size={20} />}
-                bgColor="bg-emerald-500 dark:bg-emerald-600"
+                bgColor="bg-emerald-700 dark:bg-emerald-800"
             />
             <StatCard
                 label="Average Grade"
                 value={average}
                 subtext="Cumulative GPA"
                 icon={<Trophy size={20} />}
-                bgColor="bg-princeton-orange-500 dark:bg-princeton-orange-600"
+                bgColor="bg-orange-700 dark:bg-orange-800"
             />
             <StatCard
                 label="Completed"
                 value={completed.length.toString()}
                 subtext="Total Subjects"
                 icon={<Book size={20} />}
-                bgColor="bg-crimson-violet-500 dark:bg-crimson-violet-600"
+                bgColor="bg-violet-700 dark:bg-violet-800"
             />
             <StatCard
                 label="Remaining"
                 value={(subjects.length - completed.length).toString()}
                 subtext="To Graduate"
                 icon={<Zap size={20} />}
-                bgColor="bg-dark-teal-500 dark:bg-dark-teal-600"
+                bgColor="bg-teal-700 dark:bg-teal-800"
             />
         </div>
     );

@@ -224,7 +224,7 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                         </span>
                     </div>
 
-                    {/* Row 2: Credits and Grade badges */}
+                    {/* Row 2: Credits, Locked Badge and Grade badges */}
                     <div className="flex items-center gap-2 mt-2 relative">
                         {/* Credits Badge */}
                         <button
@@ -233,12 +233,20 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                                 setIsEditingCredits(!isEditingCredits);
                                 setShowCustomCredits(false);
                             }}
-                            className="text-xs bg-slate-600 dark:bg-slate-700 text-white px-2 py-0.5 rounded-full flex items-center gap-1 hover:bg-slate-700 dark:hover:bg-slate-600 transition-colors cursor-pointer group shadow-sm"
+                            className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 flex items-center gap-1 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer group"
                         >
                             <BookOpen size={10} />
                             {subject.credits} Cr
                             <Edit2 size={8} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                         </button>
+
+                        {/* Locked Badge */}
+                        {isLockedMissing && (
+                            <span className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1" title={`Missing: ${missingPrereqs.map(p => p?.name).join(', ')}`}>
+                                <AlertCircle size={12} />
+                                Locked
+                            </span>
+                        )}
 
                         {/* Credits Popover */}
                         {isEditingCredits && (
@@ -306,62 +314,54 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                             </div>
                         )}
 
-                        {isEditingGrade ? (
-                            <input
-                                type="text"
-                                value={gradeValue}
-                                onChange={(e) => setGradeValue(e.target.value)}
-                                onBlur={handleGradeSubmit}
-                                onKeyDown={handleGradeKeyDown}
-                                placeholder="Grade"
-                                autoFocus
-                                className={cn(
-                                    "text-xs px-2 py-0.5 rounded-full w-16 focus:outline-none shadow-sm",
-                                    isCompleted
-                                        ? "bg-emerald-500 dark:bg-emerald-600 text-white placeholder:text-emerald-100 focus:ring-2 focus:ring-emerald-300"
-                                        : isInProgress
-                                            ? "bg-sky-500 dark:bg-sky-600 text-white placeholder:text-sky-100 focus:ring-2 focus:ring-sky-300"
-                                            : isReady
-                                                ? "bg-amber-500 dark:bg-amber-600 text-white placeholder:text-amber-100 focus:ring-2 focus:ring-amber-300"
-                                                : "bg-slate-600 dark:bg-slate-700 text-white placeholder:text-slate-300 focus:ring-2 focus:ring-slate-400"
-                                )}
-                            />
-                        ) : (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setIsEditingGrade(true);
-                                }}
-                                className={cn(
-                                    "text-xs px-2 py-0.5 rounded-full flex items-center gap-1 transition-colors cursor-pointer group shadow-sm",
-                                    isCompleted
-                                        ? "bg-emerald-500 dark:bg-emerald-600 text-white hover:bg-emerald-600 dark:hover:bg-emerald-500"
-                                        : isInProgress
-                                            ? "bg-sky-500 dark:bg-sky-600 text-white hover:bg-sky-600 dark:hover:bg-sky-500"
-                                            : isReady
-                                                ? "bg-amber-500 dark:bg-amber-600 text-white hover:bg-amber-600 dark:hover:bg-amber-500"
-                                                : "bg-slate-600 dark:bg-slate-700 text-white hover:bg-slate-700 dark:hover:bg-slate-600"
-                                )}
-                            >
-                                <Star size={10} />
-                                {subject.grade || 'Add grade'}
-                                <Edit2 size={8} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </button>
+                        {!isLockedMissing && (
+                            isEditingGrade ? (
+                                <input
+                                    type="text"
+                                    value={gradeValue}
+                                    onChange={(e) => setGradeValue(e.target.value)}
+                                    onBlur={handleGradeSubmit}
+                                    onKeyDown={handleGradeKeyDown}
+                                    placeholder="Grade"
+                                    autoFocus
+                                    className={cn(
+                                        "text-xs px-2 py-0.5 rounded-full border w-16 focus:outline-none focus:ring-1",
+                                        isCompleted
+                                            ? "bg-emerald-500 dark:bg-emerald-600 text-white placeholder:text-emerald-100 border-emerald-600 dark:border-emerald-500 focus:ring-emerald-300"
+                                            : isInProgress
+                                                ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 border-sky-200 dark:border-sky-800/30 focus:ring-sky-400"
+                                                : isReady
+                                                    ? "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800/30 focus:ring-amber-400"
+                                                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-600 focus:ring-slate-400"
+                                    )}
+                                />
+                            ) : (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsEditingGrade(true);
+                                    }}
+                                    className={cn(
+                                        "text-xs px-2 py-0.5 rounded-full border flex items-center gap-1 transition-colors cursor-pointer group",
+                                        isCompleted
+                                            ? "bg-emerald-500 dark:bg-emerald-600 text-white border-emerald-600 dark:border-emerald-500 hover:bg-emerald-600 dark:hover:bg-emerald-500 shadow-sm"
+                                            : isInProgress
+                                                ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 border-sky-100 dark:border-sky-800/30 hover:bg-sky-100 dark:hover:bg-sky-900/30"
+                                                : isReady
+                                                    ? "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-800/30 hover:bg-amber-100 dark:hover:bg-amber-900/30"
+                                                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
+                                    )}
+                                >
+                                    <Star size={10} />
+                                    {subject.grade || 'Add grade'}
+                                    <Edit2 size={8} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                                </button>
+                            )
                         )}
                     </div>
 
-                    {/* Row 3: Locked Badge + Action Buttons */}
-                    <div className="flex items-center justify-between gap-2 mt-1">
-                        {isLockedMissing && (
-                            <span className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1" title={`Missing: ${missingPrereqs.map(p => p?.name).join(', ')}`}>
-                                <AlertCircle size={12} />
-                                Locked
-                            </span>
-                        )}
-                        {!isLockedMissing && (
-                            <div></div>
-                        )}
-
+                    {/* Row 3: Action Buttons */}
+                    <div className="flex items-center justify-end gap-2 mt-1">
                         {/* Action Buttons */}
                         <div className="flex items-center gap-1">
                             <button
