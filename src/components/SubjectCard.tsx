@@ -181,7 +181,7 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                         {isEditingCredits ? (
                             <input
                                 type="number"
-                                min="1"
+                                min="0"
                                 max="12"
                                 value={creditsValue}
                                 onChange={(e) => setCreditsValue(e.target.value)}
@@ -204,31 +204,39 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                             </button>
                         )}
 
-                        {isCompleted && (
-                            isEditingGrade ? (
-                                <input
-                                    type="text"
-                                    value={gradeValue}
-                                    onChange={(e) => setGradeValue(e.target.value)}
-                                    onBlur={handleGradeSubmit}
-                                    onKeyDown={handleGradeKeyDown}
-                                    placeholder="Grade"
-                                    autoFocus
-                                    className="text-xs bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800/30 w-16 focus:outline-none focus:ring-1 focus:ring-emerald-400"
-                                />
-                            ) : (
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setIsEditingGrade(true);
-                                    }}
-                                    className="text-xs bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-800/30 flex items-center gap-1 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors cursor-pointer group"
-                                >
-                                    <Star size={10} />
-                                    {subject.grade || 'Add grade'}
-                                    <Edit2 size={8} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </button>
-                            )
+                        {isEditingGrade ? (
+                            <input
+                                type="text"
+                                value={gradeValue}
+                                onChange={(e) => setGradeValue(e.target.value)}
+                                onBlur={handleGradeSubmit}
+                                onKeyDown={handleGradeKeyDown}
+                                placeholder="Grade"
+                                autoFocus
+                                className={cn(
+                                    "text-xs px-2 py-0.5 rounded-full border w-16 focus:outline-none focus:ring-1",
+                                    isCompleted
+                                        ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/30 focus:ring-emerald-400"
+                                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-600 focus:ring-crimson-violet-400"
+                                )}
+                            />
+                        ) : (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsEditingGrade(true);
+                                }}
+                                className={cn(
+                                    "text-xs px-2 py-0.5 rounded-full border flex items-center gap-1 transition-colors cursor-pointer group",
+                                    isCompleted
+                                        ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/30"
+                                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
+                                )}
+                            >
+                                <Star size={10} />
+                                {subject.grade || 'Add grade'}
+                                <Edit2 size={8} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </button>
                         )}
 
                         {isLocked && !isCompleted && (

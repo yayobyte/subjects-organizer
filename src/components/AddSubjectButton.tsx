@@ -14,34 +14,37 @@ export const AddSubjectButton = ({ semester }: AddSubjectButtonProps) => {
     const [formData, setFormData] = useState({
         id: '',
         name: '',
-        credits: '',
     });
     const { addSubject } = useSubjects();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!formData.id.trim() || !formData.name.trim() || !formData.credits) {
+        if (!formData.id.trim() || !formData.name.trim()) {
             return;
         }
+
+        // Extract credits from last digit of ID
+        const lastChar = formData.id.trim().slice(-1);
+        const credits = /^\d$/.test(lastChar) ? parseInt(lastChar) : 0;
 
         const newSubject: Subject = {
             id: formData.id.trim(),
             name: formData.name.trim(),
             semester,
-            credits: parseInt(formData.credits) || 0,
+            credits,
             status: 'missing',
             prerequisites: []
         };
 
         addSubject(newSubject);
 
-        setFormData({ id: '', name: '', credits: '' });
+        setFormData({ id: '', name: '' });
         setIsOpen(false);
     };
 
     const handleCancel = () => {
-        setFormData({ id: '', name: '', credits: '' });
+        setFormData({ id: '', name: '' });
         setIsOpen(false);
     };
 
@@ -99,7 +102,7 @@ export const AddSubjectButton = ({ semester }: AddSubjectButtonProps) => {
                                     type="text"
                                     value={formData.id}
                                     onChange={(e) => setFormData(prev => ({ ...prev, id: e.target.value }))}
-                                    placeholder="e.g., CS101"
+                                    placeholder="e.g., IS105 (last digit = credits)"
                                     className={cn(
                                         "w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-600",
                                         "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100",
@@ -122,29 +125,6 @@ export const AddSubjectButton = ({ semester }: AddSubjectButtonProps) => {
                                     value={formData.name}
                                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                                     placeholder="e.g., Introduction to Programming"
-                                    className={cn(
-                                        "w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-600",
-                                        "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100",
-                                        "placeholder:text-slate-400 dark:placeholder:text-slate-500",
-                                        "focus:outline-none focus:ring-2 focus:ring-crimson-violet-500 focus:border-transparent",
-                                        "transition-all"
-                                    )}
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="subject-credits" className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
-                                    Credits
-                                </label>
-                                <input
-                                    id="subject-credits"
-                                    type="number"
-                                    min="0"
-                                    max="12"
-                                    value={formData.credits}
-                                    onChange={(e) => setFormData(prev => ({ ...prev, credits: e.target.value }))}
-                                    placeholder="0"
                                     className={cn(
                                         "w-full px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-600",
                                         "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100",
