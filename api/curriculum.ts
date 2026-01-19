@@ -7,8 +7,10 @@ interface Subject {
     credits: number;
     semester: string;
     grade?: number;
-    completed: boolean;
-    orderIndex: number;
+    status?: string;
+    completed?: boolean;
+    orderIndex?: number;
+    prerequisites?: string[];
 }
 
 const supabase = createClient(
@@ -37,8 +39,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             if (error) throw error;
 
+            // Transform database format to frontend format
+            const transformedSubjects = (data || []).map(subject => ({
+                id: subject.id,
+                name: subject.name,
+                credits: subject.credits,
+                semester: subject.semester,
+                grade: subject.grade,
+                status: subject.status || (subject.completed ? 'completed' : 'missing'),
+                prerequisites: subject.prerequisites || []
+            }));
+
             return res.status(200).json({
-                subjects: data || [],
+                subjects: transformedSubjects,
                 studentName: '' // Will be fetched from config
             });
 
@@ -58,14 +71,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             if (deleteError) throw deleteError;
 
             // Insert all subjects
-            const subjectsToInsert = subjects.map(subject => ({
+            const subjectsToInsert = subjects.map((subject, index) => ({
                 id: subject.id,
                 name: subject.name,
                 credits: subject.credits,
                 semester: subject.semester,
                 grade: subject.grade ?? null,
-                completed: subject.completed,
-                order_index: subject.orderIndex
+                status: subject.status || (subject.completed ? 'completed' : 'missing'),
+                completed: subject.status === 'completed' || subject.completed === true,
+                order_index: subject.orderIndex ?? index,
+                prerequisites: subject.prerequisites || []
             }));
 
             const { error: insertError } = await supabase
