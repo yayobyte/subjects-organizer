@@ -41,6 +41,9 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
 
     const isLocked = missingPrereqs.length > 0;
     const isCompleted = subject.status === 'completed';
+    const isInProgress = subject.status === 'in-progress';
+    const isReady = subject.status === 'missing' && !isLocked; // prerequisites met
+    const isLockedMissing = subject.status === 'missing' && isLocked; // prerequisites not met
 
     const handleCheckboxClick = () => {
         if (!isLocked || isCompleted) {
@@ -150,12 +153,16 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
             className={cn(
                 "group p-4 rounded-xl border backdrop-blur-sm transition-all duration-300 w-full min-h-32 flex flex-col",
                 isDragging ? "shadow-2xl ring-2 ring-crimson-violet-500/50 border-crimson-violet-500/50 scale-[1.02] bg-white" : "hover:shadow-lg",
-                // Styles based on status
+                // Color-coded status backgrounds
                 isCompleted
-                    ? "bg-white/80 dark:bg-slate-800/80 border-emerald-200 dark:border-emerald-800/30 hover:shadow-emerald-500/10"
-                    : isLocked
-                        ? "bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 opacity-80"
-                        : "bg-white/60 dark:bg-slate-800/60 border-slate-200/60 dark:border-slate-700/60 hover:border-crimson-violet-300 hover:bg-white hover:shadow-crimson-violet-500/10"
+                    ? "bg-emerald-50/90 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800/50 hover:shadow-emerald-500/20"
+                    : isInProgress
+                        ? "bg-sky-50/90 dark:bg-sky-950/40 border-sky-300 dark:border-sky-800/50 hover:shadow-sky-500/20"
+                        : isReady
+                            ? "bg-amber-50/90 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800/50 hover:shadow-amber-500/20"
+                            : isLockedMissing
+                                ? "bg-red-50/90 dark:bg-red-950/40 border-red-300 dark:border-red-800/50 hover:shadow-red-500/20"
+                                : "bg-slate-50/90 dark:bg-slate-900/40 border-slate-300 dark:border-slate-700/50"
             )}
         >
             <div className="flex justify-between items-start gap-4">
@@ -168,9 +175,13 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                         "mt-0.5 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200",
                         isCompleted
                             ? "bg-emerald-500 text-white cursor-pointer hover:bg-emerald-600"
-                            : isLocked
-                                ? "bg-slate-200 dark:bg-slate-800 text-slate-400 cursor-not-allowed"
-                                : "bg-slate-100 dark:bg-slate-700 text-slate-300 group-hover:border-crimson-violet-400 border border-transparent cursor-pointer hover:bg-crimson-violet-100 dark:hover:bg-slate-600"
+                            : isInProgress
+                                ? "bg-sky-500 text-white cursor-pointer hover:bg-sky-600"
+                                : isLockedMissing
+                                    ? "bg-red-200 dark:bg-red-900 text-red-600 dark:text-red-300 cursor-not-allowed"
+                                    : isReady
+                                        ? "bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-300 cursor-pointer hover:bg-amber-200 dark:hover:bg-amber-800"
+                                        : "bg-slate-100 dark:bg-slate-700 text-slate-300 cursor-pointer hover:bg-slate-200"
                     )}
                 >
                     {isCompleted ? <Check size={14} strokeWidth={3} /> : <Circle size={14} />}
@@ -308,7 +319,11 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                                     "text-xs px-2 py-0.5 rounded-full border w-16 focus:outline-none focus:ring-1",
                                     isCompleted
                                         ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/30 focus:ring-emerald-400"
-                                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-600 focus:ring-crimson-violet-400"
+                                        : isInProgress
+                                            ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 border-sky-200 dark:border-sky-800/30 focus:ring-sky-400"
+                                            : isReady
+                                                ? "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800/30 focus:ring-amber-400"
+                                                : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-600 focus:ring-slate-400"
                                 )}
                             />
                         ) : (
@@ -321,7 +336,11 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                                     "text-xs px-2 py-0.5 rounded-full border flex items-center gap-1 transition-colors cursor-pointer group",
                                     isCompleted
                                         ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/30"
-                                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
+                                        : isInProgress
+                                            ? "bg-sky-50 dark:bg-sky-900/20 text-sky-600 dark:text-sky-400 border-sky-100 dark:border-sky-800/30 hover:bg-sky-100 dark:hover:bg-sky-900/30"
+                                            : isReady
+                                                ? "bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-800/30 hover:bg-amber-100 dark:hover:bg-amber-900/30"
+                                                : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
                                 )}
                             >
                                 <Star size={10} />
@@ -333,12 +352,13 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
 
                     {/* Row 3: Locked Badge + Action Buttons */}
                     <div className="flex items-center justify-between gap-2 mt-1">
-                        {isLocked && !isCompleted ? (
-                            <span className="text-xs text-amber-500 flex items-center gap-1" title={`Missing: ${missingPrereqs.map(p => p?.name).join(', ')}`}>
+                        {isLockedMissing && (
+                            <span className="text-xs text-red-600 dark:text-red-400 flex items-center gap-1" title={`Missing: ${missingPrereqs.map(p => p?.name).join(', ')}`}>
                                 <AlertCircle size={12} />
                                 Locked
                             </span>
-                        ) : (
+                        )}
+                        {!isLockedMissing && (
                             <div></div>
                         )}
 
@@ -372,9 +392,9 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                 </div>
             </div>
 
-            {/* Connector Line (Decorative) */}
-            {!isCompleted && !isLocked && (
-                <div className="absolute left-0 bottom-0 w-full h-[2px] bg-gradient-to-r from-transparent via-crimson-violet-400/0 to-transparent group-hover:via-crimson-violet-400/50 transition-all duration-500" />
+            {/* Connector Line (Decorative) - shows on ready subjects */}
+            {isReady && (
+                <div className="absolute left-0 bottom-0 w-full h-[2px] bg-gradient-to-r from-transparent via-amber-400/0 to-transparent group-hover:via-amber-400/50 transition-all duration-500" />
             )}
         </motion.div>
         </>

@@ -20,6 +20,11 @@ A modern, interactive web application for tracking academic progress with seamle
 - **Fixed Card Dimensions**: Consistent card sizes (w-full × h-32) for uniform appearance
 
 ### 🎯 Smart Subject Management
+- **Color-Coded Status System**: Visual status indicators with distinct background colors
+  - 🟢 **Green**: Completed courses (approved)
+  - 🔵 **Blue**: In-progress courses (currently taking)
+  - 🟡 **Amber/Orange**: Ready courses (prerequisites met, available to take)
+  - 🔴 **Red**: Locked courses (prerequisites not met)
 - **One-Click Status Toggle**: Single click to cycle subjects between Missing, In Progress, and Completed states
 - **Add New Subjects**: Simplified inline form with auto-credit detection from course ID
 - **Edit Subject Names**: Click any subject name to edit inline
@@ -148,6 +153,16 @@ assignments/
 
 ## 🎮 Usage Guide
 
+### Understanding the Color System
+Each subject card is color-coded based on its current status to help you quickly identify what you need to focus on:
+
+- **🟢 Green (Completed)**: Courses you've already finished and approved
+- **🔵 Blue (In Progress)**: Courses you're currently taking this semester
+- **🟡 Amber/Orange (Ready)**: Courses available to take - all prerequisites are met!
+- **🔴 Red (Locked)**: Courses you can't take yet - prerequisites haven't been completed
+
+The color system works in both light and dark modes with automatically adjusted contrast for optimal readability.
+
 ### Subject Management
 1. **Toggle Status**: Single-click the checkbox icon to cycle through statuses (Missing → In Progress → Completed)
 2. **Add New Subject**:
@@ -248,13 +263,15 @@ The Express backend provides these endpoints:
 
 ### Completed ✅
 - Backend API integration for file-based persistence
-- Dark mode toggle
+- Dark mode toggle with backend sync
+- Color-coded status system (Green/Blue/Orange/Red for visual clarity)
 - Horizontal semester layout for landscape mode (all 10 semesters always visible)
 - Add new subjects functionality with auto-credit detection
 - Inline grade and credits editing (all subjects) with popover UI
 - Inline subject name editing
 - Single-click status toggle
 - Delete subjects with custom confirmation modal
+- Prerequisites editor with searchable dropdown
 - 3-row card layout (name, badges, actions)
 - Storage simplified to API-only
 - Fixed card dimensions (w-full × h-32)
