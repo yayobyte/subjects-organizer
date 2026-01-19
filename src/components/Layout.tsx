@@ -2,6 +2,7 @@ import { type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { GraduationCap } from 'lucide-react';
 import { DarkModeToggle } from './DarkModeToggle';
+import { StudentNameEditor } from './StudentNameEditor';
 
 interface LayoutProps {
     children: ReactNode;
@@ -29,6 +30,7 @@ export const Layout = ({ children }: LayoutProps) => {
                         </div>
 
                         <div className="flex items-center gap-4">
+                            <StudentNameEditor />
                             <DarkModeToggle />
                         </div>
                     </div>

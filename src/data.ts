@@ -43,7 +43,7 @@ export const PREREQUISITES_MAP: Record<string, string[]> = {
  * Helper function to get all semesters (1-10)
  * Returns all semesters regardless of whether they have subjects
  */
-export function getSortedSemesters(subjects: { semester: string }[]): string[] {
+export function getSortedSemesters(): string[] {
     // Always return all 10 semesters
     return [
         'Semestre 1',

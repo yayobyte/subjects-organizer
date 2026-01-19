@@ -1,11 +1,13 @@
 import { SubjectProvider, useSubjects } from './contexts/SubjectContext';
+import { ConfigProvider, useConfig } from './contexts/ConfigContext';
 import { Layout } from './components/Layout';
 import { SemesterListView } from './components/SemesterListView';
 
 function CurriculumTracker() {
-  const { isLoading } = useSubjects();
+  const { isLoading: isLoadingSubjects } = useSubjects();
+  const { isLoading: isLoadingConfig } = useConfig();
 
-  if (isLoading) {
+  if (isLoadingSubjects || isLoadingConfig) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
         <div className="text-center">
@@ -25,9 +27,11 @@ function CurriculumTracker() {
 
 function App() {
   return (
-    <SubjectProvider>
-      <CurriculumTracker />
-    </SubjectProvider>
+    <ConfigProvider>
+      <SubjectProvider>
+        <CurriculumTracker />
+      </SubjectProvider>
+    </ConfigProvider>
   );
 }
 

@@ -20,7 +20,7 @@ export const SemesterListView = () => {
         useSensor(TouchSensor)
     );
 
-    const semesters = useMemo(() => getSortedSemesters(subjects), [subjects]);
+    const semesters = useMemo(() => getSortedSemesters(), []);
 
     const groupedSubjects = useMemo(() => {
         const groups: Record<string, typeof subjects> = {};
