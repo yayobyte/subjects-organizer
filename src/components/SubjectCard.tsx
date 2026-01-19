@@ -1,24 +1,26 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check, Circle, BookOpen, Star, AlertCircle, GripVertical, Edit2 } from 'lucide-react';
+import { Check, Circle, BookOpen, Star, AlertCircle, GripVertical, Edit2, Trash2 } from 'lucide-react';
 import type { Subject } from '../types';
 import { useSubjects } from '../contexts/SubjectContext';
 import { cn } from '../lib/utils';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
+import { ConfirmDialog } from './ConfirmDialog';
 
 interface SubjectCardProps {
     subject: Subject;
 }
 
 export const SubjectCard = ({ subject }: SubjectCardProps) => {
-    const { toggleSubjectStatus, subjects, updateSubjectGrade, updateSubjectCredits, updateSubjectName } = useSubjects();
+    const { toggleSubjectStatus, subjects, updateSubjectGrade, updateSubjectCredits, updateSubjectName, deleteSubject } = useSubjects();
     const [isEditingGrade, setIsEditingGrade] = useState(false);
     const [gradeValue, setGradeValue] = useState(subject.grade?.toString() || '');
     const [isEditingCredits, setIsEditingCredits] = useState(false);
     const [creditsValue, setCreditsValue] = useState(subject.credits.toString());
     const [isEditingName, setIsEditingName] = useState(false);
     const [nameValue, setNameValue] = useState(subject.name);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: subject.id,
@@ -98,7 +100,22 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
         }
     };
 
+    const handleDelete = () => {
+        deleteSubject(subject.id);
+    };
+
     return (
+        <>
+            <ConfirmDialog
+                isOpen={showDeleteDialog}
+                onClose={() => setShowDeleteDialog(false)}
+                onConfirm={handleDelete}
+                title="Delete Subject"
+                message={`Are you sure you want to delete "${subject.name}" (${subject.id})? This action cannot be undone.`}
+                confirmText="Delete"
+                cancelText="Cancel"
+            />
+
         <motion.div
             ref={setNodeRef}
             style={style}
@@ -113,15 +130,6 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                         : "bg-white/60 dark:bg-slate-800/60 border-slate-200/60 dark:border-slate-700/60 hover:border-crimson-violet-300 hover:bg-white hover:shadow-crimson-violet-500/10"
             )}
         >
-            <button
-                {...listeners}
-                {...attributes}
-                type="button"
-                className="absolute right-2 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-100 cursor-grab active:cursor-grabbing text-slate-400 dark:text-slate-500 p-2 hover:text-crimson-violet-500 dark:hover:text-crimson-violet-400 transition-all hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
-            >
-                <GripVertical size={20} />
-            </button>
-
             <div className="flex justify-between items-start gap-4">
                 {/* Status Toggle */}
                 <button
@@ -177,7 +185,8 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                         </span>
                     </div>
 
-                    <div className="flex items-center gap-2 mt-2 flex-wrap">
+                    <div className="flex items-center justify-between gap-2 mt-2 flex-wrap">
+                        <div className="flex items-center gap-2 flex-wrap">
                         {isEditingCredits ? (
                             <input
                                 type="number"
@@ -248,6 +257,31 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                                 </span>
                             </div>
                         )}
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex items-center gap-1 ml-auto">
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowDeleteDialog(true);
+                                }}
+                                className="opacity-0 group-hover:opacity-100 cursor-pointer text-slate-400 dark:text-slate-500 p-1.5 hover:text-red-500 dark:hover:text-red-400 transition-all hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
+                                title="Delete subject"
+                            >
+                                <Trash2 size={14} />
+                            </button>
+                            <button
+                                {...listeners}
+                                {...attributes}
+                                type="button"
+                                className="opacity-50 group-hover:opacity-100 cursor-grab active:cursor-grabbing text-slate-400 dark:text-slate-500 p-1.5 hover:text-crimson-violet-500 dark:hover:text-crimson-violet-400 transition-all hover:bg-slate-100 dark:hover:bg-slate-800 rounded"
+                                title="Drag to move"
+                            >
+                                <GripVertical size={16} />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -257,5 +291,6 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
                 <div className="absolute left-0 bottom-0 w-full h-[2px] bg-gradient-to-r from-transparent via-crimson-violet-400/0 to-transparent group-hover:via-crimson-violet-400/50 transition-all duration-500" />
             )}
         </motion.div>
+        </>
     );
 };

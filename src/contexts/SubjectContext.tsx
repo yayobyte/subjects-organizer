@@ -10,6 +10,7 @@ interface SubjectContextType {
     updateSubjectGrade: (id: string, grade: number | string) => void;
     updateSubjectCredits: (id: string, credits: number) => void;
     updateSubjectName: (id: string, name: string) => void;
+    deleteSubject: (id: string) => void;
     togglePrerequisiteCheck: (id: string) => void;
     getSubject: (id: string) => Subject | undefined;
     moveSubjectToSemester: (subjectId: string, targetSemester: string) => void;
@@ -141,6 +142,13 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
         }));
     };
 
+    const deleteSubject = (id: string) => {
+        setData(prev => ({
+            ...prev,
+            subjects: prev.subjects.filter(s => s.id !== id)
+        }));
+    };
+
     const exportData = () => {
         const dataStr = JSON.stringify(data, null, 2);
         const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
@@ -195,6 +203,7 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
             updateSubjectGrade,
             updateSubjectCredits,
             updateSubjectName,
+            deleteSubject,
             togglePrerequisiteCheck,
             getSubject,
             moveSubjectToSemester,

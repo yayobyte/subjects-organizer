@@ -832,22 +832,6 @@
       "credits": 0,
       "status": "missing",
       "prerequisites": []
-    },
-    {
-      "id": "CS154",
-      "name": "TEST BUSJECT",
-      "semester": "Semestre 3",
-      "credits": 3,
-      "status": "missing",
-      "prerequisites": []
-    },
-    {
-      "id": "Test 2 Subject",
-      "name": "Materia de prueba 2",
-      "semester": "Semestre 2",
-      "credits": 1,
-      "status": "missing",
-      "prerequisites": []
     }
   ]
 }
