@@ -145,6 +145,7 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
 
         <motion.div
             ref={setNodeRef}
+            data-subject-id={subject.id}
             style={{
                 ...style,
                 position: 'relative',

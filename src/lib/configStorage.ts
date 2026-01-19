@@ -6,6 +6,7 @@
 export interface Config {
     darkMode: boolean;
     studentName: string;
+    showPrerequisiteLines: boolean;
 }
 
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
@@ -28,7 +29,8 @@ export class ConfigStorageAdapter {
             // Return defaults on error
             return {
                 darkMode: false,
-                studentName: 'Student'
+                studentName: 'Student',
+                showPrerequisiteLines: false
             };
         }
     }

@@ -2,6 +2,7 @@ import { type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { GraduationCap } from 'lucide-react';
 import { DarkModeToggle } from './DarkModeToggle';
+import { ConnectionLinesToggle } from './ConnectionLinesToggle';
 import { StudentNameEditor } from './StudentNameEditor';
 
 interface LayoutProps {
@@ -36,6 +37,7 @@ export const Layout = ({ children }: LayoutProps) => {
                             <div className="hidden md:block">
                                 <StudentNameEditor />
                             </div>
+                            <ConnectionLinesToggle />
                             <DarkModeToggle />
                         </div>
                     </div>

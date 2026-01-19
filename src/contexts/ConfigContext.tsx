@@ -6,6 +6,7 @@ interface ConfigContextType {
     isLoading: boolean;
     updateDarkMode: (darkMode: boolean) => Promise<void>;
     updateStudentName: (name: string) => Promise<void>;
+    updateShowPrerequisiteLines: (show: boolean) => Promise<void>;
     resetConfig: () => Promise<void>;
 }
 
@@ -26,7 +27,8 @@ interface ConfigProviderProps {
 export const ConfigProvider = ({ children }: ConfigProviderProps) => {
     const [config, setConfig] = useState<Config>({
         darkMode: false,
-        studentName: 'Student'
+        studentName: 'Student',
+        showPrerequisiteLines: false
     });
     const [isLoading, setIsLoading] = useState(true);
 
@@ -80,7 +82,7 @@ export const ConfigProvider = ({ children }: ConfigProviderProps) => {
     const updateStudentName = async (studentName: string) => {
         try {
             console.log('[ConfigContext] Updating student name to:', studentName);
-            
+
             // Optimistically update UI
             setConfig(prev => ({ ...prev, studentName }));
 
@@ -91,6 +93,23 @@ export const ConfigProvider = ({ children }: ConfigProviderProps) => {
             console.error('[ConfigContext] Failed to update student name:', error);
             // Revert on error
             setConfig(prev => ({ ...prev, studentName: config.studentName }));
+        }
+    };
+
+    const updateShowPrerequisiteLines = async (showPrerequisiteLines: boolean) => {
+        try {
+            console.log('[ConfigContext] Updating show prerequisite lines to:', showPrerequisiteLines);
+
+            // Optimistically update UI
+            setConfig(prev => ({ ...prev, showPrerequisiteLines }));
+
+            // Save to backend
+            const updatedConfig = await configStorage.update({ showPrerequisiteLines });
+            setConfig(updatedConfig);
+        } catch (error) {
+            console.error('[ConfigContext] Failed to update show prerequisite lines:', error);
+            // Revert on error
+            setConfig(prev => ({ ...prev, showPrerequisiteLines: !showPrerequisiteLines }));
         }
     };
 
@@ -113,6 +132,7 @@ export const ConfigProvider = ({ children }: ConfigProviderProps) => {
         isLoading,
         updateDarkMode,
         updateStudentName,
+        updateShowPrerequisiteLines,
         resetConfig,
     };
 

@@ -25,6 +25,11 @@ A modern, interactive web application for tracking academic progress with seamle
   - 🔵 **Blue**: In-progress courses (currently taking)
   - 🟡 **Amber/Orange**: Ready courses (prerequisites met, available to take)
   - 🔴 **Red**: Locked courses (prerequisites not met)
+- **Visual Prerequisite Connections**: Toggle animated connection lines showing prerequisite relationships
+  - Curved bezier paths connecting subjects to their prerequisites
+  - Color-coded by status (green/teal/red) with dashed lines for missing prerequisites
+  - Auto-updates on scroll with smooth animations
+  - Toggleable via navbar button with persistent state
 - **One-Click Status Toggle**: Single click to cycle subjects between Missing, In Progress, and Completed states
 - **Add New Subjects**: Simplified inline form with auto-credit detection from course ID
 - **Edit Subject Names**: Click any subject name to edit inline
@@ -48,7 +53,7 @@ A modern, interactive web application for tracking academic progress with seamle
 ### 🔄 Data Persistence
 - **Supabase Backend**: PostgreSQL database hosted on Supabase
 - **Vercel Serverless Functions**: API routes deployed as serverless functions
-- **Configuration Sync**: User preferences (dark mode, student name) sync across devices
+- **Configuration Sync**: User preferences (dark mode, student name, prerequisite lines toggle) sync across devices
 - **Real-time Updates**: Changes automatically saved to database
 - **Cross-Device Sync**: Access your data from any device
 
@@ -118,17 +123,22 @@ assignments/
 │   ├── components/           # React components
 │   │   ├── Layout.tsx       # Main app shell with navigation (full-width)
 │   │   ├── DarkModeToggle.tsx  # Dark mode toggle component
+│   │   ├── ConnectionLinesToggle.tsx  # Prerequisite lines toggle
+│   │   ├── PrerequisiteLines.tsx      # SVG connection lines visualization
 │   │   ├── SemesterListView.tsx  # Horizontal list view with DnD
 │   │   ├── SubjectCard.tsx       # Subject card with full inline editing + delete
 │   │   ├── AddSubjectButton.tsx  # Add subject form (auto-credit detection)
 │   │   ├── ConfirmDialog.tsx     # Custom confirmation modal for deletions
 │   │   ├── StatsDashboard.tsx    # Progress statistics
+│   │   ├── PrerequisiteEditor.tsx     # Prerequisite inline editor
 │   │   └── DroppableSemester.tsx # DnD semester container
 │   ├── contexts/
-│   │   └── SubjectContext.tsx    # Global state management
+│   │   ├── SubjectContext.tsx    # Curriculum state management
+│   │   └── ConfigContext.tsx     # User preferences state
 │   ├── lib/
 │   │   ├── utils.ts         # Utility functions
-│   │   └── storage.ts       # API storage adapter
+│   │   ├── storage.ts       # Curriculum API storage adapter
+│   │   └── configStorage.ts # Config API storage adapter
 │   ├── data.ts              # Prerequisites map
 │   ├── types.ts             # TypeScript interfaces
 │   ├── index.css            # Global styles & Tailwind config
@@ -200,12 +210,22 @@ The color system works in both light and dark modes with automatically adjusted 
    - Click and hold the grip icon at the bottom right of each card
    - Drag to another semester to move the subject
 9. **View Prerequisites**: Locked subjects show which prerequisites are missing (hover for details)
-10. **Real-time Stats**: Dashboard updates automatically as you make changes
+10. **Prerequisite Connection Lines** (NEW):
+   - Click the GitBranch icon (🌿) in the navbar to toggle visual connection lines
+   - Lines connect each subject to its prerequisites with animated curves
+   - Color-coded by status:
+     - Green solid lines = prerequisite completed ✅
+     - Teal solid lines = prerequisite in progress 🔄
+     - Red dashed lines = prerequisite missing/locked ❌
+   - Lines auto-update as you scroll and change subject statuses
+   - Toggle state persists across devices
+11. **Real-time Stats**: Dashboard updates automatically as you make changes
 
 ### User Preferences (Synced Across Devices)
 - **Student Name**: Click your name in the navbar to edit inline, syncs to all devices
 - **Dark Mode**: Click the Moon/Sun icon to toggle, preference syncs across all devices
-- Settings are saved to `server/data/config.json` and sync in real-time
+- **Prerequisite Lines**: Click the GitBranch icon to show/hide prerequisite connections
+- Settings are saved to Supabase database and sync in real-time
 
 ### Data Persistence
 - **Auto-Save**: All changes automatically saved after 1 second (curriculum and config)
@@ -275,6 +295,7 @@ The Express backend provides these endpoints:
 - 3-row card layout (name, badges, actions)
 - Storage simplified to API-only
 - Fixed card dimensions (w-full × h-32)
+- Visual prerequisite connection lines with SVG overlay (animated, color-coded)
 
 ### Pending 📋
 - Edit course IDs

@@ -205,8 +205,9 @@ npm install
 
 1. Go to https://supabase.com and create a project
 2. Go to SQL Editor and run `api/init-db.sql`
-3. Disable RLS on both tables (or create public access policies)
-4. Get credentials from Settings → API:
+3. Run the prerequisite lines migration: `api/migration-add-prerequisite-lines.sql`
+4. Disable RLS on both tables (or create public access policies)
+5. Get credentials from Settings → API:
    - Project URL
    - anon/public key
 
@@ -265,6 +266,7 @@ This will:
 - ✅ Real-time GPA and progress statistics
 - ✅ Prerequisite locking (can't complete without prerequisites)
 - ✅ Visual prerequisite indicators
+- ✅ Visual prerequisite connection lines (SVG-based, animated, color-coded)
 - ✅ Responsive design (desktop & mobile)
 
 ### Backend Features

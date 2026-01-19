@@ -42,7 +42,7 @@ This is a **full-stack React application** with a **Supabase PostgreSQL database
 ```
 App.tsx
 ├── ConfigProvider (ConfigContext.tsx)
-│   └── provides: darkMode, studentName, updateConfig()
+│   └── provides: darkMode, studentName, showPrerequisiteLines, updateConfig()
 │
 └── SubjectProvider (SubjectContext.tsx)
     ├── provides: subjects[], addSubject(), updateSubject(), deleteSubject()
@@ -50,9 +50,11 @@ App.tsx
     └── Layout
         ├── Header
         │   ├── StudentNameEditor
+        │   ├── ConnectionLinesToggle
         │   └── DarkModeToggle
         │
         └── SemesterListView
+            ├── PrerequisiteLines (SVG overlay)
             └── SubjectCard (for each subject)
                 ├── PrerequisiteEditor
                 ├── Grade editor
@@ -62,7 +64,7 @@ App.tsx
 ### State Management
 
 **ConfigContext** (`src/contexts/ConfigContext.tsx`)
-- Manages: `darkMode`, `studentName`
+- Manages: `darkMode`, `studentName`, `showPrerequisiteLines`
 - Storage: Supabase `config` table
 - API: `/api/config`
 
@@ -370,10 +372,68 @@ try {
 | Deployment | Vercel | Git-based, zero config |
 | State | React Context | Simple, no redux needed |
 
+## Prerequisite Lines Visualization
+
+### Overview
+Visual SVG-based connection lines showing prerequisite relationships between subjects.
+
+### Architecture
+```
+SemesterListView (relative container with .semester-scroll-container class)
+  ├── PrerequisiteLines Component
+  │   ├── SVG overlay (absolute, full width/height, z-index: 1)
+  │   ├── Position calculation (getBoundingClientRect)
+  │   ├── Bezier curve generation
+  │   └── Animated <path> elements
+  └── Subject Cards (data-subject-id attributes)
+```
+
+### Implementation Details
+
+**Position Calculation**:
+- Uses `querySelector` with `data-subject-id` to find cards
+- `getBoundingClientRect()` for precise positioning
+- Calculates relative to scroll container bounds
+- Accounts for `scrollLeft` to handle horizontal scrolling
+
+**Curve Generation**:
+```typescript
+M ${from.x} ${from.y}  // Move to prerequisite card right edge
+C ${controlPoint1},    // Bezier control point 1
+  ${controlPoint2},    // Bezier control point 2
+  ${to.x} ${to.y}     // End at subject card left edge
+```
+
+**Color Mapping**:
+- Green (`emerald-500`): Completed prerequisite
+- Teal (`dark-teal-500`): In-progress prerequisite
+- Red (`deep-crimson-500`): Missing/locked prerequisite (dashed)
+
+**Performance**:
+- Debounced recalculation (100ms) on scroll/resize
+- `requestAnimationFrame` for smooth rendering
+- Memoized connections array
+- Only renders when `config.showPrerequisiteLines === true`
+
+**Animations**:
+- Framer Motion `pathLength` animation (0 → 1)
+- Fade in/out transitions (300ms)
+- Stroke-dashoffset effect for drawing animation
+
+### Database Schema
+```sql
+ALTER TABLE config
+ADD COLUMN show_prerequisite_lines BOOLEAN DEFAULT FALSE;
+```
+
+### API Changes
+Updated `/api/config` endpoints to include `show_prerequisite_lines` field in GET/POST/PATCH operations.
+
 ## Documentation Map
 
 - **PROJECT_SETUP.md**: Setup and getting started
 - **ARCHITECTURE.md**: This file - system design
 - **DEPLOYMENT.md**: Deployment guide
 - **LOCAL_DEV.md**: Local development
+- **PREREQUISITE_LINES.md**: Prerequisite visualization feature details
 - **README.md**: User-facing features

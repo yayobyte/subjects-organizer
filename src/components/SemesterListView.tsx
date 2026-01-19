@@ -3,6 +3,7 @@ import { useSubjects } from '../contexts/SubjectContext';
 import { SubjectCard } from './SubjectCard';
 import { getSortedSemesters } from '../data';
 import { StatsOverview } from './StatsDashboard';
+import { PrerequisiteLines } from './PrerequisiteLines';
 import { motion } from 'framer-motion';
 import { DndContext, MouseSensor, TouchSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core';
 import { DroppableSemester } from './DroppableSemester';
@@ -66,7 +67,8 @@ export const SemesterListView = () => {
             </div>
 
             <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-                <div className="flex gap-6 overflow-x-auto pb-4">
+                <div className="relative semester-scroll-container flex gap-6 overflow-x-auto pb-4">
+                    <PrerequisiteLines />
                     {semesters.map((semester, index) => {
                         const semesterSubjects = groupedSubjects[semester] || [];
                         const isCompleted = semesterSubjects.length > 0 && semesterSubjects.every(s => s.status === 'completed');

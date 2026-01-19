@@ -4,6 +4,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 interface Config {
     darkMode: boolean;
     studentName: string;
+    showPrerequisiteLines: boolean;
 }
 
 const supabase = createClient(
@@ -27,7 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             // Get configuration
             const { data, error } = await supabase
                 .from('config')
-                .select('dark_mode, student_name')
+                .select('dark_mode, student_name, show_prerequisite_lines')
                 .eq('id', 1)
                 .single();
 
@@ -36,7 +37,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 if (error.code === 'PGRST116') {
                     return res.status(200).json({
                         darkMode: false,
-                        studentName: 'Cristian Gutierrez Gonzalez'
+                        studentName: 'Cristian Gutierrez Gonzalez',
+                        showPrerequisiteLines: false
                     });
                 }
                 throw error;
@@ -44,11 +46,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             return res.status(200).json({
                 darkMode: data.dark_mode,
-                studentName: data.student_name
+                studentName: data.student_name,
+                showPrerequisiteLines: data.show_prerequisite_lines || false
             });
 
         } else if (req.method === 'POST') {
-            const { darkMode, studentName } = req.body as Config;
+            const { darkMode, studentName, showPrerequisiteLines } = req.body as Config;
 
             // Validate
             if (typeof darkMode !== 'boolean' || typeof studentName !== 'string') {
@@ -61,7 +64,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 .upsert({
                     id: 1,
                     dark_mode: darkMode,
-                    student_name: studentName
+                    student_name: studentName,
+                    show_prerequisite_lines: showPrerequisiteLines !== undefined ? showPrerequisiteLines : false
                 }, {
                     onConflict: 'id'
                 });
@@ -77,7 +81,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             // Get current config
             const { data: currentData, error: fetchError } = await supabase
                 .from('config')
-                .select('dark_mode, student_name')
+                .select('dark_mode, student_name, show_prerequisite_lines')
                 .eq('id', 1)
                 .single();
 
@@ -87,7 +91,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             const currentConfig = currentData || {
                 dark_mode: false,
-                student_name: 'Cristian Gutierrez Gonzalez'
+                student_name: 'Cristian Gutierrez Gonzalez',
+                show_prerequisite_lines: false
             };
 
             const updates = req.body as Partial<Config>;
@@ -95,11 +100,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             // Merge with updates
             const newConfig = {
                 darkMode: updates.darkMode !== undefined ? updates.darkMode : currentConfig.dark_mode,
-                studentName: updates.studentName !== undefined ? updates.studentName : currentConfig.student_name
+                studentName: updates.studentName !== undefined ? updates.studentName : currentConfig.student_name,
+                showPrerequisiteLines: updates.showPrerequisiteLines !== undefined ? updates.showPrerequisiteLines : (currentConfig.show_prerequisite_lines || false)
             };
 
             // Validate
-            if (typeof newConfig.darkMode !== 'boolean' || typeof newConfig.studentName !== 'string') {
+            if (typeof newConfig.darkMode !== 'boolean' || typeof newConfig.studentName !== 'string' || typeof newConfig.showPrerequisiteLines !== 'boolean') {
                 return res.status(400).json({ error: 'Invalid config format' });
             }
 
@@ -109,7 +115,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 .upsert({
                     id: 1,
                     dark_mode: newConfig.darkMode,
-                    student_name: newConfig.studentName
+                    student_name: newConfig.studentName,
+                    show_prerequisite_lines: newConfig.showPrerequisiteLines
                 }, {
                     onConflict: 'id'
                 });
