@@ -1,8 +1,8 @@
 # Visual Curriculum & Prerequisite Tracker
 
-A modern, interactive web application for tracking academic progress with seamless data persistence and cross-device sync. Built with React, TypeScript, Tailwind CSS v4, and Express backend.
+A modern, interactive web application for tracking academic progress with seamless data persistence and cross-device sync. Built with React, TypeScript, Tailwind CSS v4, and Supabase.
 
-**Last Updated**: January 19, 2026 (Late Night) - Configuration system + Prerequisites editor added
+**Last Updated**: January 19, 2026 - Migrated to Supabase + Vercel serverless functions
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-19-61dafb.svg)
@@ -41,11 +41,11 @@ A modern, interactive web application for tracking academic progress with seamle
 - **Responsive Layout**: Fully optimized for desktop and mobile devices
 
 ### 🔄 Data Persistence
-- **Backend API**: Express server with file-based persistence
-- **Configuration Sync**: User preferences (dark mode, student name) sync across devices via `server/data/config.json`
-- **Curriculum Storage**: All subjects and prerequisites saved to `server/data/curriculum.json`
-- **Auto-Save**: Changes automatically saved to file (debounced by 1 second)
-- **Reset Function**: Restore default data from backup files
+- **Supabase Backend**: PostgreSQL database hosted on Supabase
+- **Vercel Serverless Functions**: API routes deployed as serverless functions
+- **Configuration Sync**: User preferences (dark mode, student name) sync across devices
+- **Real-time Updates**: Changes automatically saved to database
+- **Cross-Device Sync**: Access your data from any device
 
 ### 🖱️ Drag & Drop
 - **Semester Reallocation**: Drag subjects between semesters to reorganize your plan
@@ -63,7 +63,7 @@ A modern, interactive web application for tracking academic progress with seamle
 # Install dependencies
 npm install
 
-# Start development server (runs both frontend and backend)
+# Start development server
 npm run dev
 
 # Build for production
@@ -73,19 +73,20 @@ npm run build
 npm run preview
 ```
 
-The application will be available at:
-- **Frontend**: `http://localhost:5173` (or next available port)
-- **Backend API**: `http://localhost:3001`
+The application will be available at `http://localhost:5173`
 
 ### Development Commands
 
 ```bash
-npm run dev      # Run both frontend and backend concurrently
-npm run client   # Run only frontend (Vite)
-npm run server   # Run only backend (Express)
+npm run dev      # Run development server (Vite)
 npm run build    # Build for production
 npm run preview  # Preview production build
+npm run lint     # Run ESLint
 ```
+
+### Deployment
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for complete deployment instructions to Vercel with Supabase.
 
 ## 🏗️ Tech Stack
 
@@ -99,10 +100,10 @@ npm run preview  # Preview production build
 - **State Management**: React Context API
 
 ### Backend
-- **Server**: Express.js 5.2
-- **CORS**: Enabled for development
-- **Data Storage**: JSON file-based persistence
-- **API Endpoints**: RESTful API for curriculum operations
+- **Database**: Supabase (PostgreSQL)
+- **API**: Vercel Serverless Functions
+- **Client**: @supabase/supabase-js
+- **API Endpoints**: RESTful API for curriculum and config operations
 
 ## 📁 Project Structure
 
