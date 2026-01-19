@@ -64,7 +64,7 @@ export const StudentNameEditor = () => {
             className="flex items-center gap-2 px-3 py-1.5 text-sm text-slate-600 dark:text-slate-400 hover:text-crimson-violet-600 dark:hover:text-crimson-violet-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 group"
             title="Click to edit student name"
         >
-            <span className="font-medium">{config.studentName}</span>
+            <span className="font-medium truncate max-w-24 sm:max-w-none">{config.studentName}</span>
             <Edit2 size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
         </button>
     );

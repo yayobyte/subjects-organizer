@@ -24,13 +24,18 @@ export const Layout = ({ children }: LayoutProps) => {
                             <div className="p-2 bg-gradient-to-br from-crimson-violet-500 to-deep-crimson-600 rounded-lg shadow-lg">
                                 <GraduationCap className="w-6 h-6 text-white" />
                             </div>
-                            <span className="font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300">
+                            <span className="hidden md:inline font-bold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300">
                                 AcademicPath
                             </span>
+                            <div className="md:hidden">
+                                <StudentNameEditor />
+                            </div>
                         </div>
 
                         <div className="flex items-center gap-4">
-                            <StudentNameEditor />
+                            <div className="hidden md:block">
+                                <StudentNameEditor />
+                            </div>
                             <DarkModeToggle />
                         </div>
                     </div>
