@@ -12,11 +12,13 @@ interface SubjectCardProps {
 }
 
 export const SubjectCard = ({ subject }: SubjectCardProps) => {
-    const { toggleSubjectStatus, subjects, updateSubjectGrade, updateSubjectCredits } = useSubjects();
+    const { toggleSubjectStatus, subjects, updateSubjectGrade, updateSubjectCredits, updateSubjectName } = useSubjects();
     const [isEditingGrade, setIsEditingGrade] = useState(false);
     const [gradeValue, setGradeValue] = useState(subject.grade?.toString() || '');
     const [isEditingCredits, setIsEditingCredits] = useState(false);
     const [creditsValue, setCreditsValue] = useState(subject.credits.toString());
+    const [isEditingName, setIsEditingName] = useState(false);
+    const [nameValue, setNameValue] = useState(subject.name);
 
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: subject.id,
@@ -78,6 +80,24 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
         }
     };
 
+    const handleNameSubmit = () => {
+        if (nameValue.trim()) {
+            updateSubjectName(subject.id, nameValue.trim());
+        } else {
+            setNameValue(subject.name);
+        }
+        setIsEditingName(false);
+    };
+
+    const handleNameKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            handleNameSubmit();
+        } else if (e.key === 'Escape') {
+            setNameValue(subject.name);
+            setIsEditingName(false);
+        }
+    };
+
     return (
         <motion.div
             ref={setNodeRef}
@@ -122,12 +142,36 @@ export const SubjectCard = ({ subject }: SubjectCardProps) => {
 
                 <div className="flex-1">
                     <div className="flex justify-between items-start">
-                        <h4 className={cn(
-                            "font-medium text-sm transition-colors",
-                            isCompleted ? "text-slate-700 dark:text-slate-200" : "text-slate-900 dark:text-white"
-                        )}>
-                            {subject.name}
-                        </h4>
+                        {isEditingName ? (
+                            <input
+                                type="text"
+                                value={nameValue}
+                                onChange={(e) => setNameValue(e.target.value)}
+                                onBlur={handleNameSubmit}
+                                onKeyDown={handleNameKeyDown}
+                                autoFocus
+                                className={cn(
+                                    "font-medium text-sm transition-colors flex-1 mr-2",
+                                    "bg-white dark:bg-slate-800 border border-crimson-violet-400 dark:border-crimson-violet-500 rounded px-1",
+                                    "focus:outline-none focus:ring-1 focus:ring-crimson-violet-400",
+                                    isCompleted ? "text-slate-700 dark:text-slate-200" : "text-slate-900 dark:text-white"
+                                )}
+                            />
+                        ) : (
+                            <h4
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsEditingName(true);
+                                }}
+                                className={cn(
+                                    "font-medium text-sm transition-colors cursor-pointer hover:text-crimson-violet-600 dark:hover:text-crimson-violet-400 flex-1 group",
+                                    isCompleted ? "text-slate-700 dark:text-slate-200" : "text-slate-900 dark:text-white"
+                                )}
+                            >
+                                {subject.name}
+                                <Edit2 size={10} className="inline-block ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </h4>
+                        )}
                         <span className="text-xs font-mono text-slate-400 dark:text-slate-500 flex-shrink-0 ml-2">
                             {subject.id}
                         </span>
