@@ -44,17 +44,32 @@ export const PrerequisiteLines = () => {
                     const prereqRect = prereqCard.getBoundingClientRect();
                     const subjectRect = subjectCard.getBoundingClientRect();
 
+                    // Determine if it's the same semester
+                    const isSameSemester = subject.semester === (subjects.find(s => s.id === prereqId)?.semester);
+
                     // Calculate positions relative to container
                     const from: Point = {
-                        x: prereqRect.right - containerBounds.left + container.scrollLeft,
+                        x: prereqRect.right - containerBounds.left + container.scrollLeft + (isSameSemester ? 2 : 0),
                         y: prereqRect.top + prereqRect.height / 2 - containerBounds.top
                     };
 
-                    // Subtract arrow length (9px) plus a tiny buffer to align perfectly
-                    const to: Point = {
-                        x: subjectRect.left - containerBounds.left + container.scrollLeft - 6,
-                        y: subjectRect.top + subjectRect.height / 2 - containerBounds.top
-                    };
+                    let to: Point;
+                    if (isSameSemester) {
+                        // For same semester, connect Right-to-Right
+                        // We use the right edge for both to get a vertical line
+                        // Offset by 2px to avoid overlapping exactly with the border
+                        to = {
+                            x: prereqRect.right - containerBounds.left + container.scrollLeft + 2,
+                            y: subjectRect.top + subjectRect.height / 2 - containerBounds.top
+                        };
+                    } else {
+                        // Calculate positions relative to container
+                        // Subtract arrow length (9px) plus a tiny buffer to align perfectly
+                        to = {
+                            x: subjectRect.left - containerBounds.left + container.scrollLeft - 6,
+                            y: subjectRect.top + subjectRect.height / 2 - containerBounds.top
+                        };
+                    }
 
                     // Determine prerequisite status
                     const prereqSubject = subjects.find(s => s.id === prereqId);
@@ -74,16 +89,18 @@ export const PrerequisiteLines = () => {
         return newConnections;
     }, [subjects]);
 
-    // Create curved path using bezier curves
-    const createCurvePath = (from: Point, to: Point): string => {
-        const controlPointOffset = Math.abs(to.x - from.x) * 0.5;
+    // Create straight path (with a nudge for same-semester consistency if needed, but simple is better)
+    const createLinePath = (from: Point, to: Point): string => {
+        // If x is the same (or close), it's a vertical or diagonal line
+        // For same semester, we could add a small "handle" but let's start with pure straight
 
-        return `
-            M ${from.x} ${from.y}
-            C ${from.x + controlPointOffset} ${from.y},
-              ${to.x - controlPointOffset} ${to.y},
-              ${to.x} ${to.y}
-        `;
+        // If it's Right-to-Right (to.x > from.x usually, but depends on offsets)
+        // Actually, for same semester, we go from Prereq Right to Subject Right + offset
+        // So we might want a small "C" or "U" shape if they are in the same column, 
+        // but the user asked for "straight". However, straight between two points on the same X line is just a vertical line.
+        // Let's check how "straight" between Right and Right looks.
+
+        return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
     };
 
     // Get color based on prerequisite status
@@ -225,7 +242,7 @@ export const PrerequisiteLines = () => {
 
             <AnimatePresence>
                 {connections.map((connection, index) => {
-                    const pathData = createCurvePath(connection.from, connection.to);
+                    const pathData = createLinePath(connection.from, connection.to);
                     const isDashed = connection.status === 'missing';
                     const markerEnd = `url(#arrow-${connection.status})`;
 
