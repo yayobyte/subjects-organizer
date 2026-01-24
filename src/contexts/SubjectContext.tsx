@@ -20,6 +20,8 @@ interface SubjectContextType {
     importData: (jsonData: StudentData) => void;
     resetData: () => void;
     isLoading: boolean;
+    hoveredSubjectId: string | null;
+    setHoveredSubjectId: (id: string | null) => void;
 }
 
 const SubjectContext = createContext<SubjectContextType | undefined>(undefined);
@@ -209,6 +211,8 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
 
     const getSubject = (id: string) => data.subjects.find(s => s.id === id);
 
+    const [hoveredSubjectId, setHoveredSubjectId] = useState<string | null>(null);
+
     return (
         <SubjectContext.Provider value={{
             studentName: data.studentName,
@@ -227,7 +231,9 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
             exportData,
             importData,
             resetData,
-            isLoading
+            isLoading,
+            hoveredSubjectId,
+            setHoveredSubjectId
         }}>
             {children}
         </SubjectContext.Provider>

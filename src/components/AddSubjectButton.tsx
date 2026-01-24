@@ -15,22 +15,32 @@ export const AddSubjectButton = ({ semester }: AddSubjectButtonProps) => {
         id: '',
         name: '',
     });
-    const { addSubject } = useSubjects();
+    const { addSubject, subjects } = useSubjects();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!formData.id.trim() || !formData.name.trim()) {
+        const id = formData.id.trim();
+        const name = formData.name.trim();
+
+        if (!id || !name) {
+            return;
+        }
+
+        // Check if ID already exists
+        const exists = subjects.some(s => s.id.toLowerCase() === id.toLowerCase());
+        if (exists) {
+            alert(`Subject with ID "${id}" already exists. Please use a unique course code.`);
             return;
         }
 
         // Extract credits from last digit of ID
-        const lastChar = formData.id.trim().slice(-1);
+        const lastChar = id.slice(-1);
         const credits = /^\d$/.test(lastChar) ? parseInt(lastChar) : 0;
 
         const newSubject: Subject = {
-            id: formData.id.trim(),
-            name: formData.name.trim(),
+            id,
+            name,
             semester,
             credits,
             status: 'missing',

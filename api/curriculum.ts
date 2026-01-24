@@ -68,10 +68,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 .delete()
                 .neq('id', ''); // Delete all rows
 
-            if (deleteError) throw deleteError;
+            if (deleteError) {
+                console.error('Delete error:', deleteError);
+                throw deleteError;
+            }
 
-            // Insert all subjects
-            const subjectsToInsert = subjects.map((subject, index) => ({
+            // Remove duplicate IDs from the input array to prevent unique constraint violations
+            const seenIds = new Set<string>();
+            const uniqueSubjects = subjects.filter(s => {
+                if (seenIds.has(s.id)) {
+                    console.warn(`Filtering out duplicate subject ID: ${s.id}`);
+                    return false;
+                }
+                seenIds.add(s.id);
+                return true;
+            });
+
+            // Insert unique subjects
+            const subjectsToInsert = uniqueSubjects.map((subject, index) => ({
                 id: subject.id,
                 name: subject.name,
                 credits: subject.credits,
@@ -83,11 +97,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 prerequisites: subject.prerequisites || []
             }));
 
-            const { error: insertError } = await supabase
-                .from('subjects')
-                .insert(subjectsToInsert);
+            if (subjectsToInsert.length > 0) {
+                const { error: insertError } = await supabase
+                    .from('subjects')
+                    .insert(subjectsToInsert);
 
-            if (insertError) throw insertError;
+                if (insertError) {
+                    console.error('Insert error details:', insertError);
+                    throw insertError;
+                }
+            }
 
             return res.status(200).json({
                 success: true,
