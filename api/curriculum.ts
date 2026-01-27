@@ -62,30 +62,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 return res.status(400).json({ error: 'Invalid data format' });
             }
 
-            // Delete all existing subjects
-            const { error: deleteError } = await supabase
-                .from('subjects')
-                .delete()
-                .neq('id', ''); // Delete all rows
+            // --- SAFETY GUARD ---
+            // If the incoming list is empty, we DON'T want to wipe the database automatically.
+            // This usually happens during a synchronization error or initial load failure.
+            if (subjects.length === 0) {
+                // Check if we actually have data in the DB first
+                const { count } = await supabase
+                    .from('subjects')
+                    .select('*', { count: 'exact', head: true });
 
-            if (deleteError) {
-                console.error('Delete error:', deleteError);
-                throw deleteError;
+                if (count && count > 0) {
+                    console.warn('Refusing to auto-wipe database with empty subject list. Potential sync error.');
+                    return res.status(200).json({
+                        success: true,
+                        message: 'Sync skipped: Database contains data but incoming list was empty. Integrity preserved.'
+                    });
+                }
             }
 
-            // Remove duplicate IDs from the input array to prevent unique constraint violations
+            // Remove duplicate IDs from the input array
             const seenIds = new Set<string>();
             const uniqueSubjects = subjects.filter(s => {
-                if (seenIds.has(s.id)) {
-                    console.warn(`Filtering out duplicate subject ID: ${s.id}`);
-                    return false;
-                }
+                if (!s.id || seenIds.has(s.id)) return false;
                 seenIds.add(s.id);
                 return true;
             });
 
-            // Insert unique subjects
-            const subjectsToInsert = uniqueSubjects.map((subject, index) => ({
+            // Prepare subjects for database
+            const subjectsToSync = uniqueSubjects.map((subject, index) => ({
                 id: subject.id,
                 name: subject.name,
                 credits: subject.credits,
@@ -97,20 +101,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 prerequisites: subject.prerequisites || []
             }));
 
-            if (subjectsToInsert.length > 0) {
-                const { error: insertError } = await supabase
+            // Targeted Delete: Remove subjects that are no longer in our list
+            const incomingIds = subjectsToSync.map(s => s.id);
+            if (incomingIds.length > 0) {
+                const { error: deleteError } = await supabase
                     .from('subjects')
-                    .insert(subjectsToInsert);
+                    .delete()
+                    .not('id', 'in', `(${incomingIds.join(',')})`);
 
-                if (insertError) {
-                    console.error('Insert error details:', insertError);
-                    throw insertError;
+                if (deleteError) {
+                    console.error('Targeted delete error:', deleteError);
+                    throw deleteError;
+                }
+            } else {
+                // If we got here and the list is empty, it means either the DB was already empty
+                // or the guard above was bypassed. We only delete everything if we are absolutely sure.
+                await supabase.from('subjects').delete().neq('id', '');
+            }
+
+            // Upsert: Insert new ones and update existing ones
+            if (subjectsToSync.length > 0) {
+                const { error: upsertError } = await supabase
+                    .from('subjects')
+                    .upsert(subjectsToSync, { onConflict: 'id' });
+
+                if (upsertError) {
+                    console.error('Upsert error details:', upsertError);
+                    throw upsertError;
                 }
             }
 
             return res.status(200).json({
                 success: true,
-                message: 'Curriculum saved successfully'
+                message: 'Curriculum synchronized successfully'
             });
 
         } else {

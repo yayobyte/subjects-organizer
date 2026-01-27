@@ -43,7 +43,7 @@ const EMPTY_DATA: StudentData = {
 export const SubjectProvider = ({ children }: { children: ReactNode }) => {
     const [data, setData] = useState<StudentData>(EMPTY_DATA);
     const [isLoading, setIsLoading] = useState(true);
-    const [isFirstLoad, setIsFirstLoad] = useState(true);
+    const [hasSuccessfullyLoaded, setHasSuccessfullyLoaded] = useState(false);
     const storage = getStorageAdapter();
 
     // Load data on mount
@@ -53,16 +53,16 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
                 const loaded = await storage.load();
                 if (loaded) {
                     setData(loaded);
+                    setHasSuccessfullyLoaded(true);
                 } else {
-                    console.warn('No data found in storage, using empty state');
+                    console.warn('No data found in storage or fetch failed');
+                    // We don't set hasSuccessfullyLoaded to true here to prevent 
+                    // overwriting the DB with empty data if the fetch failed.
                 }
             } catch (error) {
                 console.error('Failed to load data:', error);
             } finally {
                 setIsLoading(false);
-                // We use a timeout to ensure any state updates from loading are processed
-                // before we allow saving again.
-                setTimeout(() => setIsFirstLoad(false), 1000);
             }
         };
 
@@ -71,8 +71,14 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
 
     // Save data whenever it changes (debounced to avoid excessive saves)
     useEffect(() => {
-        // Don't save if still loading, if it's the empty state, or if it's the very first load
-        if (isLoading || isFirstLoad || data === EMPTY_DATA) return;
+        // --- PREVENT AUTO-DELETION ---
+        // 1. Don't save if still loading.
+        // 2. Don't save if we haven't successfully pulled the baseline from the server yet.
+        // 3. Don't save if the curriculum is empty (this is almost always an error state 
+        //    unless the user explicitly deleted every single card one by one).
+        if (isLoading || !hasSuccessfullyLoaded || data.subjects.length === 0) {
+            return;
+        }
 
         const saveData = async () => {
             try {
@@ -85,7 +91,7 @@ export const SubjectProvider = ({ children }: { children: ReactNode }) => {
         // Debounce saves
         const timeoutId = setTimeout(saveData, 1000);
         return () => clearTimeout(timeoutId);
-    }, [data, isLoading, isFirstLoad]);
+    }, [data, isLoading, hasSuccessfullyLoaded]);
 
     const updateSubjectStatus = (id: string, status: SubjectStatus) => {
         setData(prev => ({
