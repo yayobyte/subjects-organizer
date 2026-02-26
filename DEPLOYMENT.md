@@ -1,6 +1,4 @@
-# Deployment Guide for Vercel with Supabase
-
-This guide walks you through deploying your Curriculum Tracker application to Vercel with Supabase as the database.
+This guide walks you through deploying your Curriculum Tracker application to Vercel with Supabase as the identity and database provider. The application is a static site that communicates directly with Supabase.
 
 ## Prerequisites
 
@@ -19,40 +17,42 @@ This guide walks you through deploying your Curriculum Tracker application to Ve
 4. Click **Create new project**
 5. Wait for the project to be provisioned (~2 minutes)
 
-## Step 2: Set Up Database Tables
-
-1. In your Supabase project dashboard, click on the **SQL Editor** in the left sidebar
-2. Click **New Query**
-3. Copy and paste the contents of `api/init-db.sql`:
+3. Copy and paste the contents of the following SQL script to create tables and set up Row Level Security:
 
 ```sql
--- Create subjects table
+-- 1. Create subjects table
 CREATE TABLE IF NOT EXISTS subjects (
     id TEXT PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id),
     name TEXT NOT NULL,
     credits INTEGER NOT NULL,
     semester TEXT NOT NULL,
     grade REAL,
+    status TEXT DEFAULT 'missing',
     completed BOOLEAN DEFAULT FALSE,
-    order_index INTEGER DEFAULT 0
+    order_index INTEGER DEFAULT 0,
+    prerequisites TEXT[] DEFAULT '{}'
 );
 
--- Create config table
+-- 2. Create config table
 CREATE TABLE IF NOT EXISTS config (
-    id INTEGER PRIMARY KEY DEFAULT 1,
+    user_id UUID PRIMARY KEY REFERENCES auth.users(id),
     dark_mode BOOLEAN DEFAULT FALSE,
     student_name TEXT DEFAULT 'Cristian Gutierrez Gonzalez',
-    CHECK (id = 1)
+    show_prerequisite_lines BOOLEAN DEFAULT FALSE
 );
 
--- Insert default config if not exists
-INSERT INTO config (id, dark_mode, student_name)
-VALUES (1, false, 'Cristian Gutierrez Gonzalez')
-ON CONFLICT (id) DO NOTHING;
+-- 3. Enable RLS
+ALTER TABLE subjects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE config ENABLE ROW LEVEL SECURITY;
 
--- Create indexes for better performance
-CREATE INDEX IF NOT EXISTS idx_subjects_semester ON subjects(semester);
-CREATE INDEX IF NOT EXISTS idx_subjects_completed ON subjects(completed);
+-- 4. Create Policies for 'subjects'
+CREATE POLICY "Users can manage their own subjects" ON subjects
+FOR ALL USING (auth.uid() = user_id);
+
+-- 5. Create Policies for 'config'
+CREATE POLICY "Users can manage their own config" ON config
+FOR ALL USING (auth.uid() = user_id);
 ```
 
 4. Click **Run** to execute the SQL
@@ -75,8 +75,10 @@ CREATE INDEX IF NOT EXISTS idx_subjects_completed ON subjects(completed);
 
    | Name | Value |
    |------|-------|
-   | `SUPABASE_URL` | Your Supabase Project URL |
-   | `SUPABASE_ANON_KEY` | Your Supabase anon public key |
+   | `VITE_SUPABASE_URL` | Your Supabase Project URL |
+   | `VITE_SUPABASE_ANON_KEY` | Your Supabase anon public key |
+   | `NEXT_PUBLIC_SUPABASE_URL` | (Duplicate of URL for compatibility) |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | (Duplicate of Anon Key for compatibility) |
 
 5. Make sure to add them for all environments: **Production**, **Preview**, and **Development**
 6. Click **Save**
@@ -113,23 +115,15 @@ vercel --prod
 4. Test editing student name (saves to database)
 5. Test adding/editing subjects (saves to database)
 
-## API Endpoints
-
-Your serverless functions will be available at:
-
-- `https://your-app.vercel.app/api/health` - Health check
-- `https://your-app.vercel.app/api/config` - Configuration (GET, POST, PATCH)
-- `https://your-app.vercel.app/api/curriculum` - Curriculum data (GET, POST)
-
 ## Local Development with Supabase
 
-To develop locally with the Supabase database:
+To develop locally:
 
 1. Create a `.env.local` file in the project root:
 
 ```bash
-SUPABASE_URL=your-supabase-project-url
-SUPABASE_ANON_KEY=your-supabase-anon-key
+VITE_SUPABASE_URL=your-supabase-project-url
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 ```
 
 2. Start the development server:
@@ -138,23 +132,10 @@ SUPABASE_ANON_KEY=your-supabase-anon-key
 npm run dev
 ```
 
-The frontend will run on port 5173 (Vite) and make API calls to `/api/*`.
-
-## Supabase Row Level Security (RLS)
-
-By default, Supabase enables RLS (Row Level Security) on tables. For this personal project, you can disable it:
-
-1. Go to **Authentication** → **Policies** in Supabase
-2. For the `subjects` table, click **New Policy**
-3. Choose **Enable read access for all users** and **Enable insert/update/delete for all users**
-4. Repeat for the `config` table
-
-Alternatively, disable RLS entirely (only for personal projects):
-
-```sql
-ALTER TABLE subjects DISABLE ROW LEVEL SECURITY;
-ALTER TABLE config DISABLE ROW LEVEL SECURITY;
-```
+The frontend will run on port 5173 (Vite) and connect directly to your Supabase cloud instance.
+...
+1. Go to **Authentication** → **Providers** in Supabase and ensure "Email" is enabled.
+2. (Optional) Disable "Confirm Email" if you want instant registration during testing.
 
 Run this in the Supabase SQL Editor.
 
@@ -213,3 +194,6 @@ Both services are completely free for personal projects within these limits.
 - Set up monitoring and alerts
 - Configure automatic database backups in Supabase
 - Add authentication if needed (Supabase has built-in auth)
+
+---
+[ **Back to README** ](README.md) | [ **Quick Reference** ](QUICK_REFERENCE.md) | [ **Project Setup** ](PROJECT_SETUP.md) | [ **Architecture** ](ARCHITECTURE.md)

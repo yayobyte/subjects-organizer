@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-02-25
+
+### Added - Supabase Authentication & RLS
+- **Supabase Auth Integration**: Full user registration and login flow.
+- **Row Level Security (RLS)**: Data is now scoped per user. Each student has their own private curriculum.
+- **Auth Screen**: Modern, responsive login and registration UI with Lucide icons.
+- **AuthContext**: Centralized session management using React Context.
+- **Protected Routes**: Main application is hidden behind a login wall.
+- **Smart Data Fallback**: New users automatically ingest default university data on first login.
+- **Build Optimization**: Configured `manualChunks` in Vite to improve performance and reduce bundle size.
+
+### Removed
+- **Vercel Serverless Functions**: Deleted all `/api` routes. The frontend now communicates directly with Supabase.
+- **API Proxy**: Removed Vercel CLI dependency for local development.
+
+### Fixed
+- **Large Bundle Warning**: Resolved Vite bundle size warnings via explicit chunk splitting.
+- **Supabase 406 Error**: Fixed "Not Acceptable" console errors using `.maybeSingle()` for initial config fetches.
+- **Build Failure**: Fixed missing `tsc` binary on Vercel by using `npx` and cleaning up legacy API dependencies.
+
 ## [1.2.0] - 2026-01-19
 
 ### Removed - Cross-Semester Drag and Drop
@@ -119,3 +139,6 @@ All notable changes to this project will be documented in this file.
 - Vercel serverless deployment
 - Real-time statistics
 - Cross-device sync
+
+---
+[ **Back to README** ](README.md) | [ **Quick Reference** ](QUICK_REFERENCE.md) | [ **Project Setup** ](PROJECT_SETUP.md) | [ **Architecture** ](ARCHITECTURE.md)

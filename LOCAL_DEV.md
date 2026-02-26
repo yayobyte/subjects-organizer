@@ -2,42 +2,26 @@
 
 ## Setup
 
-Your project is now configured to run with Supabase locally using Vercel Dev.
-
-### Prerequisites
-
-- Vercel CLI installed globally: `npm i -g vercel`
-- `.env.local` file with Supabase credentials (already created)
+- `.env.local` file with Supabase credentials (VITE_ or NEXT_PUBLIC_ prefixes)
 
 ## Running Locally
 
-```bash
-npm run dev
-```
-
-This starts:
 - **Frontend**: React app with Vite
-- **API**: Serverless functions from `/api` directory
-- **Database**: Connected to your Supabase cloud database
+- **Database**: Connected directly to your Supabase cloud database
 
-The app will be available at: **http://localhost:3000**
+The app will be available at: **http://localhost:5173** (or the port Vite provides)
 
-## How It Works
-
-- `vercel dev` reads environment variables from `.env.local`
-- Your serverless functions in `/api` run locally
-- The frontend makes requests to `/api/*` which are handled by the local serverless functions
-- The functions connect to your Supabase cloud database
+- Vite loads environment variables from `.env.local`
+- The Supabase client in the frontend uses these variables to connect directly to the cloud.
+- `AuthContext` handles the login flow.
 
 ## Environment Variables
 
 Located in `.env.local`:
 ```
-SUPABASE_URL=https://mkjzxaunzcgubuaplptq.supabase.co
-SUPABASE_ANON_KEY=your-anon-key-here
+VITE_SUPABASE_URL=https://xxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key-here
 ```
-
-These are automatically loaded by Vercel Dev.
 
 ## Troubleshooting
 
@@ -57,3 +41,6 @@ ALTER TABLE config DISABLE ROW LEVEL SECURITY;
 ```
 
 Run this in Supabase SQL Editor if needed.
+
+---
+[ **Back to README** ](README.md) | [ **Quick Reference** ](QUICK_REFERENCE.md) | [ **Project Setup** ](PROJECT_SETUP.md) | [ **Architecture** ](ARCHITECTURE.md)

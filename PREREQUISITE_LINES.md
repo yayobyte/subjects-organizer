@@ -108,13 +108,9 @@ Added column to `config` table:
 ALTER TABLE config
 ADD COLUMN IF NOT EXISTS show_prerequisite_lines BOOLEAN DEFAULT FALSE;
 ```
+Note: Ensure you update your RLS policies to include this new column if necessary.
 
-### API Endpoints
-
-Updated `/api/config` endpoint to handle new field:
-- **GET**: Returns `showPrerequisiteLines` boolean
-- **POST**: Saves full config including `showPrerequisiteLines`
-- **PATCH**: Updates `showPrerequisiteLines` field
+The application uses the Supabase `maybeSingle()` method to fetch the user's private configuration. Updates are sent via `.upsert()` containing the specific `user_id`.
 
 ## Usage
 
@@ -165,11 +161,12 @@ Updated `/api/config` endpoint to handle new field:
 ### Modified Files
 - `src/lib/configStorage.ts`
 - `src/contexts/ConfigContext.tsx`
-- `api/config.ts`
 - `src/components/Layout.tsx`
 - `src/components/SubjectCard.tsx`
 - `src/components/SemesterListView.tsx`
 - `README.md`
+- `ARCHITECTURE.md`
+- `PROJECT_SETUP.md`
 
 ## Testing Checklist
 
@@ -209,3 +206,6 @@ Possible improvements:
 **Status**: ✅ Fully Implemented and Tested
 **Performance**: Smooth 60fps scrolling with all lines visible
 **Compatibility**: Works with all existing features (drag-drop, inline editing, etc.)
+
+---
+[ **Back to README** ](README.md) | [ **Quick Reference** ](QUICK_REFERENCE.md) | [ **Project Setup** ](PROJECT_SETUP.md) | [ **Architecture** ](ARCHITECTURE.md)

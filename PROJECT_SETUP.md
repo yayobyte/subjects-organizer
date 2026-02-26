@@ -1,8 +1,4 @@
-# Project Setup Documentation
-
-## Overview
-
-Visual Curriculum & Prerequisite Tracker - A modern web application for tracking academic progress with real-time database sync using Supabase and Vercel serverless functions.
+Visual Curriculum & Prerequisite Tracker - A modern web application for tracking academic progress with real-time database sync using Supabase Auth and Row Level Security (RLS).
 
 **Last Updated**: January 19, 2026
 
@@ -19,9 +15,10 @@ Visual Curriculum & Prerequisite Tracker - A modern web application for tracking
 
 ### Backend
 - **Database**: Supabase (PostgreSQL)
-- **API**: Vercel Serverless Functions (TypeScript)
+- **Authentication**: Supabase Auth
+- **Security**: Row Level Security (RLS)
 - **Client**: @supabase/supabase-js v2.90.1
-- **Deployment**: Vercel
+- **Deployment**: Vercel (Static)
 
 ## Project Structure
 
@@ -35,6 +32,7 @@ Visual Curriculum & Prerequisite Tracker - A modern web application for tracking
 │
 ├── src/                         # React Frontend
 │   ├── components/              # UI Components
+│   │   ├── Auth.tsx             # Login/Signup/Reset Password UI
 │   │   ├── DarkModeToggle.tsx
 │   │   ├── Layout.tsx
 │   │   ├── PrerequisiteEditor.tsx
@@ -42,28 +40,19 @@ Visual Curriculum & Prerequisite Tracker - A modern web application for tracking
 │   │   ├── SubjectCard.tsx
 │   │   └── StudentNameEditor.tsx
 │   ├── contexts/                # React Context
+│   │   ├── AuthContext.tsx      # Auth session management
 │   │   ├── ConfigContext.tsx
 │   │   └── SubjectContext.tsx
 │   ├── lib/                     # Utilities
+│   │   ├── supabase.ts         # Supabase client initialization
 │   │   ├── configStorage.ts    # Config API client
 │   │   └── storage.ts          # Curriculum API client
-│   ├── data.ts                 # Prerequisites map
 │   ├── types.ts                # TypeScript types
 │   └── App.tsx                 # Main component
-│
-├── scripts/                     # Utility Scripts
-│   ├── check-supabase-data.js
-│   ├── remigrate-with-prerequisites.js
-│   └── fix-schema.sql
-│
-├── public/                      # Static Assets
-├── dist/                        # Build Output
-│
-├── .env                        # Supabase credentials (local)
-├── .env.local                  # Same (Vercel pulls from here)
+...
+├── .env.local                  # Environment variables
 ├── vercel.json                 # Vercel configuration
-├── vite.config.ts              # Vite configuration
-├── tailwind.config.js          # Tailwind configuration
+├── vite.config.ts              # Vite configuration (with chunk splitting)
 ├── package.json                # Dependencies
 └── tsconfig.json               # TypeScript configuration
 ```
@@ -98,99 +87,25 @@ CREATE TABLE config (
 );
 ```
 
-**Important**: Row Level Security (RLS) must be disabled or set to allow public access:
+**Important**: Row Level Security (RLS) handles user isolation. Tables must contain a `user_id` column linked to `auth.users.id`.
 ```sql
-ALTER TABLE subjects DISABLE ROW LEVEL SECURITY;
-ALTER TABLE config DISABLE ROW LEVEL SECURITY;
+ALTER TABLE subjects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE config ENABLE ROW LEVEL SECURITY;
 ```
+See `DEPLOYMENT.md` for the full secure migration script.
 
-## API Endpoints
-
-All endpoints are serverless functions in `/api`:
-
-### GET `/api/curriculum`
-Returns all subjects with prerequisites and status.
-
-**Response:**
-```json
-{
-  "subjects": [
-    {
-      "id": "IS304",
-      "name": "Estructura de Datos",
-      "credits": 4,
-      "semester": "Semestre 3",
-      "grade": 3.1,
-      "status": "completed",
-      "prerequisites": ["IS284", "IS142"]
-    }
-  ],
-  "studentName": ""
-}
-```
-
-### POST `/api/curriculum`
-Saves all subjects (replaces all existing data).
-
-**Request Body:**
-```json
-{
-  "subjects": [
-    {
-      "id": "IS304",
-      "name": "Estructura de Datos",
-      "credits": 4,
-      "semester": "Semestre 3",
-      "status": "completed",
-      "grade": 3.1,
-      "prerequisites": ["IS284", "IS142"]
-    }
-  ]
-}
-```
-
-### GET `/api/config`
-Returns user configuration.
-
-**Response:**
-```json
-{
-  "darkMode": false,
-  "studentName": "Cristian Gutierrez Gonzalez"
-}
-```
-
-### POST `/api/config`
-Saves entire configuration.
-
-### PATCH `/api/config`
-Partially updates configuration.
-
-### GET `/api/health`
-Health check endpoint.
-
-**Response:**
-```json
-{
-  "status": "ok",
-  "timestamp": "2026-01-19T..."
-}
-```
+We no longer use serverless functions. The frontend communicates directly with Supabase via the client SDK. This automatically handles authentication tokens and user-scoped RLS.
 
 ## Environment Variables
 
-### Local Development (`.env` or `.env.local`)
+### Local Development (`.env.local`)
 ```bash
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-anon-public-key
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-public-key
 ```
 
 ### Vercel Production
-Add these in Vercel Dashboard → Settings → Environment Variables:
-- `SUPABASE_URL`
-- `SUPABASE_ANON_KEY`
-
-Make sure to add them for all environments: Production, Preview, and Development.
+Add those same variables in Vercel Dashboard → Settings → Environment Variables. Use the `VITE_` prefix to ensure they are bundled by Vite.
 
 ## Setup Instructions
 
@@ -222,15 +137,11 @@ SUPABASE_ANON_KEY=your-anon-key
 ### 4. Run Local Development
 
 ```bash
-npm run dev:vercel
+npm run dev
 ```
 
-This starts:
-- Vite dev server (React app)
-- Vercel serverless functions locally
-- Available at: http://localhost:3000
-
-**Note**: Regular `npm run dev` only starts Vite without API functions.
+This starts the Vite dev server. The app will connect directly to the Supabase cloud.
+Available at: http://localhost:5173
 
 ### 5. Deploy to Vercel
 
@@ -337,3 +248,6 @@ For issues or questions:
 - Review API endpoint documentation above
 - Check Supabase logs for database errors
 - Check Vercel logs for function errors
+
+---
+[ **Back to README** ](README.md) | [ **Quick Reference** ](QUICK_REFERENCE.md) | [ **Deployment** ](DEPLOYMENT.md) | [ **Architecture** ](ARCHITECTURE.md)

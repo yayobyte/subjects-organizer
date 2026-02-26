@@ -105,8 +105,8 @@ Updates the prerequisites array for a subject and triggers auto-save.
 2. Dropdown opens with filtered subjects
 3. User searches (optional) and selects a subject
 4. `handleAddPrerequisite` calls `updatePrerequisites` in context
-5. Context updates state and triggers debounced save (1 second)
-6. Backend persists to `curriculum.json`
+5. Context updates state and triggers debounced save (1 second) via `SubjectContext`.
+6. Supabase Client persists to the `subjects` table directly.
 
 ## Persistence
 
@@ -123,7 +123,7 @@ interface Subject {
 }
 ```
 
-The backend already handles this since it saves the entire subjects array to `server/data/curriculum.json`.
+Prerequisites are stored in the `Subject` type and the `subjects` table in Supabase as a native `TEXT[]` array.
 
 ## Usage Examples
 
@@ -210,7 +210,7 @@ None currently. Potential additions:
 - [x] Cannot add duplicate
 - [x] Only shows current/previous semester subjects
 - [x] Click outside closes dropdown
-- [x] Changes persist to backend
+- [x] Changes persist to Supabase automatically
 - [x] Prerequisite badges display correctly
 - [x] Locked indicator works with new prerequisites
 - [x] Card expands to fit multiple prerequisites
@@ -220,3 +220,6 @@ None currently. Potential additions:
 **Status**: ✅ Fully implemented and integrated  
 **Performance**: Optimistic updates with 1-second debounced save  
 **Compatibility**: Works with existing prerequisite checking system
+
+---
+[ **Back to README** ](README.md) | [ **Quick Reference** ](QUICK_REFERENCE.md) | [ **Project Setup** ](PROJECT_SETUP.md) | [ **Architecture** ](ARCHITECTURE.md)

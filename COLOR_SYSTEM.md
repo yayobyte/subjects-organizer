@@ -147,7 +147,7 @@ The color system fully supports dark mode with automatically adjusted:
 - Added `@variant dark (&:is(.dark *));` directive in `src/index.css`
 - Dark mode class applied to `<html>` element via JavaScript
 - Persisted in localStorage for instant application on page load
-- Synced with Supabase backend for cross-device consistency
+- Synced with Supabase backend (user-specific config row via RLS)
 - All `dark:` variants work correctly with custom design system colors
 
 All color adjustments use Tailwind's `dark:` variant for seamless theme switching.
@@ -251,3 +251,6 @@ Possible additions to the color system:
 
 **Documentation Updated**: January 19, 2026
 **Status**: ✅ Fully Implemented and Tested
+
+---
+[ **Back to README** ](README.md) | [ **Quick Reference** ](QUICK_REFERENCE.md) | [ **Project Setup** ](PROJECT_SETUP.md) | [ **Architecture** ](ARCHITECTURE.md)

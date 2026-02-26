@@ -6,55 +6,51 @@
 
 ### Tech Stack Summary
 - **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS v4
-- **Backend**: Vercel Serverless Functions (TypeScript)
-- **Database**: Supabase (PostgreSQL) - cloud-hosted
-- **Deployment**: Vercel
-- **State**: React Context API
+- **Auth**: Supabase Auth (Email/Password)
+- **Database**: Supabase (PostgreSQL) + Row Level Security (RLS)
+- **Deployment**: Vercel (Static Frontend)
+- **State**: React Context API (Auth, Subject, Config)
 
 ### Database Tables
 
 **`subjects`** table:
-- `id` (TEXT, PK): Subject code
+- `id` (TEXT): Subject code
+- `user_id` (UUID, PK): Link to `auth.users`
 - `name` (TEXT): Subject name
 - `credits` (INTEGER): Credit hours
 - `semester` (TEXT): e.g., "Semestre 1"
 - `grade` (REAL): Numeric grade
 - `status` (TEXT): 'completed' | 'in-progress' | 'missing' | 'current'
-- `completed` (BOOLEAN): Quick flag
-- `order_index` (INTEGER): Display order
 - `prerequisites` (TEXT[]): Array of prerequisite subject IDs
 
 **`config`** table:
-- `id` (INTEGER, PK): Always 1
+- `user_id` (UUID, PK): Link to `auth.users`
 - `dark_mode` (BOOLEAN): Dark mode preference
 - `student_name` (TEXT): Student's name
+- `show_prerequisite_lines` (BOOLEAN): Connection lines visibility
 
-### API Endpoints (Serverless)
+### API Integration
+Communication is **direct via the Supabase Client SDK**.
 
-All in `/api` directory:
-
-- **GET `/api/curriculum`**: Fetch all subjects
-- **POST `/api/curriculum`**: Save all subjects
-- **GET `/api/config`**: Fetch config
-- **POST `/api/config`**: Save entire config
-- **PATCH `/api/config`**: Partial config update
-- **GET `/api/health`**: Health check
+- `supabase.from('subjects').select('*')`
+- `supabase.from('config').maybeSingle()`
+- `supabase.auth.signInWithPassword(...)`
+- `supabase.auth.signUp(...)`
 
 ### Environment Variables
 
 Required in `.env.local` (local) and Vercel Dashboard (production):
 
 ```bash
-SUPABASE_URL=https://xxx.supabase.co
-SUPABASE_ANON_KEY=eyJhbGciOi...
+VITE_SUPABASE_URL=https://xxx.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOi...
 ```
 
 ### Development Commands
 
 ```bash
-npm run dev          # Vite only (no API)
-npm run dev:vercel   # Vite + Vercel Functions (with API) ← USE THIS
-npm run build        # Production build
+npm run dev          # Start local development
+npm run build        # Build for production (optimized)
 ```
 
 ### File Structure
@@ -86,13 +82,12 @@ npm run build        # Production build
 
 ### Key Implementation Details
 
-1. **No Express Server**: Uses Vercel Serverless Functions
-2. **No Local JSON**: All data in Supabase cloud database
+1. **Architecture**: Client-direct to Supabase (no server functions)
+2. **Security**: Row Level Security (RLS) handles user data isolation
 3. **Prerequisites**: Stored as PostgreSQL `TEXT[]` array
-4. **Status Field**: Required - used by frontend for UI logic
-5. **Color-Coded Cards**: Green (completed), Blue (in-progress), Amber (ready), Red (locked)
-6. **Auto-save**: 1 second debounce before API call
-7. **RLS Disabled**: Row Level Security disabled for single-user access
+4. **Auth**: Handled via `AuthContext.tsx`
+5. **Auto-save**: Local state updates instantly, background DB save debounced
+6. **Smart Fallback**: New accounts receive default curriculum from `curriculum.json` automatically
 
 ### Common Tasks
 
@@ -185,3 +180,6 @@ API layer handles transformation between these formats.
 - Store environment variables in `.env.local` and Vercel Dashboard
 - Run migration scripts when database schema changes
 - Check both PROJECT_SETUP.md and ARCHITECTURE.md for details
+
+---
+[ **Back to README** ](README.md) | [ **Project Setup** ](PROJECT_SETUP.md) | [ **Architecture** ](ARCHITECTURE.md) | [ **Deployment** ](DEPLOYMENT.md)

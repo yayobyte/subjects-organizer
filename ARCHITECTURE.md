@@ -2,36 +2,34 @@
 
 ## System Architecture Overview
 
-This is a **full-stack React application** with a **Supabase PostgreSQL database** and **Vercel serverless functions** for the API layer.
+This is a **pure frontend React application** powered directly by **Supabase**. Authentication is handled via Supabase Auth, and data security is enforced at the database level using **Row Level Security (RLS)**.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                         USER BROWSER                         │
 │                     (React + TypeScript)                     │
+│                                                              │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  Application Logic                                  │   │
+│  │  - AuthContext.tsx (User session management)        │   │
+│  │  - storage.ts (Direct Supabase SDK calls)           │   │
+│  │  - configStorage.ts (Direct Supabase SDK calls)     │   │
+│  └─────────────────────────────────────────────────────┘   │
 └──────────────────────┬──────────────────────────────────────┘
                        │
-                       │ HTTP/HTTPS
-                       │ /api/* requests
+                       │ Supabase Client SDK (w/ JWT)
+                       │ @supabase/supabase-js
                        ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    VERCEL EDGE NETWORK                       │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  Serverless Functions (/api)                        │   │
-│  │  - curriculum.ts (GET/POST subjects)                │   │
-│  │  - config.ts (GET/POST/PATCH config)                │   │
-│  │  - health.ts (health check)                         │   │
-│  └────────────────────┬────────────────────────────────┘   │
-└───────────────────────┼─────────────────────────────────────┘
-                        │
-                        │ Supabase Client SDK
-                        │ @supabase/supabase-js
-                        ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                  SUPABASE (PostgreSQL)                       │
 │  ┌──────────────────────────────────────────────────────┐  │
+│  │  Services:                                            │  │
+│  │  - Supabase Auth (Identity Management)                │  │
+│  │  - PostgreSQL DB with RLS (Data isolation)            │  │
+│  │                                                       │  │
 │  │  Tables:                                              │  │
-│  │  - subjects (id, name, credits, status, prereqs)     │  │
-│  │  - config (dark_mode, student_name)                  │  │
+│  │  - subjects (user_id PK, id, name, credits...)       │  │
+│  │  - config (user_id PK, dark_mode, student_name)       │  │
 │  └──────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -41,44 +39,41 @@ This is a **full-stack React application** with a **Supabase PostgreSQL database
 ### Component Hierarchy
 ```
 App.tsx
+├── AuthProvider (AuthContext.tsx)
+│   └── provides: user, session, login(), signUp(), logout()
+│
 ├── ConfigProvider (ConfigContext.tsx)
 │   └── provides: darkMode, studentName, showPrerequisiteLines, updateConfig()
 │
 └── SubjectProvider (SubjectContext.tsx)
     ├── provides: subjects[], addSubject(), updateSubject(), deleteSubject()
     │
-    └── Layout
+    └── Layout (Protected by Auth)
+        ├── Auth Screen (if logged out)
         ├── Header
         │   ├── StudentNameEditor
         │   ├── ConnectionLinesToggle
         │   └── DarkModeToggle
-        │
-        └── SemesterListView
-            ├── PrerequisiteLines (SVG overlay)
-            └── SubjectCard (for each subject)
-                ├── PrerequisiteEditor
-                ├── Grade editor
-                └── Status toggle
+...
 ```
 
 ### State Management
 
+**AuthContext** (`src/contexts/AuthContext.tsx`)
+- Manages: `user` session, `isLoading`
+- Storage: Supabase Auth
+
 **ConfigContext** (`src/contexts/ConfigContext.tsx`)
 - Manages: `darkMode`, `studentName`, `showPrerequisiteLines`
-- Storage: Supabase `config` table
-- API: `/api/config`
+- Storage: Supabase `config` table (user-specific via RLS)
 
 **SubjectContext** (`src/contexts/SubjectContext.tsx`)
 - Manages: `subjects[]` array
-- Storage: Supabase `subjects` table
-- API: `/api/curriculum`
-- Features: Auto-save (1s debounce), optimistic updates
-
-### Data Flow
-
-1. **Load Data on Mount**
+- Storage: Supabase `subjects` table (user-specific via RLS)
+- Features: Auto-save (1s debounce), automatic backup fallback
+...
    ```
-   Component Mount → Context useEffect → API GET → Update State → Render
+   Sign-in → App Mount → Contexts Fetch → Direct DB Queries → Render
    ```
 
 2. **User Action (e.g., edit grade)**
@@ -94,152 +89,21 @@ App.tsx
 
 ## Backend Architecture (Serverless Functions)
 
-### API Function Structure
+We use **Supabase Auth** and the **Supabase JS Client** directly in the browser.
 
-Each API endpoint is a separate TypeScript file in `/api`:
+### Authentication Flow
+1. User logs in/registers via the `Auth.tsx` component.
+2. `supabase.auth.signInWithPassword` returns a JWT token.
+3. The Supabase Client automatically attaches this JWT to all subsequent requests.
 
-**Example: `/api/curriculum.ts`**
-```typescript
-import { createClient } from '@supabase/supabase-js';
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-
-const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_ANON_KEY
-);
-
-export default async function handler(req, res) {
-    // CORS headers
-    // Route by HTTP method (GET/POST)
-    // Query Supabase
-    // Transform data
-    // Return JSON
-}
-```
-
-### Data Transformation Layer
-
-The API transforms between **database schema** and **frontend schema**:
-
-**Database Format:**
-```typescript
-{
-    id: "IS304",
-    name: "Estructura de Datos",
-    credits: 4,
-    semester: "Semestre 3",
-    grade: 3.1,
-    status: "completed",
-    completed: true,
-    order_index: 5,
-    prerequisites: ["IS284", "IS142"]  // PostgreSQL array
-}
-```
-
-**Frontend Format:**
-```typescript
-{
-    id: "IS304",
-    name: "Estructura de Datos",
-    credits: 4,
-    semester: "Semestre 3",
-    grade: 3.1,
-    status: "completed",
-    prerequisites: ["IS284", "IS142"]  // JavaScript array
-}
-```
-
-The API handles this transformation automatically.
-
-## Database Design
-
-### Prerequisites Implementation
-
-Prerequisites are stored as a **PostgreSQL TEXT[] array**:
+### Data Isolation
+All tables use `user_id` columns linked to `auth.users.id`.
+`Row Level Security (RLS)` is enabled to ensure users can only see and edit their own rows.
 
 ```sql
-prerequisites TEXT[] DEFAULT '{}'
+CREATE POLICY "user_exclusive_access" ON subjects
+FOR ALL USING (auth.uid() = user_id);
 ```
-
-Example data:
-```sql
-INSERT INTO subjects (id, prerequisites)
-VALUES ('IS304', ARRAY['IS284', 'IS142']);
-```
-
-Query with prerequisites:
-```sql
-SELECT * FROM subjects WHERE 'IS284' = ANY(prerequisites);
-```
-
-### Why Both `status` AND `completed` Fields?
-
-- **`status`**: Main field used by frontend (`completed`, `in-progress`, `missing`)
-- **`completed`**: Boolean for quick filtering in SQL queries
-- They're kept in sync: `completed = (status === 'completed')`
-
-This allows:
-```sql
--- Fast query using indexed boolean
-SELECT * FROM subjects WHERE completed = true;
-
--- Frontend uses status for UI logic
-if (subject.status === 'completed') { ... }
-```
-
-## Deployment Architecture
-
-### Vercel Deployment
-```
-GitHub Repository (master branch)
-        ↓
-    git push
-        ↓
-Vercel Auto-Deploy
-        ↓
-Build: npm run build
-        ↓
-Deploy: Serverless Functions + Static Assets
-        ↓
-Production: https://your-app.vercel.app
-```
-
-### Environment Variables Flow
-```
-Local: .env.local → Vercel Dev
-Production: Vercel Dashboard → Serverless Functions
-```
-
-## Key Design Decisions
-
-### Why Supabase over Other Options?
-
-✅ **Pros:**
-- Real PostgreSQL (relational, ACID compliant)
-- Free tier sufficient for personal projects
-- Built-in authentication (future expansion)
-- Real-time subscriptions available
-- REST API + client SDK
-
-❌ **Alternatives considered:**
-- **Vercel Postgres**: Removed by Vercel
-- **Vercel Blob**: Too expensive for frequent reads/writes
-- **Local JSON**: No cross-device sync
-
-### Why Vercel Serverless over Express?
-
-✅ **Serverless Pros:**
-- No server management
-- Auto-scaling
-- Free tier generous
-- Global edge network
-- Zero config deployment
-
-❌ **Express Cons:**
-- Requires hosting (VPS, Heroku, etc.)
-- Manual scaling
-- Always-on costs
-- More maintenance
 
 ### Why Store Prerequisites in Database?
 
@@ -279,11 +143,12 @@ Both coexist: `data.ts` has the official curriculum prerequisites, database stor
 
 ### Current Security Model
 
-⚠️ **Public Access** (suitable for personal use only)
+⚠️ **Private Access Enabled**
 
-- RLS disabled: `ALTER TABLE subjects DISABLE ROW LEVEL SECURITY;`
-- Anyone with the URL can read/write data
-- ANON key is public (visible in frontend code)
+- RLS enabled: `ALTER TABLE subjects ENABLE ROW LEVEL SECURITY;`
+- Users must log in.
+- RLS policies ensure data isolation.
+- `VITE_SUPABASE_ANON_KEY` is public (standard for Supabase).
 
 ### For Production/Multi-User
 
@@ -437,3 +302,6 @@ Updated `/api/config` endpoints to include `show_prerequisite_lines` field in GE
 - **LOCAL_DEV.md**: Local development
 - **PREREQUISITE_LINES.md**: Prerequisite visualization feature details
 - **README.md**: User-facing features
+
+---
+[ **Back to README** ](README.md) | [ **Quick Reference** ](QUICK_REFERENCE.md) | [ **Project Setup** ](PROJECT_SETUP.md) | [ **Deployment** ](DEPLOYMENT.md)
