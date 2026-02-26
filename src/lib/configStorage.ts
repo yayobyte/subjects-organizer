@@ -1,109 +1,107 @@
-/**
- * Configuration Storage Adapter
- * Handles saving/loading user preferences from backend API
- */
+import { supabase } from './supabase';
 
-export interface Config {
+export interface UserConfig {
     darkMode: boolean;
     studentName: string;
     showPrerequisiteLines: boolean;
 }
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+export interface IConfigStorage {
+    load(): Promise<UserConfig | null>;
+    save(config: UserConfig): Promise<void>;
+    update(updates: Partial<UserConfig>): Promise<UserConfig>;
+}
 
-export class ConfigStorageAdapter {
-    /**
-     * Load configuration from backend
-     */
-    async load(): Promise<Config> {
+export class SupabaseConfigStorageAdapter implements IConfigStorage {
+    async load(): Promise<UserConfig | null> {
         try {
-            const response = await fetch(`${API_BASE}/config`);
-            if (!response.ok) {
-                throw new Error(`Failed to load config: ${response.statusText}`);
+            const { data: userData, error: userError } = await supabase.auth.getUser();
+            if (userError || !userData.user) {
+                console.error('User not authenticated');
+                return null;
             }
-            const config = await response.json();
-            console.log('[ConfigStorage] Loaded config:', config);
-            return config;
+
+            const { data, error } = await supabase
+                .from('config')
+                .select('dark_mode, student_name, show_prerequisite_lines')
+                .eq('user_id', userData.user.id)
+                .maybeSingle();
+
+            if (error) throw error;
+
+            // If config doesn't exist for this user, return defaults
+            if (!data) {
+                return {
+                    darkMode: false,
+                    studentName: 'Cristian Gutierrez Gonzalez',
+                    showPrerequisiteLines: false
+                };
+            }
+
+            return {
+                darkMode: data.dark_mode,
+                studentName: data.student_name,
+                showPrerequisiteLines: data.show_prerequisite_lines || false
+            };
         } catch (error) {
-            console.error('[ConfigStorage] Error loading config:', error);
-            // Return defaults on error
+            console.error('Failed to load config from Supabase:', error);
+            // Return defaults on error to avoid breaking the app
             return {
                 darkMode: false,
-                studentName: 'Student',
+                studentName: 'Cristian Gutierrez Gonzalez',
                 showPrerequisiteLines: false
             };
         }
     }
 
-    /**
-     * Save entire configuration to backend
-     */
-    async save(config: Config): Promise<void> {
+    async save(config: UserConfig): Promise<void> {
         try {
-            const response = await fetch(`${API_BASE}/config`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(config),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to save config: ${response.statusText}`);
+            const { data: userData, error: userError } = await supabase.auth.getUser();
+            if (userError || !userData.user) {
+                throw new Error('User not authenticated');
             }
 
-            console.log('[ConfigStorage] Saved config:', config);
+            const { error } = await supabase
+                .from('config')
+                .upsert({
+                    user_id: userData.user.id,
+                    dark_mode: config.darkMode,
+                    student_name: config.studentName,
+                    show_prerequisite_lines: config.showPrerequisiteLines !== undefined ? config.showPrerequisiteLines : false
+                }, {
+                    onConflict: 'user_id'
+                });
+
+            if (error) throw error;
         } catch (error) {
-            console.error('[ConfigStorage] Error saving config:', error);
+            console.error('Failed to save config to Supabase:', error);
             throw error;
         }
     }
 
-    /**
-     * Update specific config fields (partial update)
-     */
-    async update(updates: Partial<Config>): Promise<Config> {
+    async update(updates: Partial<UserConfig>): Promise<UserConfig> {
         try {
-            const response = await fetch(`${API_BASE}/config`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updates),
-            });
+            const currentConfig = await this.load();
+            const configTemplate = currentConfig || {
+                darkMode: false,
+                studentName: 'Cristian Gutierrez Gonzalez',
+                showPrerequisiteLines: false
+            };
 
-            if (!response.ok) {
-                throw new Error(`Failed to update config: ${response.statusText}`);
-            }
+            const newConfig = {
+                ...configTemplate,
+                ...updates
+            };
 
-            const result = await response.json();
-            console.log('[ConfigStorage] Updated config:', result.config);
-            return result.config;
+            await this.save(newConfig);
+            return newConfig;
         } catch (error) {
-            console.error('[ConfigStorage] Error updating config:', error);
-            throw error;
-        }
-    }
-
-    /**
-     * Reset configuration to defaults
-     */
-    async reset(): Promise<void> {
-        try {
-            const response = await fetch(`${API_BASE}/config/reset`, {
-                method: 'POST',
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to reset config: ${response.statusText}`);
-            }
-
-            console.log('[ConfigStorage] Config reset to defaults');
-        } catch (error) {
-            console.error('[ConfigStorage] Error resetting config:', error);
+            console.error('Failed to update config in Supabase:', error);
             throw error;
         }
     }
 }
 
-export const configStorage = new ConfigStorageAdapter();
+export function getConfigStorageAdapter(): IConfigStorage {
+    return new SupabaseConfigStorageAdapter();
+}

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import { configStorage, type Config } from '../lib/configStorage';
+import { getConfigStorageAdapter, type UserConfig as Config } from '../lib/configStorage';
 
 interface ConfigContextType {
     config: Config;
@@ -27,10 +27,11 @@ interface ConfigProviderProps {
 export const ConfigProvider = ({ children }: ConfigProviderProps) => {
     const [config, setConfig] = useState<Config>({
         darkMode: false,
-        studentName: 'Student',
+        studentName: 'Cristian Gutierrez Gonzalez',
         showPrerequisiteLines: false
     });
     const [isLoading, setIsLoading] = useState(true);
+    const configStorage = getConfigStorageAdapter();
 
     // Load config on mount
     useEffect(() => {
@@ -38,10 +39,11 @@ export const ConfigProvider = ({ children }: ConfigProviderProps) => {
             try {
                 console.log('[ConfigContext] Loading configuration...');
                 const loadedConfig = await configStorage.load();
-                setConfig(loadedConfig);
-                
-                // Apply dark mode immediately
-                applyDarkMode(loadedConfig.darkMode);
+                if (loadedConfig) {
+                    setConfig(loadedConfig);
+                    // Apply dark mode immediately
+                    applyDarkMode(loadedConfig.darkMode);
+                }
             } catch (error) {
                 console.error('[ConfigContext] Failed to load config:', error);
             } finally {
@@ -63,7 +65,6 @@ export const ConfigProvider = ({ children }: ConfigProviderProps) => {
     const updateDarkMode = async (darkMode: boolean) => {
         try {
             console.log('[ConfigContext] Updating dark mode to:', darkMode);
-            
             // Optimistically update UI
             setConfig(prev => ({ ...prev, darkMode }));
             applyDarkMode(darkMode);
@@ -82,7 +83,6 @@ export const ConfigProvider = ({ children }: ConfigProviderProps) => {
     const updateStudentName = async (studentName: string) => {
         try {
             console.log('[ConfigContext] Updating student name to:', studentName);
-
             // Optimistically update UI
             setConfig(prev => ({ ...prev, studentName }));
 
@@ -99,7 +99,6 @@ export const ConfigProvider = ({ children }: ConfigProviderProps) => {
     const updateShowPrerequisiteLines = async (showPrerequisiteLines: boolean) => {
         try {
             console.log('[ConfigContext] Updating show prerequisite lines to:', showPrerequisiteLines);
-
             // Optimistically update UI
             setConfig(prev => ({ ...prev, showPrerequisiteLines }));
 
@@ -116,12 +115,14 @@ export const ConfigProvider = ({ children }: ConfigProviderProps) => {
     const resetConfig = async () => {
         try {
             console.log('[ConfigContext] Resetting configuration...');
-            await configStorage.reset();
-            
-            // Reload config
-            const loadedConfig = await configStorage.load();
-            setConfig(loadedConfig);
-            applyDarkMode(loadedConfig.darkMode);
+            const defaults = {
+                darkMode: false,
+                studentName: 'Cristian Gutierrez Gonzalez',
+                showPrerequisiteLines: false
+            };
+            await configStorage.save(defaults);
+            setConfig(defaults);
+            applyDarkMode(defaults.darkMode);
         } catch (error) {
             console.error('[ConfigContext] Failed to reset config:', error);
         }
