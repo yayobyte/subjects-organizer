@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vite --host",
     "dev:local": "npx vercel dev",
-    "build": "tsc && vite build",
+    "build": "./node_modules/.bin/tsc && ./node_modules/.bin/vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
